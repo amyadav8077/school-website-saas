@@ -1,0 +1,13 @@
+# Caches & OS metadata
+.DS_Store
+Thumbs.db
+.angular/
+.gradle/
+.idea/
+.vscode/
+
+# Build folders
+**/build/
+**/dist/
+**/target/
+**/node_modules/

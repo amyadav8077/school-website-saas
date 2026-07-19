@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # Database Service (PostgreSQL)
+  postgres:
+    image: postgres:15-alpine
+    container_name: school_saas_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: school_saas_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # Cache Service (Redis)
+  redis:
+    image: redis:7-alpine
+    container_name: school_saas_redis
+    ports:
+      - "6379:6379"
+
+  # Core Backend API Engine
+  backend:
+    build: ./school-website-backend
+    container_name: school_saas_backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: school_saas_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      - postgres
+      - redis
+
+  # Angular Client Application (Server-Side Rendered)
+  frontend:
+    build: ./school-website-frontend
+    container_name: school_saas_frontend
+    ports:
+      - "4000:4000"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

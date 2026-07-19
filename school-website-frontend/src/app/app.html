@@ -1,0 +1,1080 @@
+@if (!currentUser()) {
+  <app-login (loginSuccess)="onLoginSuccess($event)"></app-login>
+} @else {
+  <main style="max-width: 100%; width: 100%; padding: 1.5rem 3rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; box-sizing: border-box; margin: 0 auto;">
+    
+    <!-- SaaS Platform Master Header -->
+    @if (!activeTenant()) {
+      <div style="display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 0.75rem 1.25rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid #1e293b; color: white;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span>🌐</span>
+          <span style="font-weight: 700; font-size: 0.9rem; color: #94a3b8;">SchoolSaaS.com Hub Console (Logged in: <strong style="color: #60a5fa;">{{ currentUser()?.username }}</strong>)</span>
+        </div>
+        <button (click)="logout()" style="background: #ef4444; color: white; border: 0; padding: 0.45rem 1rem; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.8rem; transition: background 0.15s;" onmouseenter="this.style.background='#dc2626'" onmouseleave="this.style.background='#ef4444'">
+          🚪 Logout
+        </button>
+      </div>
+    }
+  
+  @if (!activeTenant()) {
+    <!-- ========================================== -->
+    <!-- SaaS PLATFORM MARKETING HUB (SchoolSaaS.com) -->
+    <!-- ========================================== -->
+    <header style="text-align: center; margin-bottom: 3rem;">
+      <span style="background-color: #dbeafe; color: #1e40af; font-size: 0.85rem; padding: 0.35rem 1rem; border-radius: 9999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Multi-Tenant SaaS Infrastructure</span>
+      <h1 style="color: #0f172a; font-size: 3rem; margin-top: 1rem; margin-bottom: 1rem; font-weight: 900; letter-spacing: -0.03em; line-height: 1.1;">
+        Launch Your School's Digital Website & Portal in Seconds
+      </h1>
+      <p style="color: #475569; font-size: 1.25rem; max-width: 700px; margin: 0 auto; line-height: 1.6;">
+        A comprehensive multi-tenant school CMS and administrative engine. Manage pages, admissions funnels, dynamic gradebooks, fee invoicing ledger, news bulletins, and help Desks in one unified platform.
+      </p>
+    </header>
+
+    <!-- Core Grid: Onboarding Terminal & Features Grid -->
+    <section style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; margin-bottom: 3.5rem; align-items: start;">
+      
+      <!-- Instant Onboarding Terminal Card -->
+      <app-tenant-onboarding (tenantOnboarded)="onTenantOnboarded($event)"></app-tenant-onboarding>
+
+      <!-- SaaS Capability Overview Grid -->
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <h3 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.15rem; color: #0f172a; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">Integrated Modules</h3>
+        
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; display: flex; gap: 0.75rem; align-items: flex-start;">
+          <span style="font-size: 1.5rem; background: #dbeafe; padding: 0.4rem; border-radius: 6px; line-height: 1;">🏗️</span>
+          <div>
+            <strong style="color: #0f172a; font-size: 0.95rem; display: block; margin-bottom: 0.15rem;">Structured CMS Builders</strong>
+            <p style="margin: 0; font-size: 0.85rem; color: #475569; line-height: 1.4;">Compose layout sections, banners, announcements, and compliance disclosures instantly.</p>
+          </div>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; display: flex; gap: 0.75rem; align-items: flex-start;">
+          <span style="font-size: 1.5rem; background: #ffedd5; padding: 0.4rem; border-radius: 6px; line-height: 1;">📝</span>
+          <div>
+            <strong style="color: #0f172a; font-size: 0.95rem; display: block; margin-bottom: 0.15rem;">Admissions CRM Funnel</strong>
+            <p style="margin: 0; font-size: 0.85rem; color: #475569; line-height: 1.4;">Capture parental inquiry leads on the public site and manage candidate status transitions.</p>
+          </div>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; display: flex; gap: 0.75rem; align-items: flex-start;">
+          <span style="font-size: 1.5rem; background: #ecfdf5; padding: 0.4rem; border-radius: 6px; line-height: 1;">💳</span>
+          <div>
+            <strong style="color: #0f172a; font-size: 0.95rem; display: block; margin-bottom: 0.15rem;">Tuition Invoicing Ledger</strong>
+            <p style="margin: 0; font-size: 0.85rem; color: #475569; line-height: 1.4;">Issue fee invoices dynamically with full outstanding reports and parent simulated checkout gateways.</p>
+          </div>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; display: flex; gap: 0.75rem; align-items: flex-start;">
+          <span style="font-size: 1.5rem; background: #e0f2fe; padding: 0.4rem; border-radius: 6px; line-height: 1;">📊</span>
+          <div>
+            <strong style="color: #0f172a; font-size: 0.95rem; display: block; margin-bottom: 0.15rem;">Report Card Transcript Lookup</strong>
+            <p style="margin: 0; font-size: 0.85rem; color: #475569; line-height: 1.4;">Log assessment gradebooks and let parents securely query student transcripts.</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Platform Directory of Registered Schools -->
+    <section style="border-top: 2px solid #e2e8f0; padding-top: 3rem;">
+      <h3 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.5rem; color: #0f172a; font-weight: 800; text-align: center;">Registered School Directories</h3>
+      <p style="color: #64748b; font-size: 0.95rem; text-align: center; margin-bottom: 2rem;">
+        Click any registered institution to launch its dedicated administration terminal and customized public website.
+      </p>
+
+      @if (tenantsList().length === 0) {
+        <div style="background: #f8fafc; border: 1px dashed #cbd5e1; padding: 3rem; text-align: center; border-radius: 8px; color: #64748b;">
+          <span style="font-size: 2.5rem; display: block; margin-bottom: 0.5rem;">🏫</span>
+          <strong style="display: block; font-size: 1.1rem; margin-bottom: 0.25rem;">No Schools Registered Yet</strong>
+          <span style="font-size: 0.9rem;">Fill out the "Onboard New School" form above to launch the first multi-tenant portal!</span>
+        </div>
+      } @else {
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          @for (school of tenantsList(); track school.id) {
+            <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 6px rgba(0,0,0,0.02); hover: box-shadow: 0 10px 15px rgba(0,0,0,0.05); transition: all 0.2s;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                  <div style="width: 32px; height: 36px; border-radius: 50%; background: #e0f2fe; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #1e3a8a; font-size: 0.95rem;">
+                    {{ school.name.charAt(0) }}
+                  </div>
+                  <strong style="font-size: 1.15rem; color: #0f172a;">{{ school.name }}</strong>
+                </div>
+                <span style="font-family: monospace; font-size: 0.85rem; color: #2563eb; background: #eff6ff; padding: 0.25rem 0.5rem; border-radius: 4px; display: inline-block; margin-bottom: 1rem;">
+                  {{ school.customDomain ? 'https://' + school.customDomain : 'https://' + school.subdomain + '.schoolsaas.com' }}
+                </span>
+                <p style="color: #64748b; font-size: 0.85rem; margin: 0 0 1rem 0; line-height: 1.4;">Status: <strong style="color: #16a34a;">ACTIVE WORKSPACE</strong> • Active since {{ school.createdAt | date:'mediumDate' }}</p>
+                
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.8rem; color: #475569; margin-bottom: 1rem; line-height: 1.4; text-align: left;">
+                  🔑 <strong>Tenant Admin Login:</strong><br />
+                  Username: <code style="color: #2563eb; font-weight: 700;">{{ school.subdomain === 'pioneer' ? 'pioneer_admin' : school.subdomain + '_admin' }}</code><br />
+                  Password: <code style="color: #2563eb; font-weight: 700;">{{ school.subdomain === 'pioneer' ? 'pioneer123' : 'admin123' }}</code>
+                </div>
+              </div>
+              
+              <button (click)="onTenantOnboarded(school)" style="width: 100%; text-align: center; border: 0; background: #0f172a; color: white; padding: 0.65rem; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.9rem; transition: background 0.2s; margin-bottom: 0.5rem;">
+                Launch Administration Terminal ➡️
+              </button>
+
+              @if (activeCloneTenantId() !== school.id) {
+                <button (click)="toggleCloneForm(school.id)" style="width: 100%; text-align: center; border: 1px solid #cbd5e1; background: white; color: #475569; padding: 0.55rem; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.85rem; transition: background 0.2s;">
+                  👯 Clone Website as Template
+                </button>
+              } @else {
+                <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 1rem; margin-top: 0.5rem; text-align: left;">
+                  <strong style="font-size: 0.85rem; color: #0f172a; display: block; margin-bottom: 0.75rem;">👯 Clone Website Template</strong>
+                  
+                  <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <div>
+                      <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">New School Name</label>
+                      <input type="text" name="cloneName" [(ngModel)]="cloneName" placeholder="e.g. Oxford Academy" style="width: 100%; padding: 0.4rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.8rem; box-sizing: border-box;" />
+                    </div>
+                    <div>
+                      <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">New Subdomain</label>
+                      <div style="display: flex; align-items: center;">
+                        <input type="text" name="cloneSubdomain" [(ngModel)]="cloneSubdomain" placeholder="oxford-academy" style="flex: 1; padding: 0.4rem; border: 1px solid #cbd5e1; border-radius: 4px 0 0 4px; font-size: 0.8rem; box-sizing: border-box; width: 100%;" />
+                        <span style="background: #e2e8f0; padding: 0.4rem 1.25rem; border: 1px solid #cbd5e1; border-left: 0; border-radius: 0 4px 4px 0; font-size: 0.75rem; color: #64748b; font-weight: 600; box-sizing: border-box;">.schoolsaas.com</span>
+                      </div>
+                    </div>
+                    
+                    @if (cloneError()) {
+                      <span style="display: block; font-size: 0.75rem; color: #ef4444; font-weight: 600;">⚠️ {{ cloneError() }}</span>
+                    }
+
+                    <div style="display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 0.5rem;">
+                      <button (click)="cancelClone()" style="background: white; border: 1px solid #cbd5e1; padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; color: #475569; cursor: pointer;">Cancel</button>
+                      <button (click)="submitClone(school.id)" [disabled]="isCloning() || !cloneName || !cloneSubdomain" style="background: #2563eb; color: white; border: 0; padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">
+                        {{ isCloning() ? 'Cloning...' : 'Start Cloning' }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+  } @else {
+    <!-- ========================================== -->
+    <!-- ACTIVE TENANT WORKSPACE (ADMIN TERMINAL)   -->
+    <!-- ========================================== -->
+    <header style="text-align: center; margin-bottom: 2rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 1.5rem;">
+      <span style="background-color: #dbeafe; color: #1e40af; font-size: 0.8rem; padding: 0.25rem 0.75rem; border-radius: 9999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Multi-Tenant SaaS Portal</span>
+      <h1 style="color: #0f172a; font-size: 2.25rem; margin-top: 0.5rem; margin-bottom: 0.5rem; font-weight: 800; letter-spacing: -0.025em;">{{ title() }}</h1>
+      <p style="color: #475569; font-size: 1.1rem; margin: 0;">Stage 10 Core: Interactive Role-Based Access Control (RBAC) Security</p>
+    </header>
+
+    <!-- Health & Connection Status -->
+    <section style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+      <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <h3 style="font-size: 1rem; color: #334155; margin: 0 0 0.25rem 0; font-weight: 600;">SaaS Frontend Client</h3>
+          <p style="color: #64748b; font-size: 0.85rem; margin: 0;">Angular 21 Client Application Engine</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem; background: white; padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid #cbd5e1;">
+          <span style="display: inline-block; width: 10px; height: 12px; background-color: #10b981; border-radius: 50%;"></span>
+          <strong style="color: #0f766e; font-size: 0.9rem;">ONLINE</strong>
+        </div>
+      </div>
+
+      <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <h3 style="font-size: 1rem; color: #334155; margin: 0 0 0.25rem 0; font-weight: 600;">SaaS Backend Monolith</h3>
+          <p style="color: #64748b; font-size: 0.85rem; margin: 0;">Spring Boot 4 Core Services Engine</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem; background: white; padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid #cbd5e1;">
+          @if (backendStatus() === 'UP') {
+            <span style="display: inline-block; width: 10px; height: 10px; background-color: #10b981; border-radius: 50%;"></span>
+            <strong style="color: #0f766e; font-size: 0.9rem;">ONLINE</strong>
+          } @else if (backendStatus() === 'Checking...') {
+            <span style="display: inline-block; width: 10px; height: 10px; background-color: #f59e0b; border-radius: 50%;"></span>
+            <strong style="color: #b45309; font-size: 0.9rem;">CHECKING...</strong>
+          } @else {
+            <span style="display: inline-block; width: 10px; height: 10px; background-color: #ef4444; border-radius: 50%;"></span>
+            <strong style="color: #b91c1c; font-size: 0.9rem;">OFFLINE</strong>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Dynamic Security Role Switcher Bar -->
+    <div style="display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 0.75rem 1.25rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #1e293b; color: white;">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <span style="font-size: 1.25rem;">🛡️</span>
+        <div>
+          <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; display: block; letter-spacing: 0.05em;">Security Authority Level</span>
+          <strong style="color: #60a5fa; font-size: 0.95rem;">
+            {{ activeRole() === 'SCHOOL_ADMIN' ? 'School Administrator (Staff Clearance)' : 'Parent / General Website Visitor' }}
+          </strong>
+        </div>
+      </div>
+      <!-- Toggle Action Buttons -->
+      <div style="display: flex; gap: 0.5rem; font-size: 0.85rem;">
+        <button (click)="activeRole.set('SCHOOL_ADMIN')" 
+          [style.background]="activeRole() === 'SCHOOL_ADMIN' ? '#2563eb' : '#1e293b'"
+          [style.border-color]="activeRole() === 'SCHOOL_ADMIN' ? '#3b82f6' : '#334155'"
+          style="color: white; border: 1px solid; padding: 0.45rem 1rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+          👤 School Administrator
+        </button>
+        <button (click)="activeRole.set('PARENT_VISITOR')" 
+          [style.background]="activeRole() === 'PARENT_VISITOR' ? '#f59e0b' : '#1e293b'"
+          [style.border-color]="activeRole() === 'PARENT_VISITOR' ? '#fbbf24' : '#334155'"
+          style="color: white; border: 1px solid; padding: 0.45rem 1rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+          👪 Parent / Visitor
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Workspace Navigation Controls -->
+    <div style="display: flex; justify-content: space-between; align-items: center; background: #f1f5f9; padding: 1rem; border-radius: 6px; margin-bottom: 2rem; border: 1px solid #e2e8f0;">
+      <span style="font-size: 1rem; color: #334155;">Active School Terminal: <strong style="color: #0f172a;">{{ activeTenant().name }}</strong></span>
+      <div style="display: flex; gap: 0.5rem;">
+        @if (currentUser()?.role === 'SUPER_ADMIN') {
+          <button (click)="resetDemo()" style="background-color: #0f172a; color: white; border: 0; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 0.2s;">
+            ⬅️ Back to SchoolSaaS.com Hub
+          </button>
+        }
+        <button (click)="logout()" style="background-color: #ef4444; color: white; border: 0; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 0.2s;">
+          🚪 Logout ({{ currentUser()?.username }})
+        </button>
+      </div>
+    </div>
+
+    <!-- Tenant Customization Dashboard Modules -->
+    <section style="margin-bottom: 3rem;">
+      @if (activeRole() !== 'SCHOOL_ADMIN') {
+        <!-- Unified Security Profile Lock Card -->
+        <div style="background: white; border: 1px solid #cbd5e1; border-radius: 12px; padding: 2.5rem; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 3rem;">
+          <span style="font-size: 3rem; display: block; margin-bottom: 0.5rem;">🔒</span>
+          <h2 style="font-size: 1.5rem; color: #0f172a; font-weight: 800; margin-top: 0.5rem; margin-bottom: 0.5rem;">Parent / General Visitor Active Session</h2>
+          <p style="color: #64748b; font-size: 1rem; max-width: 550px; margin: 0 auto 1.5rem auto; line-height: 1.6;">
+            You are currently logged in with a **Parent / Visitor** security profile. All school setup dashboards and administrative setup terminals are securely locked. 
+            Use the **Real-time Public Website Preview** sandbox below to explore the portal features (grades, admissions, payments)!
+          </p>
+          <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 0.75rem 1rem; border-radius: 6px; display: inline-block; font-size: 0.9rem; font-weight: 600;">
+            💡 Tip: Use the dynamic Role Switcher at the very top of the screen to swap clearance levels instantly!
+          </div>
+        </div>
+      } @else {
+        <!-- User Profile & Account Security -->
+        <app-user-profile [user]="currentUser()"></app-user-profile>
+
+        <!-- Branding Settings -->
+        <app-branding-settings 
+          [tenantId]="activeTenant().id" 
+          [tenantName]="activeTenant().name" 
+          [subdomain]="activeTenant().subdomain"
+          [userRole]="activeRole()"
+          (brandingUpdated)="onBrandingUpdated($event)">
+        </app-branding-settings>
+
+        <!-- Page Builder -->
+        <app-page-builder
+          [tenantId]="activeTenant().id"
+          [tenantName]="activeTenant().name"
+          (contentModified)="onContentModified()">
+        </app-page-builder>
+
+        <!-- Academics & Faculty Manager -->
+        <app-academics-manager
+          [tenantId]="activeTenant().id"
+          (catalogModified)="onCatalogModified()">
+        </app-academics-manager>
+
+        <!-- Billing & Invoicing Office -->
+        <app-billing-manager
+          [tenantId]="activeTenant().id"
+          [tenantName]="activeTenant().name"
+          [refreshTrigger]="billingRefreshTrigger()"
+          (billingModified)="onBillingModified()">
+        </app-billing-manager>
+
+        <!-- Student Gradebook & Marks Manager -->
+        <app-gradebook-manager
+          [tenantId]="activeTenant().id"
+          [tenantName]="activeTenant().name"
+          [refreshTrigger]="gradebookRefreshTrigger()"
+          (gradebookModified)="onGradebookModified()">
+        </app-gradebook-manager>
+
+        <!-- School Events, Bulletins & Circulars Manager -->
+        <app-news-manager
+          [tenantId]="activeTenant().id"
+          (notificationModified)="onNotificationModified()">
+        </app-news-manager>
+
+        <!-- Transfer Certificate issuing office (Admin Panel) -->
+        <app-tc-manager
+          [tenantId]="activeTenant().id"
+          [tenantName]="activeTenant().name"
+          [refreshTrigger]="tcRefreshTrigger()"
+          (tcModified)="onTCModified()">
+        </app-tc-manager>
+
+        <!-- Applicant Tracking System (ATS Careers Office) -->
+        <app-careers-manager
+          [tenantId]="activeTenant().id"
+          [tenantName]="activeTenant().name"
+          [refreshTrigger]="careersRefreshTrigger()">
+        </app-careers-manager>
+
+        <!-- Support Ticket Resolve Manager -->
+        <app-support-manager
+          [tenantId]="activeTenant().id"
+          [tenantName]="activeTenant().name"
+          [refreshTrigger]="supportRefreshTrigger()">
+        </app-support-manager>
+
+        <!-- Admissions Inquiry Manager (SaaS Admin CRM Pipeline) -->
+        <app-admissions-manager
+          [tenantId]="activeTenant().id"
+          [tenantName]="activeTenant().name"
+          [refreshTrigger]="admissionsRefreshTrigger()">
+        </app-admissions-manager>
+      }
+    </section>
+
+    <!-- Live Multi-Tenant Theme Preview Sandbox -->
+    <section style="margin-top: 3rem;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; border-bottom: 2px solid #cbd5e1; padding-bottom: 0.5rem;">
+        <h2 style="font-size: 1.5rem; color: #1e293b; margin: 0; font-weight: 800;">Real-time Multi-Tenant Website Preview</h2>
+        <span style="background-color: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; font-size: 0.8rem; padding: 0.25rem 0.5rem; border-radius: 6px; font-weight: 600;">
+          {{ activeTenant().customDomain || activeTenant().subdomain + '.schoolsaas.com' }}
+        </span>
+      </div>
+      
+      <p style="color: #64748b; font-size: 0.95rem; margin-top: 0; margin-bottom: 1.5rem; line-height: 1.5;">
+        This sandbox previews the tenant's public website template. The design, palette, header elements, buttons, and contact details update instantly in response to the active school configurations.
+      </p>
+
+      <!-- Simulated Browser Window Container (Dynamic Full-Screen Overlay) -->
+      <div [style.position]="isFullscreenPreview() ? 'fixed' : 'relative'"
+           [style.top]="isFullscreenPreview() ? '0' : 'auto'"
+           [style.left]="isFullscreenPreview() ? '0' : 'auto'"
+           [style.width]="isFullscreenPreview() ? '100vw' : '100%'"
+           [style.height]="isFullscreenPreview() ? '100vh' : 'auto'"
+           [style.z-index]="isFullscreenPreview() ? '999999' : '1'"
+           [style.border-radius]="isFullscreenPreview() ? '0' : '8px'"
+           [style.box-shadow]="isFullscreenPreview() ? 'none' : '0 10px 15px -3px rgba(0, 0, 0, 0.1)'"
+           [style.display]="isFullscreenPreview() ? 'flex' : 'block'"
+           [style.flex-direction]="isFullscreenPreview() ? 'column' : 'none'"
+           style="border: 1px solid #cbd5e1; overflow: hidden; background: white;">
+        
+        <!-- Simulated Browser Bar -->
+        <div style="background: #f1f5f9; padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid #cbd5e1; flex-shrink: 0;">
+          <div style="display: flex; gap: 0.35rem;">
+            <span style="width: 10px; height: 10px; background: #ef4444; border-radius: 50%;"></span>
+            <span style="width: 10px; height: 10px; background: #f59e0b; border-radius: 50%;"></span>
+            <span style="width: 10px; height: 10px; background: #10b981; border-radius: 50%;"></span>
+          </div>
+          <div style="background: white; border: 1px solid #cbd5e1; padding: 0.25rem 1rem; border-radius: 4px; font-family: monospace; font-size: 0.8rem; color: #64748b; flex: 1; text-align: center;">
+            {{ activeTenant().customDomain ? 'https://' + activeTenant().customDomain : 'https://' + activeTenant().subdomain + '.schoolsaas.com' }}/{{ activePreviewPage() ? activePreviewPage().slug : '' }}
+          </div>
+          @if (isFullscreenPreview()) {
+            <button (click)="isFullscreenPreview.set(false)" style="background: #ef4444; color: white; border: 0; padding: 0.35rem 0.75rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
+              ❌ Exit Full-Page Preview
+            </button>
+          } @else {
+            <button (click)="isFullscreenPreview.set(true)" style="background: #2563eb; color: white; border: 0; padding: 0.35rem 0.75rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.25rem; transition: background 0.15s;" onmouseenter="this.style.background='#1d4ed8'" onmouseleave="this.style.background='#2563eb'">
+              🖥️ Full-Page Preview
+            </button>
+          }
+        </div>
+
+        <!-- Public Site Content (Applied with Custom CSS variables) -->
+        <div [style.font-family]="fontFamily()" 
+             [style.flex]="isFullscreenPreview() ? '1' : 'none'"
+             [style.overflow-y]="isFullscreenPreview() ? 'auto' : 'visible'"
+             style="background: white; min-height: 450px; display: flex; flex-direction: column; transition: font-family 0.3s;">
+          
+          <!-- Animated Top Announcement Banner -->
+          @if (activeBanner() && activeBanner().enabled) {
+            <div style="background: linear-gradient(90deg, #dc2626, #ea580c); color: white; padding: 0.65rem 1rem; font-size: 0.85rem; font-weight: 700; overflow: hidden; position: relative; display: flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-bottom: 2px solid rgba(255,255,255,0.15); flex-shrink: 0;">
+              
+              <!-- Marquee container with CSS animation -->
+              <div style="white-space: nowrap; width: 100%; display: flex; align-items: center; justify-content: space-between;">
+                <marquee [direction]="activeBanner().direction === 'right' ? 'right' : 'left'" scrollamount="5" style="flex-grow: 1; margin-right: 1.5rem; font-family: system-ui, sans-serif;">
+                  ⚡ ATTENTION ANNOUNCEMENT: {{ activeBanner().text }}
+                </marquee>
+                
+                <!-- "Click Me / View Details" Action Button -->
+                <button (click)="selectPreviewPageBySlug(activeBanner().pageSlug)" 
+                        [style.background-color]="accentColor()"
+                        style="color: #0f172a; border: 0; padding: 0.35rem 0.95rem; border-radius: 9999px; font-weight: 800; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"
+                        onmouseenter="this.style.transform='scale(1.05)'"
+                        onmouseleave="this.style.transform='scale(1)'">
+                  🔥 {{ activeBanner().buttonText || 'Click Me!' }}
+                </button>
+              </div>
+
+            </div>
+          }
+
+          <!-- School Branded Header Navigation -->
+          <nav [style.border-top-color]="primaryColor()" style="border-top: 4px solid #1e3a8a; padding: 1.25rem 2.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03); transition: border-color 0.3s; background: #ffffff;">
+            <div class="school-brand">
+              <div class="logo-container" [style.background-color]="logoUrl().startsWith('data:') ? 'transparent' : primaryColor()">
+                @if (logoUrl().startsWith('data:') || logoUrl().startsWith('http') || logoUrl().startsWith('/')) {
+                  <img [src]="logoUrl()" style="width: 100%; height: 100%; object-fit: cover;" alt="logo" />
+                } @else {
+                  {{ logoUrl() }}
+                }
+              </div>
+              <span class="school-name">
+                {{ activeTenant().name }}
+              </span>
+            </div>
+
+            <!-- Dynamic Page Navigation Tabs -->
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+              @if (schoolPages().length === 0) {
+                <span class="nav-link active">Home</span>
+                <span class="nav-link">About</span>
+                <span class="nav-link">Admissions</span>
+              } @else {
+                @for (p of schoolPages(); track p.id) {
+                  <div (mouseenter)="showGradesDropdown.set(p.slug === 'grades')" 
+                       (mouseleave)="showGradesDropdown.set(false)"
+                       style="position: relative; display: inline-block;">
+                    <span (click)="selectPreviewPage(p)" 
+                          class="nav-link"
+                          [class.active]="activePreviewPage()?.id === p.id">
+                      {{ p.title }}
+                      @if (p.slug === 'grades') { ▾ }
+                    </span>
+                    
+                    <!-- Dropdown Sub-menu Content (Renders dynamically on hover) -->
+                    @if (p.slug === 'grades' && showGradesDropdown()) {
+                      <div style="position: absolute; top: 100%; left: 0; background: white; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1); width: 250px; z-index: 100; padding: 0.5rem 0; box-sizing: border-box; text-align: left; margin-top: 0.5rem;">
+                        <span style="display: block; padding: 0.4rem 1rem; font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; border-bottom: 1px solid #f1f5f9; margin-bottom: 0.25rem; padding-bottom: 0.4rem;">Select Grade Transcript</span>
+                        <a (click)="selectGradeLevelLookup('John Doe', p)" style="display: block; padding: 0.65rem 1rem; color: #475569; text-decoration: none; font-size: 0.85rem; cursor: pointer; transition: background 0.15s; font-weight: 600;" onmouseenter="this.style.background='#f1f5f9'" onmouseleave="this.style.background='transparent'">
+                          📊 High School (John Doe)
+                        </a>
+                        <a (click)="selectGradeLevelLookup('Jane Smith', p)" style="display: block; padding: 0.65rem 1rem; color: #475569; text-decoration: none; font-size: 0.85rem; cursor: pointer; transition: background 0.15s; font-weight: 600;" onmouseenter="this.style.background='#f1f5f9'" onmouseleave="this.style.background='transparent'">
+                          📊 Primary School (Jane Smith)
+                        </a>
+                      </div>
+                    }
+                  </div>
+                }
+              }
+            </div>
+          </nav>
+
+          <!-- Website Page Body (Pushes the footer to the bottom of the page) -->
+          <div style="flex: 1 0 auto; display: flex; flex-direction: column; width: 100%;">
+
+          <!-- Prominent CBSE Compliance Header Bar (CBSE Cir No. 09/2021 Appendix IX prominent link requirement) -->
+          @if (activeTenant()) {
+            <div style="background: #fffbeb; border-bottom: 1px solid #fef08a; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 700; color: #b45309;">
+              <span>⚠️ CBSE Appendix IX Compliance Desk Active</span>
+              <button (click)="selectPreviewPageBySlug('disclosures')" style="background: #fbbf24; border: 1px solid #f59e0b; color: #0f172a; padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem;">
+                📜 VIEW MANDATORY PUBLIC DISCLOSURE (CBSE)
+              </button>
+            </div>
+          }
+
+          <!-- Public Site Sections (Loop dynamically through sections of activePreviewPage) -->
+          @if (activePreviewPage() && activePreviewPage().sections && activePreviewPage().sections.length > 0) {
+            
+            @for (sec of activePreviewPage().sections; track sec.id) {
+              
+              @if (sec.type === 'HERO') {
+                <!-- HERO SECTION -->
+                <div [style.background]="'linear-gradient(135deg, ' + primaryColor() + ' 0%, ' + secondaryColor() + ' 100%)'" 
+                     style="padding: 4rem 2rem; text-align: center; color: white; transition: background 0.3s;">
+                  <h2 style="font-size: 2.25rem; font-weight: 800; margin-top: 0; margin-bottom: 1rem; text-shadow: 0 2px 4px rgba(0,0,0,0.15);">
+                    {{ parsedSectionConfig(sec.config).title || 'Outstanding Education for Future Leaders' }}
+                  </h2>
+                  <p style="font-size: 1.1rem; max-width: 600px; margin: 0 auto 2rem auto; opacity: 0.95; line-height: 1.6;">
+                    {{ parsedSectionConfig(sec.config).subtitle || 'Admissions are open for the academic year 2026-27.' }}
+                  </p>
+                  @if (activePreviewPage()?.slug === 'home' || activePreviewPage()?.slug === 'admissions') {
+                    <button (click)="selectPreviewPageBySlug('admissions')" [style.background-color]="accentColor()" style="border: 0; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 700; color: #0f172a; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.15); transition: background-color 0.3s;">
+                      Enroll / Register Now
+                    </button>
+                  }
+                </div>
+              }
+
+              @if (sec.type === 'CAROUSEL') {
+                <!-- DYNAMIC IMAGE SLIDER / CAROUSEL SECTION (Narayana-style visual slider) -->
+                <div style="position: relative; width: 100%; height: 320px; overflow: hidden; background: #1e293b;">
+                  
+                  @for (img of getCarouselImages(sec.config); track $index; let idx = $index) {
+                    <div [style.display]="activeHomeSlideIdx() === idx ? 'block' : 'none'" style="width: 100%; height: 100%; position: relative;">
+                      <img [src]="img.url" alt="Campus Carousel Slide" style="width: 100%; height: 100%; object-fit: cover;" />
+                      <div style="position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(15, 23, 42, 0.65); color: white; padding: 1rem 2rem; box-sizing: border-box; text-align: center;">
+                        <h4 style="margin: 0; font-size: 1.15rem; font-weight: 700;">{{ img.caption || 'Campus Highlights' }}</h4>
+                      </div>
+                    </div>
+                  }
+
+                  <!-- Controls -->
+                  <button (click)="prevHomeSlide(getCarouselImages(sec.config).length)" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.7); border: 0; width: 36px; height: 36px; border-radius: 50%; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.15); z-index: 10;">
+                    ◀
+                  </button>
+                  <button (click)="nextHomeSlide(getCarouselImages(sec.config).length)" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.7); border: 0; width: 36px; height: 36px; border-radius: 50%; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.15); z-index: 10;">
+                    ▶
+                  </button>
+
+                  <!-- Indicators -->
+                  <div style="position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; z-index: 10;">
+                    @for (img of getCarouselImages(sec.config); track $index; let idx = $index) {
+                      <span (click)="activeHomeSlideIdx.set(idx)" style="width: 8px; height: 8px; border-radius: 50%; cursor: pointer;" [style.background]="activeHomeSlideIdx() === idx ? accentColor() : 'rgba(255,255,255,0.5)'"></span>
+                    }
+                  </div>
+
+                </div>
+              }
+
+              @if (sec.type === 'FEATURES') {
+                <!-- FEATURES SECTION -->
+                <div style="padding: 3rem 2rem; background: #ffffff; text-align: center; border-bottom: 1px solid #e2e8f0;">
+                  <h3 [style.color]="primaryColor()" style="font-size: 1.5rem; font-weight: 700; margin-bottom: 2rem;">Our Core Focus & Facilities</h3>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1200px; margin: 0 auto;">
+                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; border: 1px solid #cbd5e1;">
+                      <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎓</div>
+                      <h4 style="font-size: 1.1rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">
+                        {{ parsedSectionConfig(sec.config).f1_title || 'World-Class Faculty' }}
+                      </h4>
+                      <p style="font-size: 0.85rem; color: #475569; margin: 0;">Our highly certified and experienced teachers guide students towards success.</p>
+                    </div>
+                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; border: 1px solid #cbd5e1;">
+                      <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏀</div>
+                      <h4 style="font-size: 1.1rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">
+                        {{ parsedSectionConfig(sec.config).f2_title || 'Interactive Labs & Sports Centers' }}
+                      </h4>
+                      <p style="font-size: 0.85rem; color: #475569; margin: 0;">Equipped with high-tech science, computer labs, and international sports fields.</p>
+                    </div>
+                  </div>
+                </div>
+              }
+
+              @if (sec.type === 'NOTICES') {
+                <!-- NOTICES SECTION -->
+                <div style="padding: 3rem 2rem; background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                  <div style="max-width: 1200px; margin: 0 auto;">
+                    <h3 [style.color]="primaryColor()" style="font-size: 1.4rem; font-weight: 700; margin-bottom: 1rem; border-left: 4px solid; padding-left: 0.5rem;" [style.border-color]="accentColor()">
+                      📢 {{ parsedSectionConfig(sec.config).title || 'School Announcements & Circulars' }}
+                    </h3>
+                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1.25rem;">
+                      <p style="font-size: 0.95rem; color: #334155; line-height: 1.6; margin: 0 0 1rem 0;">
+                        {{ parsedSectionConfig(sec.config).notice_body || 'Assessments and important timetables have been published.' }}
+                      </p>
+                      <span style="font-size: 0.8rem; color: #64748b; font-weight: 500;">Published: July 16, 2026</span>
+                    </div>
+                  </div>
+                </div>
+              }
+
+              @if (sec.type === 'DISCLOSURES') {
+                <!-- DISCLOSURES SECTION -->
+                <div style="padding: 3rem 2rem; background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                  <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+                    <h3 [style.color]="primaryColor()" style="font-size: 1.4rem; font-weight: 700; margin-bottom: 1rem;">
+                      {{ parsedSectionConfig(sec.config).title || 'Mandatory Regulatory Disclosures' }}
+                    </h3>
+                    <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem;">Access the statutory documents required by the board of education:</p>
+                    <a [style.color]="primaryColor()" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #f1f5f9; padding: 0.75rem 1.25rem; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 0.95rem; transition: color 0.3s; cursor: pointer;">
+                      📄 {{ parsedSectionConfig(sec.config).link1_text || 'Download Mandatory Affiliation File (PDF)' }}
+                    </a>
+                  </div>
+                </div>
+              }
+
+              @if (sec.type === 'VIDEO') {
+                <!-- VIDEO HIGHLIGHTS SECTION (Narayana-style embedded video tour) -->
+                <div style="padding: 3rem 2rem; background: #f8fafc; border-bottom: 1px solid #e2e8f0; text-align: center;">
+                  <div style="max-width: 1200px; margin: 0 auto;">
+                    <h3 [style.color]="primaryColor()" style="font-size: 1.5rem; font-weight: 800; margin-top: 0; margin-bottom: 1.5rem; letter-spacing: -0.01em;">
+                      🎥 School Video Highlights
+                    </h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                      @for (vid of getVideoList(sec.config); track $index) {
+                        <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column;">
+                          <!-- Secure Responsive Video Player Card -->
+                          <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; background: #000;">
+                            @if (vid.url.startsWith('data:video') || vid.url.startsWith('blob:') || !vid.url.includes('youtube.com') && !vid.url.includes('youtu.be') && !vid.url.includes('vimeo.com')) {
+                              <!-- Local uploaded video file -->
+                              <video [src]="vid.url" controls style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain;"></video>
+                            } @else {
+                              <!-- Embedded video player (YouTube/Vimeo) -->
+                              <iframe 
+                                [src]="getSafeUrl(vid.url)" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                allowfullscreen
+                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                              </iframe>
+                            }
+                          </div>
+                          <div style="padding: 1rem; text-align: left; border-top: 1px solid #cbd5e1;">
+                            <strong style="color: #0f172a; font-size: 0.95rem; line-height: 1.3; display: block;">{{ vid.title || 'School Video Tour' }}</strong>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+
+              @if (sec.type === 'INTRO') {
+                <!-- SCHOOL INTRODUCTION SECTION -->
+                <div style="padding: 4rem 2rem; background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                  <div style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem; align-items: center;">
+                    <div style="text-align: left;">
+                      <h3 [style.color]="primaryColor()" style="font-size: 1.8rem; font-weight: 800; margin-top: 0; margin-bottom: 1.5rem;">
+                        {{ parsedSectionConfig(sec.config).title || 'Welcome to Our Campus' }}
+                      </h3>
+                      <p style="font-size: 1rem; color: #334155; line-height: 1.7; margin-bottom: 1.5rem;">
+                        {{ parsedSectionConfig(sec.config).body || 'SaaS Pioneer Academy has been leading holistic childhood development systems. Combining certified mentors, top board curricula, and comprehensive development systems, we provide an unparalleled environment for prospective achievers to thrive.' }}
+                      </p>
+                      <button (click)="selectPreviewPageBySlug('courses')" [style.background-color]="primaryColor()" style="border: 0; padding: 0.65rem 1.25rem; border-radius: 4px; font-weight: 700; color: white; cursor: pointer;">
+                        Explore Our Philosophy →
+                      </button>
+                    </div>
+                    <div style="position: relative;">
+                      <div [style.border-color]="accentColor()" style="position: absolute; top: -10px; left: -10px; width: 100%; height: 100%; border: 3px solid; border-radius: 8px; z-index: 1;"></div>
+                      <img [src]="parsedSectionConfig(sec.config).imgUrl || 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=600&q=80'" alt="Campus Welcome" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: block; position: relative; z-index: 2;" />
+                    </div>
+                  </div>
+                </div>
+              }
+
+              @if (sec.type === 'FOUNDERS') {
+                <!-- FOUNDERS SECTION -->
+                <div style="padding: 4rem 2rem; background: #f8fafc; border-bottom: 1px solid #e2e8f0; text-align: center;">
+                  <div style="max-width: 1200px; margin: 0 auto;">
+                    <h3 [style.color]="primaryColor()" style="font-size: 1.8rem; font-weight: 800; margin-top: 0; margin-bottom: 2.5rem;">
+                      {{ parsedSectionConfig(sec.config).title || 'Meet Our Visionary Leaders' }}
+                    </h3>
+                    <div style="display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap;">
+                      @for (f of getFoundersList(sec.config); track $index) {
+                        <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 2rem; width: 320px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; align-items: center; text-align: center;">
+                          <img [src]="f.photoUrl || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&q=80'" alt="Founder Portrait" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; margin-bottom: 1.25rem; border: 3px solid #cbd5e1;" [style.border-color]="accentColor()" />
+                          <h4 style="margin: 0 0 0.25rem 0; font-size: 1.15rem; font-weight: 700; color: #0f172a;">{{ f.name }}</h4>
+                          <span [style.color]="primaryColor()" style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 1rem;">{{ f.role }}</span>
+                          <p style="font-size: 0.85rem; color: #475569; line-height: 1.6; margin: 0;">"{{ f.bio }}"</p>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+
+              @if (sec.type === 'FACILITIES') {
+                <!-- CAMPUS FACILITIES GRID SECTION -->
+                <div style="padding: 4rem 2rem; background: #ffffff; border-bottom: 1px solid #e2e8f0; text-align: center;">
+                  <div style="max-width: 1200px; margin: 0 auto;">
+                    <h3 [style.color]="primaryColor()" style="font-size: 1.8rem; font-weight: 800; margin-top: 0; margin-bottom: 1rem;">
+                      {{ parsedSectionConfig(sec.config).title || 'Our Modern Infrastructure' }}
+                    </h3>
+                    <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                      We offer premium class hardware, high-tech academic laboratories, and certified sports setups to support all learners.
+                    </p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+                      @for (fac of getFacilitiesList(sec.config); track $index) {
+                        <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; text-align: left;">
+                          <div style="width: 100%; height: 200px; background: #1e293b;">
+                            <img [src]="fac.photoUrl" alt="Facility" style="width: 100%; height: 100%; object-fit: cover;" />
+                          </div>
+                          <div style="padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1;">
+                            <div>
+                              <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem; font-weight: 700; color: #0f172a;">{{ fac.title }}</h4>
+                              <p style="font-size: 0.85rem; color: #475569; line-height: 1.5; margin: 0;">{{ fac.description }}</p>
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+
+              @if (sec.type === 'PHOTO_GRID') {
+                <!-- PHOTOS GRID GALLERY SECTION -->
+                <div style="padding: 4rem 2rem; background: #f8fafc; border-bottom: 1px solid #e2e8f0; text-align: center;">
+                  <div style="max-width: 1200px; margin: 0 auto;">
+                    <h3 [style.color]="primaryColor()" style="font-size: 1.8rem; font-weight: 800; margin-top: 0; margin-bottom: 1rem;">
+                      {{ parsedSectionConfig(sec.config).title || 'Campus Life in Pictures' }}
+                    </h3>
+                    
+                    <!-- Categorized Filter Selector -->
+                    <div style="display: flex; justify-content: center; gap: 0.75rem; margin-top: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                      <button (click)="activeGalleryFilter.set('ALL')" style="border: 1px solid #cbd5e1; padding: 0.4rem 1rem; border-radius: 9999px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;"
+                        [style.background]="activeGalleryFilter() === 'ALL' ? primaryColor() : 'white'"
+                        [style.color]="activeGalleryFilter() === 'ALL' ? 'white' : '#475569'"
+                        [style.border-color]="activeGalleryFilter() === 'ALL' ? primaryColor() : '#cbd5e1'">
+                        Show All
+                      </button>
+                      <button (click)="activeGalleryFilter.set('ACADEMICS')" style="border: 1px solid #cbd5e1; padding: 0.4rem 1rem; border-radius: 9999px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;"
+                        [style.background]="activeGalleryFilter() === 'ACADEMICS' ? primaryColor() : 'white'"
+                        [style.color]="activeGalleryFilter() === 'ACADEMICS' ? 'white' : '#475569'"
+                        [style.border-color]="activeGalleryFilter() === 'ACADEMICS' ? primaryColor() : '#cbd5e1'">
+                        Academics
+                      </button>
+                      <button (click)="activeGalleryFilter.set('SPORTS')" style="border: 1px solid #cbd5e1; padding: 0.4rem 1rem; border-radius: 9999px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;"
+                        [style.background]="activeGalleryFilter() === 'SPORTS' ? primaryColor() : 'white'"
+                        [style.color]="activeGalleryFilter() === 'SPORTS' ? 'white' : '#475569'"
+                        [style.border-color]="activeGalleryFilter() === 'SPORTS' ? primaryColor() : '#cbd5e1'">
+                        Sports
+                      </button>
+                      <button (click)="activeGalleryFilter.set('CULTURAL')" style="border: 1px solid #cbd5e1; padding: 0.4rem 1rem; border-radius: 9999px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;"
+                        [style.background]="activeGalleryFilter() === 'CULTURAL' ? primaryColor() : 'white'"
+                        [style.color]="activeGalleryFilter() === 'CULTURAL' ? 'white' : '#475569'"
+                        [style.border-color]="activeGalleryFilter() === 'CULTURAL' ? primaryColor() : '#cbd5e1'">
+                        Cultural / Arts
+                      </button>
+                    </div>
+
+                    <!-- Beautiful Masonry Grid -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;">
+                      @for (p of getPhotoGridList(sec.config); track $index) {
+                        @if (activeGalleryFilter() === 'ALL' || p.category === activeGalleryFilter()) {
+                          <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column;" class="gallery-card">
+                            <div style="width: 100%; height: 180px; background: #e2e8f0; overflow: hidden; position: relative;">
+                              <img [src]="p.url" alt="Grid Image" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" />
+                            </div>
+                            <div style="padding: 0.75rem 1rem; text-align: left; border-top: 1px solid #cbd5e1; display: flex; justify-content: space-between; align-items: center;">
+                              <span style="font-size: 0.8rem; color: #0f172a; font-weight: 700;">{{ p.caption }}</span>
+                              <span style="font-size: 0.65rem; padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: 800; background: #f1f5f9; color: #475569;">{{ p.category }}</span>
+                            </div>
+                          </div>
+                        }
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+
+            }
+
+          }
+
+          <!-- Empty Preview Placeholder - Only show if it has no sections AND is not a special directory page -->
+          @if (activePreviewPage() && (!activePreviewPage().sections || activePreviewPage().sections.length === 0) && 
+               activePreviewPage().slug !== 'courses' && 
+               activePreviewPage().slug !== 'faculty' && 
+               activePreviewPage().slug !== 'fees' && 
+               activePreviewPage().slug !== 'admissions' && 
+               activePreviewPage().slug !== 'news' && 
+               activePreviewPage().slug !== 'grades' && 
+               activePreviewPage().slug !== 'gallery' && 
+               activePreviewPage().slug !== 'careers' && 
+               activePreviewPage().slug !== 'disclosures' && 
+               activePreviewPage().slug !== 'tc' && 
+               activePreviewPage().slug !== 'contact') {
+            <div style="padding: 4rem 2rem; text-align: center; color: #64748b; background: #f8fafc; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 250px;">
+              <span style="font-size: 2.5rem; margin-bottom: 1rem;">🏗️</span>
+              <h3 style="font-size: 1.25rem; font-weight: 700; color: #334155; margin-top: 0; margin-bottom: 0.5rem;">No sections configured on this page yet</h3>
+              <p style="max-width: 450px; font-size: 0.9rem; line-height: 1.5; margin: 0;">
+                Use the **CMS School Page Builder** panel above to add sections (Hero, Features, notices, etc.) and save them. They will instantly render here in real-time!
+              </p>
+            </div>
+          }
+
+          <!-- Dynamic Academics Program Offerings Showcase (Renders on 'courses' page, mimicking NarayanaGroup design) -->
+          @if (activeTenant() && activePreviewPage() && activePreviewPage().slug === 'courses') {
+            <div style="padding: 3.5rem 2rem; background: #ffffff; border-top: 1px solid #e2e8f0; flex: 1;">
+              <div style="text-align: center; max-width: 1200px; margin: 0 auto 3rem auto;">
+                <span [style.color]="accentColor()" style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.5rem;">Holistic Educational Network</span>
+                <h3 [style.color]="primaryColor()" style="font-size: 2rem; font-weight: 800; margin: 0 0 0.5rem 0; letter-spacing: -0.025em; line-height: 1.2;">Comprehensive Programs & Integrated Coaching</h3>
+                <p style="color: #64748b; font-size: 1rem; margin: 0;">Inspiring young minds, building concept clarity, and empowering competitive success from Kindergarten to Grade 12.</p>
+              </div>
+
+              <!-- Narayana-Style Academic Channels Grid -->
+              @if (publicPrograms().length > 0) {
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto 4rem auto;">
+                  @for (prog of publicPrograms(); track prog.id) {
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; hover: box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: all 0.2s;">
+                      <div>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+                          <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="font-size: 1.5rem;">
+                              @if (prog.type === 'SCHOOL') { 🎒 }
+                              @else if (prog.type === 'COLLEGE') { 🏫 }
+                              @else if (prog.type === 'COACHING') { 🏆 }
+                              @else { 🚀 }
+                            </span>
+                            <strong style="font-size: 1.15rem; color: #0f172a;">{{ prog.name }}</strong>
+                          </div>
+                          <span [style.background]="accentColor()" style="color: #0f172a; font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 9999px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">{{ prog.type }}</span>
+                        </div>
+                        <p style="color: #475569; font-size: 0.85rem; line-height: 1.5; margin: 0 0 1rem 0;">{{ prog.description }}</p>
+                      </div>
+                      @if (prog.details) {
+                        <div style="font-size: 0.8rem; color: #64748b; border-top: 1px dashed #e2e8f0; padding-top: 0.75rem; display: flex; flex-direction: column; gap: 0.25rem;">
+                          <strong style="color: #1e3a8a; display: block;">Core Deliverables:</strong>
+                          <span>• {{ prog.details }}</span>
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+
+              <!-- Syllabus Course Catalog (Underneath Programs) -->
+              <div style="text-align: center; border-top: 1px solid #e2e8f0; padding-top: 3.5rem; max-width: 1200px; margin: 0 auto;">
+                <h4 [style.color]="primaryColor()" style="font-size: 1.5rem; font-weight: 800; margin-bottom: 2rem;">Individual Course Syllabus Directories</h4>
+                
+                @if (publicCourses().length === 0) {
+                  <p style="color: #64748b; font-style: italic;">No specific courses registered. Add some in the Admin panel above!</p>
+                } @else {
+                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; text-align: left;">
+                    @for (c of publicCourses(); track c.id) {
+                      <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; background: #ffffff;">
+                        <div>
+                          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                            <strong style="font-size: 1.1rem; color: #0f172a;">{{ c.name }}</strong>
+                            <span [style.background]="accentColor()" style="color: #0f172a; font-size: 0.75rem; padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: 700;">{{ c.gradeLevel }}</span>
+                          </div>
+                          <p style="color: #475569; font-size: 0.85rem; line-height: 1.5; margin: 0 0 1rem 0;">{{ c.description }}</p>
+                        </div>
+                        @if (c.syllabusSummary) {
+                          <div style="font-size: 0.8rem; color: #1e3a8a; border-top: 1px dashed #cbd5e1; padding-top: 0.5rem; font-weight: 600;">Syllabus Highlights: <span style="color: #475569; font-weight: 400;">{{ c.syllabusSummary }}</span></div>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Dynamic Faculty Directory Showcase (Renders on 'faculty' page) -->
+          @if (activeTenant() && activePreviewPage() && activePreviewPage().slug === 'faculty') {
+            <div style="padding: 3rem 2rem; background: #f8fafc; border-top: 1px solid #cbd5e1; flex: 1;">
+              <h3 [style.color]="primaryColor()" style="font-size: 1.5rem; font-weight: 800; text-align: center; margin-top: 0; margin-bottom: 2rem;">Meet Our Academic Leaders</h3>
+              
+              @if (publicFaculty().length === 0) {
+                <p style="text-align: center; color: #64748b; font-style: italic;">No faculty members registered in the showcase yet. Add them in the Admin panel above!</p>
+              } @else {
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto;">
+                  @for (f of publicFaculty(); track f.id) {
+                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.25rem; display: flex; gap: 1rem; align-items: flex-start; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                      <div [style.background-color]="primaryColor()" style="width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white;">
+                        👩‍🏫
+                      </div>
+                      <div>
+                        <strong style="font-size: 1.1rem; color: #0f172a; display: block;">{{ f.name }}</strong>
+                        <span [style.color]="accentColor()" style="font-weight: 700; font-size: 0.8rem; display: block; text-transform: uppercase; margin-bottom: 0.25rem;">{{ f.designation }}</span>
+                        <span style="font-size: 0.75rem; color: #64748b; display: block; font-style: italic; margin-bottom: 0.5rem;">Qualifications: {{ f.qualification }}</span>
+                        <p style="color: #475569; font-size: 0.8rem; margin: 0; line-height: 1.4;">{{ f.bio }}</p>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Dynamic School News Circulars Page (Renders on 'news' page) -->
+          @if (activeTenant() && activePreviewPage() && activePreviewPage().slug === 'news') {
+            <div style="padding: 3rem 2rem; background: white; border-top: 1px solid #cbd5e1; flex: 1;">
+              <h3 [style.color]="primaryColor()" style="font-size: 1.5rem; font-weight: 800; text-align: center; margin-top: 0; margin-bottom: 2rem;">Announcements & Official Circulars</h3>
+              
+              @if (publicNews().length === 0) {
+                <p style="text-align: center; color: #64748b; font-style: italic;">No bulletins or notifications published in this school's feed. Add some in the Admin panel above!</p>
+              } @else {
+                <div style="display: flex; flex-direction: column; gap: 1.25rem; max-width: 1200px; margin: 0 auto;">
+                  @for (n of publicNews(); track n.id) {
+                    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.02); background: #f8fafc;">
+                      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 0.75rem;">
+                        <strong style="font-size: 1.15rem; color: #0f172a;">{{ n.title }}</strong>
+                        <span [style.background]="accentColor()" style="color: #0f172a; font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 9999px; font-weight: 700;">Circular Feed</span>
+                      </div>
+                      <p style="color: #475569; font-size: 0.95rem; line-height: 1.6; margin: 0; white-space: pre-line;">{{ n.content }}</p>
+                      <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #64748b; margin-top: 1rem; border-top: 1px solid #e2e8f0; padding-top: 0.5rem;">
+                        <span>Issued by: <strong>{{ n.author }}</strong></span>
+                        <span>Published: {{ n.publishedDate | date:'medium' }}</span>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Dynamic School Events Calendar Page (Renders on 'events' page) -->
+          @if (activeTenant() && activePreviewPage() && activePreviewPage().slug === 'events') {
+            <div style="padding: 3rem 2rem; background: #f8fafc; border-top: 1px solid #cbd5e1; flex: 1;">
+              <h3 [style.color]="primaryColor()" style="font-size: 1.5rem; font-weight: 800; text-align: center; margin-top: 0; margin-bottom: 2rem;">Upcoming Academic Events</h3>
+              
+              @if (publicEvents().length === 0) {
+                <p style="text-align: center; color: #64748b; font-style: italic;">No upcoming school events scheduled in the calendar yet. Schedule them in the Admin panel above!</p>
+              } @else {
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto;">
+                  @for (ev of publicEvents(); track ev.id) {
+                    <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.25rem; display: flex; gap: 1rem; align-items: flex-start; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                      <div [style.background-color]="primaryColor()" style="color: white; padding: 0.5rem; border-radius: 6px; text-align: center; min-width: 60px; box-sizing: border-box;">
+                        <span style="display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">{{ ev.eventDate | date:'MMM' }}</span>
+                        <span style="display: block; font-size: 1.25rem; font-weight: 800;">{{ ev.eventDate | date:'d' }}</span>
+                      </div>
+                      <div>
+                        <strong style="font-size: 1.1rem; color: #0f172a; display: block;">{{ ev.title }}</strong>
+                        <span style="font-size: 0.8rem; color: #64748b; display: block; margin-bottom: 0.5rem;">📍 Location: {{ ev.location }}</span>
+                        <p style="color: #475569; font-size: 0.85rem; margin: 0; line-height: 1.4;">{{ ev.description }}</p>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Integrated Interactive Student Achievers Testimonials Carousel (Renders dynamically on 'home' page) -->
+          @if (activeTenant() && activePreviewPage() && activePreviewPage().slug === 'home') {
+            <app-achievers-carousel
+              [tenantId]="activeTenant().id"
+              [primaryColor]="primaryColor()"
+              [accentColor]="accentColor()">
+            </app-achievers-carousel>
+          }
+
+          <!-- Integrated Interactive Student Enrichment Activities Showcase (Renders dynamically on 'home' page, mimicking NarayanaGroup design) -->
+          @if (activeTenant() && activePreviewPage() && activePreviewPage().slug === 'home') {
+            <app-campus-enrichment
+              [tenantId]="activeTenant().id"
+              [primaryColor]="primaryColor()"
+              [accentColor]="accentColor()">
+            </app-campus-enrichment>
+          }
+
+          <!-- Integrated Student Fee Payment Portal (Renders dynamically on 'fees' page) -->
+          @if (activeTenant() && activePreviewPage() && activePreviewPage().slug === 'fees') {
+            <app-payment-portal
+              [tenantId]="activeTenant().id"
+              [primaryColor]="primaryColor()"
+              [accentColor]="accentColor()"
+              (paymentCompleted)="onBillingModified()">
+            </app-payment-portal>
+          }
+
+          <!-- Integrated Public Gradebook Report Card Lookup Portal (Renders dynamically on 'grades' page) -->
+          @if (activeTenant() && activePreviewPage() && activePreviewPage().slug === 'grades') {
+            <app-report-card-lookup
+              [tenantId]="activeTenant().id"
+              [primaryColor]="primaryColor()"
+              [accentColor]="accentColor()"
+              [prefilledSearchName]="prefilledSearchName()">
+            </app-report-card-lookup>
+          }
+
+          <!-- Integrated Admissions Lead Capture Form (Renders dynamically on 'admissions' page) -->
+          @if (activeTenant() && activePreviewPage() && activePreviewPage().slug === 'admissions') {
+            <app-admissions-form
+              [tenantId]="activeTenant().id"
+              [primaryColor]="primaryColor()"
+              [accentColor]="accentColor()"
+              (inquirySubmitted)="onInquirySubmitted()">
+            </app-admissions-form>
+          }
+
+          <!-- Integrated Public Contact Desk Form (Renders dynamically on 'contact' page) -->
+          @if (activeTenant() && activePreviewPage() && activePreviewPage().slug === 'contact') {
+            <app-contact-form
+              [tenantId]="activeTenant().id"
+              [primaryColor]="primaryColor()"
+              (messageSubmitted)="onSupportSubmitted()">
+            </app-contact-form>
+
+            @if (googleMapUrl()) {
+              <!-- Embedded Secure Google Map Container -->
+              <div style="padding: 0 2rem 3rem 2rem; background: white; text-align: center;">
+                <div style="max-width: 900px; margin: 0 auto; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); background: #f8fafc;">
+                  <iframe [src]="getSafeUrl(googleMapUrl())" width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+              </div>
+            }
+          }
+
+          <!-- Integrated Public School Branches Directory (Renders dynamically on 'contact' page, mimicking NarayanaGroup design) -->
+          @if (activeTenant() && activePreviewPage() && activePreviewPage().slug === 'contact') {
+            <app-school-branches
+              [tenantId]="activeTenant().id"
+              [primaryColor]="primaryColor()"
+              [accentColor]="accentColor()">
+            </app-school-branches>
+          }
+
+          <!-- Integrated Public Campus life filterable media Gallery (Renders dynamically on 'gallery' page) -->
+          @if (activeTenant() && activePreviewPage() && activePreviewPage().slug === 'gallery') {
+            <app-campus-gallery
+              [tenantId]="activeTenant().id"
+              [primaryColor]="primaryColor()"
+              [accentColor]="accentColor()">
+            </app-campus-gallery>
+          }
+
+          <!-- Integrated Public Careers Vacancies Portal (Renders dynamically on 'careers' page) -->
+          @if (activeTenant() && activePreviewPage() && activePreviewPage().slug === 'careers') {
+            <app-careers-portal
+              [tenantId]="activeTenant().id"
+              [primaryColor]="primaryColor()"
+              [accentColor]="accentColor()"
+              (applicationSubmitted)="onCareersModified()">
+            </app-careers-portal>
+          }
+
+          <!-- Integrated Public CBSE Mandatory Disclosures (Renders dynamically on 'disclosures' page, complying with Cir No. 09/2021) -->
+          @if (activeTenant() && activePreviewPage() && activePreviewPage().slug === 'disclosures') {
+            <app-public-disclosures
+              [tenantId]="activeTenant().id"
+              [tenantName]="activeTenant().name"
+              [primaryColor]="primaryColor()"
+              [accentColor]="accentColor()">
+            </app-public-disclosures>
+          }
+
+          <!-- Integrated Public Transfer Certificate Verification Portal (Renders dynamically on 'tc' page) -->
+          @if (activeTenant() && activePreviewPage() && activePreviewPage().slug === 'tc') {
+            <app-tc-lookup
+              [tenantId]="activeTenant().id"
+              [primaryColor]="primaryColor()"
+              [accentColor]="accentColor()">
+            </app-tc-lookup>
+          }
+
+          </div> <!-- End of Website Page Body wrapper -->
+
+          <!-- Brand Themed Footer (Branded with primary color) -->
+          <footer [style.background-color]="primaryColor()" style="margin-top: auto; background-color: #1e3a8a; padding: 2rem; color: white; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; transition: background-color 0.3s; font-size: 0.9rem; opacity: 0.95;">
+            <div>
+              <strong style="display: block; font-size: 1rem; margin-bottom: 0.25rem;">
+                {{ activeTenant().name }}
+              </strong>
+              <span>© 2026 Educational Trust. All rights reserved.</span>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; align-items: center;">
+              @if (facebookUrl()) {
+                <a [href]="facebookUrl()" target="_blank" style="color: white; text-decoration: none; font-size: 1.5rem; transition: transform 0.2s; display: inline-block;" onmouseenter="this.style.transform='scale(1.2)'" onmouseleave="this.style.transform='scale(1)'" title="Facebook">📘</a>
+              }
+              @if (twitterUrl()) {
+                <a [href]="twitterUrl()" target="_blank" style="color: white; text-decoration: none; font-size: 1.5rem; transition: transform 0.2s; display: inline-block;" onmouseenter="this.style.transform='scale(1.2)'" onmouseleave="this.style.transform='scale(1)'" title="Twitter">🐦</a>
+              }
+              @if (instagramUrl()) {
+                <a [href]="instagramUrl()" target="_blank" style="color: white; text-decoration: none; font-size: 1.5rem; transition: transform 0.2s; display: inline-block;" onmouseenter="this.style.transform='scale(1.2)'" onmouseleave="this.style.transform='scale(1)'" title="Instagram">📸</a>
+              }
+              @if (youtubeUrl()) {
+                <a [href]="youtubeUrl()" target="_blank" style="color: white; text-decoration: none; font-size: 1.5rem; transition: transform 0.2s; display: inline-block;" onmouseenter="this.style.transform='scale(1.2)'" onmouseleave="this.style.transform='scale(1)'" title="YouTube">🎥</a>
+              }
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.85rem; text-align: right;">
+              <span>✉️ {{ contactEmail() }}</span>
+              <span>📞 {{ contactPhone() }}</span>
+            </div>
+          </footer>
+
+        </div>
+      </div>
+    </section>
+  }
+</main>
+}
+
+<router-outlet />

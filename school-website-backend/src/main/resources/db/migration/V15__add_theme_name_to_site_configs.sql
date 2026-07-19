@@ -1,0 +1,1 @@
+ALTER TABLE site_configs ADD theme_name VARCHAR(100) DEFAULT 'DEFAULT';
