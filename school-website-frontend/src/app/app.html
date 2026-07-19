@@ -1,7 +1,7 @@
 @if (!currentUser()) {
   <app-login (loginSuccess)="onLoginSuccess($event)"></app-login>
 } @else {
-  <main style="max-width: 100%; width: 100%; padding: 1.5rem 3rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; box-sizing: border-box; margin: 0 auto;">
+  <main style="max-width: 1300px; width: 100%; padding: 1.5rem 1rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; box-sizing: border-box; margin: 0 auto;">
     
     <!-- SaaS Platform Master Header -->
     @if (!activeTenant()) {
@@ -31,7 +31,7 @@
     </header>
 
     <!-- Core Grid: Onboarding Terminal & Features Grid -->
-    <section style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; margin-bottom: 3.5rem; align-items: start;">
+    <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-bottom: 3.5rem; align-items: start;">
       
       <!-- Instant Onboarding Terminal Card -->
       <app-tenant-onboarding (tenantOnboarded)="onTenantOnboarded($event)"></app-tenant-onboarding>
@@ -89,7 +89,7 @@
           <span style="font-size: 0.9rem;">Fill out the "Onboard New School" form above to launch the first multi-tenant portal!</span>
         </div>
       } @else {
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1.5rem;">
           @for (school of tenantsList(); track school.id) {
             <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 6px rgba(0,0,0,0.02); hover: box-shadow: 0 10px 15px rgba(0,0,0,0.05); transition: all 0.2s;">
               <div>
@@ -165,8 +165,8 @@
       <p style="color: #475569; font-size: 1.1rem; margin: 0;">Stage 10 Core: Interactive Role-Based Access Control (RBAC) Security</p>
     </header>
 
-    <!-- Health & Connection Status -->
-    <section style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+     <!-- Health & Connection Status -->
+     <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
       <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between;">
         <div>
           <h3 style="font-size: 1rem; color: #334155; margin: 0 0 0.25rem 0; font-weight: 600;">SaaS Frontend Client</h3>
@@ -199,7 +199,7 @@
     </section>
 
     <!-- Dynamic Security Role Switcher Bar -->
-    <div style="display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 0.75rem 1.25rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #1e293b; color: white;">
+    <div style="display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 0.75rem 1.25rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #1e293b; color: white; flex-wrap: wrap; gap: 1rem;">
       <div style="display: flex; align-items: center; gap: 0.75rem;">
         <span style="font-size: 1.25rem;">🛡️</span>
         <div>
@@ -210,7 +210,7 @@
         </div>
       </div>
       <!-- Toggle Action Buttons -->
-      <div style="display: flex; gap: 0.5rem; font-size: 0.85rem;">
+      <div style="display: flex; gap: 0.5rem; font-size: 0.85rem; flex-wrap: wrap;">
         <button (click)="activeRole.set('SCHOOL_ADMIN')" 
           [style.background]="activeRole() === 'SCHOOL_ADMIN' ? '#2563eb' : '#1e293b'"
           [style.border-color]="activeRole() === 'SCHOOL_ADMIN' ? '#3b82f6' : '#334155'"
@@ -227,7 +227,7 @@
     </div>
 
     <!-- Main Workspace Navigation Controls -->
-    <div style="display: flex; justify-content: space-between; align-items: center; background: #f1f5f9; padding: 1rem; border-radius: 6px; margin-bottom: 2rem; border: 1px solid #e2e8f0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; background: #f1f5f9; padding: 1rem; border-radius: 6px; margin-bottom: 2rem; border: 1px solid #e2e8f0; flex-wrap: wrap; gap: 1rem;">
       <span style="font-size: 1rem; color: #334155;">Active School Terminal: <strong style="color: #0f172a;">{{ activeTenant().name }}</strong></span>
       <div style="display: flex; gap: 0.5rem;">
         @if (currentUser()?.role === 'SUPER_ADMIN') {
@@ -412,7 +412,7 @@
           }
 
           <!-- School Branded Header Navigation -->
-          <nav [style.border-top-color]="primaryColor()" style="border-top: 4px solid #1e3a8a; padding: 1.25rem 2.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03); transition: border-color 0.3s; background: #ffffff;">
+          <nav [style.border-top-color]="primaryColor()" style="border-top: 4px solid #1e3a8a; padding: 1.25rem 1rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03); transition: border-color 0.3s; background: #ffffff; flex-wrap: wrap; gap: 1rem;">
             <div class="school-brand" (click)="selectPreviewPageBySlug('home')" style="cursor: pointer;">
               <div class="logo-container" [style.background-color]="logoUrl().startsWith('data:') ? 'transparent' : primaryColor()">
                 @if (logoUrl().startsWith('data:') || logoUrl().startsWith('http') || logoUrl().startsWith('/')) {
@@ -427,7 +427,7 @@
             </div>
 
             <!-- Dynamic Page Navigation Tabs -->
-            <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; justify-content: center;">
               @if (schoolPages().length === 0) {
                 <span class="nav-link active">Home</span>
                 <span class="nav-link">About</span>
@@ -624,7 +624,7 @@
               @if (sec.type === 'INTRO') {
                 <!-- SCHOOL INTRODUCTION SECTION -->
                 <div style="padding: 4rem 2rem; background: #ffffff; border-bottom: 1px solid #e2e8f0;">
-                  <div style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem; align-items: center;">
+                  <div style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 3rem; align-items: center;">
                     <div style="text-align: left;">
                       <h3 [style.color]="primaryColor()" style="font-size: 1.8rem; font-weight: 800; margin-top: 0; margin-bottom: 1.5rem;">
                         {{ parsedSectionConfig(sec.config).title || 'Welcome to Our Campus' }}
