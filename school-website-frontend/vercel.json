@@ -1,5 +1,5 @@
 {
-  "outputDirectory": "dist/school-website-frontend",
+  "outputDirectory": "dist/school-website-frontend/browser",
   "routes": [
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
