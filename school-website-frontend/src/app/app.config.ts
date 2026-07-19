@@ -15,7 +15,7 @@ export const appConfig: ApplicationConfig = {
         (req, next) => {
           const isLocalhost = typeof window === 'undefined' || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
           if (!isLocalhost && req.url.startsWith('http://localhost:8080')) {
-            const liveBackendUrl = 'https://school-backend.onrender.com'; // Change this to your live Render backend URL
+            const liveBackendUrl = 'https://school-backend-b6yr.onrender.com';
             const secureUrl = req.url.replace('http://localhost:8080', liveBackendUrl);
             const clonedReq = req.clone({ url: secureUrl });
             return next(clonedReq);
