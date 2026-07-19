@@ -269,6 +269,24 @@ export class App implements OnInit {
     this.http.get<any[]>(`http://localhost:8080/api/sites/${tenantId}/pages`)
       .subscribe({
         next: (data) => {
+          const pageSortOrder: Record<string, number> = {
+            'home': 1,
+            'courses': 2,
+            'admissions': 3,
+            'faculty': 4,
+            'fees': 5,
+            'careers': 6,
+            'news': 7,
+            'gallery': 8,
+            'disclosures': 9,
+            'tc': 10
+          };
+          data.sort((a, b) => {
+            const orderA = pageSortOrder[a.slug] || 99;
+            const orderB = pageSortOrder[b.slug] || 99;
+            return orderA - orderB;
+          });
+
           this.schoolPages.set(data);
           
           // Select first page by default if none selected or if active preview no longer exists

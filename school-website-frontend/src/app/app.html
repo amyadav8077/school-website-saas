@@ -413,7 +413,7 @@
 
           <!-- School Branded Header Navigation -->
           <nav [style.border-top-color]="primaryColor()" style="border-top: 4px solid #1e3a8a; padding: 1.25rem 2.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03); transition: border-color 0.3s; background: #ffffff;">
-            <div class="school-brand">
+            <div class="school-brand" (click)="selectPreviewPageBySlug('home')" style="cursor: pointer;">
               <div class="logo-container" [style.background-color]="logoUrl().startsWith('data:') ? 'transparent' : primaryColor()">
                 @if (logoUrl().startsWith('data:') || logoUrl().startsWith('http') || logoUrl().startsWith('/')) {
                   <img [src]="logoUrl()" style="width: 100%; height: 100%; object-fit: cover;" alt="logo" />
