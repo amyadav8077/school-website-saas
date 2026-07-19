@@ -35,7 +35,8 @@
             ],
             "security": {
               "allowedHosts": []
-            }
+            },
+            "prerender": false
           },
           "configurations": {
             "production": {
