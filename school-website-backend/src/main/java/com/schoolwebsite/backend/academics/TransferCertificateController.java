@@ -28,16 +28,14 @@ public class TransferCertificateController {
             @RequestParam(required = false) String fatherName,
             @RequestParam(required = false) String aadharNo) {
         
-        if (classLevel != null && !classLevel.trim().isEmpty() && section != null && !section.trim().isEmpty()) {
-            if (studentName != null && !studentName.trim().isEmpty()) {
-                List<TransferCertificate> res = repository.findByTenantIdAndClassLevelAndSectionAndStudentNameContainingIgnoreCaseOrderByIssueDateDesc(
-                        tenantId, classLevel.trim(), section.trim(), studentName.trim());
-                return ResponseEntity.ok(res);
-            } else {
-                List<TransferCertificate> res = repository.findByTenantIdAndClassLevelAndSectionOrderByIssueDateDesc(
-                        tenantId, classLevel.trim(), section.trim());
-                return ResponseEntity.ok(res);
-            }
+        if (studentName != null && !studentName.trim().isEmpty()) {
+            List<TransferCertificate> res = repository.findByTenantIdAndStudentNameContainingIgnoreCaseOrderByIssueDateDesc(
+                    tenantId, studentName.trim());
+            return ResponseEntity.ok(res);
+        } else if (classLevel != null && !classLevel.trim().isEmpty() && section != null && !section.trim().isEmpty()) {
+            List<TransferCertificate> res = repository.findByTenantIdAndClassLevelAndSectionOrderByIssueDateDesc(
+                    tenantId, classLevel.trim(), section.trim());
+            return ResponseEntity.ok(res);
         } else if (admissionNo != null && !admissionNo.trim().isEmpty()) {
             if (fatherName != null && !fatherName.trim().isEmpty() && aadharNo != null && !aadharNo.trim().isEmpty()) {
                 // Classic CBSE security-compliant verification

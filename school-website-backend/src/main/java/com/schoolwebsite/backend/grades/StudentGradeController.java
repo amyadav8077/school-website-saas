@@ -24,16 +24,11 @@ public class StudentGradeController {
             @RequestParam(required = false) String classLevel,
             @RequestParam(required = false) String section) {
         List<StudentGrade> list;
-        if (classLevel != null && !classLevel.trim().isEmpty() && section != null && !section.trim().isEmpty()) {
-            if (studentName != null && !studentName.trim().isEmpty()) {
-                list = repository.findByTenantIdAndClassLevelAndSectionAndStudentNameContainingIgnoreCaseOrderByCreatedAtDesc(
-                        tenantId, classLevel.trim(), section.trim(), studentName.trim());
-            } else {
-                list = repository.findByTenantIdAndClassLevelAndSectionOrderByCreatedAtDesc(
-                        tenantId, classLevel.trim(), section.trim());
-            }
-        } else if (studentName != null && !studentName.trim().isEmpty()) {
+        if (studentName != null && !studentName.trim().isEmpty()) {
             list = repository.findByTenantIdAndStudentNameContainingIgnoreCaseOrderByCreatedAtDesc(tenantId, studentName.trim());
+        } else if (classLevel != null && !classLevel.trim().isEmpty() && section != null && !section.trim().isEmpty()) {
+            list = repository.findByTenantIdAndClassLevelAndSectionOrderByCreatedAtDesc(
+                    tenantId, classLevel.trim(), section.trim());
         } else {
             list = repository.findByTenantIdOrderByCreatedAtDesc(tenantId);
         }

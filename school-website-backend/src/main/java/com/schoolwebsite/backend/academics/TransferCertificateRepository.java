@@ -21,4 +21,7 @@ public interface TransferCertificateRepository extends JpaRepository<TransferCer
 
     List<TransferCertificate> findByTenantIdAndAdmissionNoOrderByIssueDateDesc(
             Long tenantId, String admissionNo);
+
+    List<TransferCertificate> findByTenantIdAndStudentNameContainingIgnoreCaseOrderByIssueDateDesc(
+            Long tenantId, String studentName);
 }
