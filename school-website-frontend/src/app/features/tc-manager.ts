@@ -51,18 +51,37 @@ export interface TransferCertificate {
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+        <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
           <div>
             <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Class Level</label>
             <select name="classLevel" [(ngModel)]="newTC.classLevel" required style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
-              <option value="Primary School (G1-5)">Primary School (G1-5)</option>
-              <option value="Middle School (G6-8)">Middle School (G6-8)</option>
-              <option value="High School (G9-12)">High School (G9-12)</option>
+              <option value="Pre-Nursery">Pre-Nursery</option>
+              <option value="Nursery">Nursery</option>
+              <option value="LKG">LKG</option>
+              <option value="UKG">UKG</option>
+              <option value="1st">1st Grade</option>
+              <option value="2nd">2nd Grade</option>
+              <option value="3rd">3rd Grade</option>
+              <option value="4th">4th Grade</option>
+              <option value="5th">5th Grade</option>
+              <option value="6th">6th Grade</option>
+              <option value="7th">7th Grade</option>
+              <option value="8th">8th Grade</option>
+              <option value="9th">9th Grade</option>
+              <option value="10th">10th Grade</option>
+              <option value="11th">11th Grade</option>
+              <option value="12th">12th Grade</option>
             </select>
           </div>
           <div>
             <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Section</label>
-            <input type="text" name="section" [(ngModel)]="newTC.section" required placeholder="e.g. A" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+            <select name="section" [(ngModel)]="newTC.section" required style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="D">D</option>
+              <option value="E">E</option>
+            </select>
           </div>
           <div>
             <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">TC Certificate No.</label>
@@ -131,7 +150,7 @@ export class TCManagerComponent implements OnChanges {
   newTC = {
     studentName: '',
     admissionNo: '',
-    classLevel: 'High School (G9-12)',
+    classLevel: '1st',
     section: 'A',
     fatherName: '',
     aadharNo: '',

@@ -19,16 +19,41 @@ public class TransferCertificateController {
 
     // Public / Parents verification lookup
     @GetMapping("/sites/{tenantId}/tc")
-    public ResponseEntity<TransferCertificate> verifyAndDownloadTC(
+    public ResponseEntity<List<TransferCertificate>> verifyAndDownloadTC(
             @PathVariable Long tenantId,
-            @RequestParam String admissionNo,
-            @RequestParam String fatherName,
-            @RequestParam String aadharNo) {
+            @RequestParam(required = false) String classLevel,
+            @RequestParam(required = false) String section,
+            @RequestParam(required = false) String studentName,
+            @RequestParam(required = false) String admissionNo,
+            @RequestParam(required = false) String fatherName,
+            @RequestParam(required = false) String aadharNo) {
         
-        return repository.findByTenantIdAndAdmissionNoAndFatherNameContainingIgnoreCaseAndAadharNo(
-                tenantId, admissionNo, fatherName, aadharNo)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        if (classLevel != null && !classLevel.trim().isEmpty() && section != null && !section.trim().isEmpty()) {
+            if (studentName != null && !studentName.trim().isEmpty()) {
+                List<TransferCertificate> res = repository.findByTenantIdAndClassLevelAndSectionAndStudentNameContainingIgnoreCaseOrderByIssueDateDesc(
+                        tenantId, classLevel.trim(), section.trim(), studentName.trim());
+                return ResponseEntity.ok(res);
+            } else {
+                List<TransferCertificate> res = repository.findByTenantIdAndClassLevelAndSectionOrderByIssueDateDesc(
+                        tenantId, classLevel.trim(), section.trim());
+                return ResponseEntity.ok(res);
+            }
+        } else if (admissionNo != null && !admissionNo.trim().isEmpty()) {
+            if (fatherName != null && !fatherName.trim().isEmpty() && aadharNo != null && !aadharNo.trim().isEmpty()) {
+                // Classic CBSE security-compliant verification
+                return repository.findByTenantIdAndAdmissionNoAndFatherNameContainingIgnoreCaseAndAadharNo(
+                        tenantId, admissionNo.trim(), fatherName.trim(), aadharNo.trim())
+                        .map(tc -> ResponseEntity.ok(List.of(tc)))
+                        .orElse(ResponseEntity.ok(List.of()));
+            } else {
+                List<TransferCertificate> res = repository.findByTenantIdAndAdmissionNoOrderByIssueDateDesc(
+                        tenantId, admissionNo.trim());
+                return ResponseEntity.ok(res);
+            }
+        }
+        
+        List<TransferCertificate> res = repository.findByTenantIdOrderByIssueDateDesc(tenantId);
+        return ResponseEntity.ok(res);
     }
 
     // Admin list issued TCs

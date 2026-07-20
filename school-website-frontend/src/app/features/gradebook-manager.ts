@@ -10,6 +10,11 @@ export interface StudentGrade {
   term: string;
   grade: string;
   remarks: string;
+  admissionNo?: string;
+  classLevel?: string;
+  section?: string;
+  fatherName?: string;
+  aadharNo?: string;
 }
 
 @Component({
@@ -40,10 +45,60 @@ export interface StudentGrade {
       <!-- Mode 1: Single Score Entry Form -->
       @if (managerMode() === 'SINGLE') {
         <form (ngSubmit)="addGradeRecord()" #gradeForm="ngForm" style="background: #f8fafc; padding: 1.25rem; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
-          <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem;">
+          
+          <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem;">
             <div>
               <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Student Name</label>
               <input type="text" name="studentName" [(ngModel)]="newGrade.studentName" required placeholder="e.g. John Doe" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Admission Number</label>
+              <input type="text" name="admissionNo" [(ngModel)]="newGrade.admissionNo" required placeholder="e.g. ADM-101" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+            </div>
+          </div>
+
+          <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem;">
+            <div>
+              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Father's Name</label>
+              <input type="text" name="fatherName" [(ngModel)]="newGrade.fatherName" required placeholder="e.g. Richard Doe" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Aadhar Card Number</label>
+              <input type="text" name="aadharNo" [(ngModel)]="newGrade.aadharNo" required placeholder="e.g. 1234-5678-9012" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+            </div>
+          </div>
+
+          <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 1rem;">
+            <div>
+              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Class Level</label>
+              <select name="classLevel" [(ngModel)]="newGrade.classLevel" required style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
+                <option value="Pre-Nursery">Pre-Nursery</option>
+                <option value="Nursery">Nursery</option>
+                <option value="LKG">LKG</option>
+                <option value="UKG">UKG</option>
+                <option value="1st">1st Grade</option>
+                <option value="2nd">2nd Grade</option>
+                <option value="3rd">3rd Grade</option>
+                <option value="4th">4th Grade</option>
+                <option value="5th">5th Grade</option>
+                <option value="6th">6th Grade</option>
+                <option value="7th">7th Grade</option>
+                <option value="8th">8th Grade</option>
+                <option value="9th">9th Grade</option>
+                <option value="10th">10th Grade</option>
+                <option value="11th">11th Grade</option>
+                <option value="12th">12th Grade</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Section</label>
+              <select name="section" [(ngModel)]="newGrade.section" required style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+              </select>
             </div>
             <div>
               <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Subject</label>
@@ -57,7 +112,7 @@ export interface StudentGrade {
             </div>
           </div>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div>
               <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Academic Term</label>
               <select name="term" [(ngModel)]="newGrade.term" required style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
@@ -157,7 +212,7 @@ export interface StudentGrade {
           <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left;">
             <thead>
               <tr style="background: #f1f5f9; border-bottom: 1px solid #cbd5e1; color: #475569; font-weight: 600;">
-                <th style="padding: 0.75rem 1rem;">Student Name</th>
+                <th style="padding: 0.75rem 1rem;">Student Details</th>
                 <th style="padding: 0.75rem 1rem;">Subject</th>
                 <th style="padding: 0.75rem 1rem;">Term</th>
                 <th style="padding: 0.75rem 1rem;">Score / Grade</th>
@@ -168,7 +223,14 @@ export interface StudentGrade {
             <tbody>
               @for (g of grades(); track g.id) {
                 <tr style="border-bottom: 1px solid #e2e8f0; hover: background-color: #f8fafc;">
-                  <td style="padding: 0.75rem 1rem; font-weight: 700; color: #0f172a;">{{ g.studentName }}</td>
+                  <td style="padding: 0.75rem 1rem; color: #0f172a;">
+                    <strong style="display: block; font-weight: 700;">{{ g.studentName }}</strong>
+                    @if (g.classLevel || g.section || g.admissionNo) {
+                      <span style="font-size: 0.75rem; color: #64748b; display: block; margin-top: 0.15rem;">
+                        {{ g.classLevel || '-' }} (Section {{ g.section || '-' }}) • Adm No: {{ g.admissionNo || '-' }}
+                      </span>
+                    }
+                  </td>
                   <td style="padding: 0.75rem 1rem; color: #475569;">{{ g.subjectName }}</td>
                   <td style="padding: 0.75rem 1rem; color: #64748b;">{{ g.term }}</td>
                   <td style="padding: 0.75rem 1rem; font-weight: 700; color: #1e3a8a;">{{ g.grade }}</td>
@@ -201,12 +263,17 @@ export class GradebookManagerComponent implements OnChanges {
 
   pasteAreaText: string = '';
 
-  newGrade = {
+  newGrade: StudentGrade = {
     studentName: '',
     subjectName: 'Mathematics',
     term: 'Term 1 Midterm',
     grade: 'A',
-    remarks: 'Demonstrates exceptional logical capability.'
+    remarks: 'Demonstrates exceptional logical capability.',
+    admissionNo: '',
+    classLevel: '1st',
+    section: 'A',
+    fatherName: '',
+    aadharNo: ''
   };
 
   constructor(private readonly http: HttpClient) {}

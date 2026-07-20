@@ -23,6 +23,20 @@ public class StudentGrade {
     @Column(name = "student_name", nullable = false)
     private String studentName;
 
+    @Column(name = "admission_no")
+    private String admissionNo;
+
+    @Column(name = "class_level")
+    private String classLevel;
+
+    private String section;
+
+    @Column(name = "father_name")
+    private String fatherName;
+
+    @Column(name = "aadhar_no")
+    private String aadharNo;
+
     @Column(name = "subject_name", nullable = false)
     private String subjectName; // e.g. Mathematics, English Literature, Chemistry
 

@@ -20,12 +20,22 @@ public class StudentGradeController {
     @GetMapping("/sites/{tenantId}/grades")
     public ResponseEntity<List<StudentGrade>> getGrades(
             @PathVariable Long tenantId,
-            @RequestParam(required = false) String studentName) {
+            @RequestParam(required = false) String studentName,
+            @RequestParam(required = false) String classLevel,
+            @RequestParam(required = false) String section) {
         List<StudentGrade> list;
-        if (studentName == null || studentName.trim().isEmpty()) {
-            list = repository.findByTenantIdOrderByCreatedAtDesc(tenantId);
+        if (classLevel != null && !classLevel.trim().isEmpty() && section != null && !section.trim().isEmpty()) {
+            if (studentName != null && !studentName.trim().isEmpty()) {
+                list = repository.findByTenantIdAndClassLevelAndSectionAndStudentNameContainingIgnoreCaseOrderByCreatedAtDesc(
+                        tenantId, classLevel.trim(), section.trim(), studentName.trim());
+            } else {
+                list = repository.findByTenantIdAndClassLevelAndSectionOrderByCreatedAtDesc(
+                        tenantId, classLevel.trim(), section.trim());
+            }
+        } else if (studentName != null && !studentName.trim().isEmpty()) {
+            list = repository.findByTenantIdAndStudentNameContainingIgnoreCaseOrderByCreatedAtDesc(tenantId, studentName.trim());
         } else {
-            list = repository.findByTenantIdAndStudentNameContainingIgnoreCaseOrderByCreatedAtDesc(tenantId, studentName);
+            list = repository.findByTenantIdOrderByCreatedAtDesc(tenantId);
         }
         return ResponseEntity.ok(list);
     }
