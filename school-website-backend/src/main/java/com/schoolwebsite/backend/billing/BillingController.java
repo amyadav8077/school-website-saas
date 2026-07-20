@@ -45,8 +45,10 @@ public class BillingController {
     @GetMapping("/sites/{tenantId}/invoices")
     public ResponseEntity<List<StudentInvoice>> getInvoices(
             @PathVariable Long tenantId,
-            @RequestParam(required = false) String studentName) {
-        List<StudentInvoice> list = service.getInvoices(tenantId, studentName);
+            @RequestParam(required = false) String studentName,
+            @RequestParam(required = false) String gradeLevel,
+            @RequestParam(required = false) String section) {
+        List<StudentInvoice> list = service.getInvoices(tenantId, studentName, gradeLevel, section);
         return ResponseEntity.ok(list);
     }
 

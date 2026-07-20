@@ -28,12 +28,48 @@ export interface StudentInvoice {
       </p>
 
       <!-- Student Record Lookup Bar -->
-      <form (ngSubmit)="searchStudentInvoices()" style="display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap;">
-        <input type="text" name="studentSearchName" [(ngModel)]="searchName" placeholder="Enter Student's Full Name (e.g. John Doe)" required
-          style="flex: 1; min-width: 240px; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem; box-sizing: border-box;" />
-        <button type="submit" [style.background-color]="primaryColor" style="border: 0; color: white; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 700; cursor: pointer; flex-grow: 1; max-width: 100%;">
-          🔍 Find Invoices
-        </button>
+      <form (ngSubmit)="searchStudentInvoices()" style="display: flex; gap: 0.75rem; margin-bottom: 2rem; flex-wrap: wrap; background: #f8fafc; padding: 1.5rem; border-radius: 8px; border: 1px solid #cbd5e1;">
+        <div style="flex: 1; min-width: 150px;">
+          <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 0.35rem;">Select Class</label>
+          <select name="searchClass" [(ngModel)]="searchClass" required style="width: 100%; padding: 0.7rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; background: white; font-weight: 600;">
+            <option value="Pre-Nursery">Pre-Nursery</option>
+            <option value="Nursery">Nursery</option>
+            <option value="LKG">LKG</option>
+            <option value="UKG">UKG</option>
+            <option value="1st">1st Grade</option>
+            <option value="2nd">2nd Grade</option>
+            <option value="3rd">3rd Grade</option>
+            <option value="4th">4th Grade</option>
+            <option value="5th">5th Grade</option>
+            <option value="6th">6th Grade</option>
+            <option value="7th">7th Grade</option>
+            <option value="8th">8th Grade</option>
+            <option value="9th">9th Grade</option>
+            <option value="10th">10th Grade</option>
+            <option value="11th">11th Grade</option>
+            <option value="12th">12th Grade</option>
+          </select>
+        </div>
+        <div style="flex: 1; min-width: 100px;">
+          <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 0.35rem;">Select Section</label>
+          <select name="searchSection" [(ngModel)]="searchSection" required style="width: 100%; padding: 0.7rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; background: white; font-weight: 600;">
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+            <option value="E">E</option>
+          </select>
+        </div>
+        <div style="flex: 2; min-width: 200px;">
+          <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 0.35rem;">Student Name (Optional)</label>
+          <input type="text" name="studentSearchName" [(ngModel)]="searchName" placeholder="Enter name or leave empty to list all" 
+            style="width: 100%; padding: 0.7rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; box-sizing: border-box;" />
+        </div>
+        <div style="width: 100%; display: flex; align-items: flex-end; margin-top: 0.5rem;">
+          <button type="submit" [style.background-color]="primaryColor" style="width: 100%; border: 0; color: white; padding: 0.75rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: opacity 0.2s;">
+            🔍 Find Issued Bills (Class-wise)
+          </button>
+        </div>
       </form>
 
       <!-- Search Results -->
@@ -47,7 +83,7 @@ export interface StudentInvoice {
             </div>
           } @else {
             <h4 style="color: #1e293b; font-size: 1rem; font-weight: 700; margin-bottom: 1rem;">
-              Issued Bills found for student: <span style="color: #2563eb;">{{ searchName }}</span>
+              Issued Bills found matching search criteria:
             </h4>
             
             <div style="display: flex; flex-direction: column; gap: 1rem;">
@@ -183,12 +219,21 @@ export class PaymentPortalComponent {
   protected readonly checkoutStatusMessage = signal<string>('Initializing sandbox stripe integration...');
 
   searchName: string = '';
+  searchClass: string = '1st';
+  searchSection: string = 'A';
 
   constructor(private readonly http: HttpClient) {}
 
   searchStudentInvoices() {
-    if (!this.searchName.trim()) return;
-    this.http.get<StudentInvoice[]>(`http://localhost:8080/api/sites/${this.tenantId}/invoices?studentName=${this.searchName}`)
+    this.hasSearched.set(false);
+    let url = `http://localhost:8080/api/sites/${this.tenantId}/invoices`
+      + `?gradeLevel=${encodeURIComponent(this.searchClass)}`
+      + `&section=${encodeURIComponent(this.searchSection)}`;
+    if (this.searchName.trim()) {
+      url += `&studentName=${encodeURIComponent(this.searchName.trim())}`;
+    }
+
+    this.http.get<StudentInvoice[]>(url)
       .subscribe({
         next: (data) => {
           this.invoices.set(data);

@@ -23,8 +23,19 @@ public class StudentInvoice {
     @Column(name = "student_name", nullable = false)
     private String studentName;
 
+    @Column(name = "admission_no")
+    private String admissionNo;
+
     @Column(name = "grade_level", nullable = false)
-    private String gradeLevel;
+    private String gradeLevel; // e.g. 1st, 2nd, etc. (Maps to classLevel)
+
+    private String section;
+
+    @Column(name = "father_name")
+    private String fatherName;
+
+    @Column(name = "aadhar_no")
+    private String aadharNo;
 
     @Column(name = "fee_item_name", nullable = false)
     private String feeItemName;

@@ -142,15 +142,76 @@ export interface StudentGrade {
 
       <!-- Mode 2: Bulk Excel / Spreadsheet Importer -->
       @if (managerMode() === 'BULK') {
-        <div style="background: #f8fafc; padding: 1.25rem; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
-          <h3 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1rem; color: #1e293b; font-weight: 700;">Copy-Paste Spreadsheet Grid</h3>
-          <p style="color: #64748b; font-size: 0.8rem; margin-top: 0; margin-bottom: 1rem;">
-            Select cells in Excel or Google Sheets, copy them, and paste them into the box below. 
-            <strong>Columns format:</strong> Student Name [Tab] Subject [Tab] Term [Tab] Grade [Tab] Remarks
-          </p>
+        <div style="background: #f8fafc; padding: 1.5rem; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
+          <h3 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.15rem; color: #1e293b; font-weight: 700;">Excel / Spreadsheet Copy-Paste Importer</h3>
+          
+          <!-- Bulk Mode Switcher -->
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+            <button (click)="bulkUploadMode.set('CLASS'); parseSpreadsheet()" 
+              [style.background]="bulkUploadMode() === 'CLASS' ? '#1e3a8a' : 'white'"
+              [style.color]="bulkUploadMode() === 'CLASS' ? 'white' : '#475569'"
+              style="border: 1px solid #cbd5e1; padding: 0.4rem 0.8rem; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 0.8rem;">
+              🏫 Class-wise Excel Upload
+            </button>
+            <button (click)="bulkUploadMode.set('SCHOOL'); parseSpreadsheet()" 
+              [style.background]="bulkUploadMode() === 'SCHOOL' ? '#1e3a8a' : 'white'"
+              [style.color]="bulkUploadMode() === 'SCHOOL' ? 'white' : '#475569'"
+              style="border: 1px solid #cbd5e1; padding: 0.4rem 0.8rem; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 0.8rem;">
+              🌐 School-wide Master Excel Upload
+            </button>
+          </div>
 
-          <textarea [(ngModel)]="pasteAreaText" rows="6" 
-            placeholder="John Doe&#9;Mathematics&#9;Term 1 Midterm&#9;95%&#9;Excellent problem-solving&#10;Jane Smith&#9;Science & Physics&#9;Term 1 Midterm&#9;88%&#9;Very attentive in practicals"
+          @if (bulkUploadMode() === 'CLASS') {
+            <!-- Class Selection dropdowns for bulk -->
+            <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; background: white; padding: 1rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+              <div>
+                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Select Target Class</label>
+                <select name="bulkClass" [(ngModel)]="bulkClass" (change)="parseSpreadsheet()" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white; font-weight: 600;">
+                  <option value="Pre-Nursery">Pre-Nursery</option>
+                  <option value="Nursery">Nursery</option>
+                  <option value="LKG">LKG</option>
+                  <option value="UKG">UKG</option>
+                  <option value="1st">1st Grade</option>
+                  <option value="2nd">2nd Grade</option>
+                  <option value="3rd">3rd Grade</option>
+                  <option value="4th">4th Grade</option>
+                  <option value="5th">5th Grade</option>
+                  <option value="6th">6th Grade</option>
+                  <option value="7th">7th Grade</option>
+                  <option value="8th">8th Grade</option>
+                  <option value="9th">9th Grade</option>
+                  <option value="10th">10th Grade</option>
+                  <option value="11th">11th Grade</option>
+                  <option value="12th">12th Grade</option>
+                </select>
+              </div>
+              <div>
+                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Select Target Section</label>
+                <select name="bulkSection" [(ngModel)]="bulkSection" (change)="parseSpreadsheet()" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white; font-weight: 600;">
+                  <option value="A">A</option>
+                  <option value="B">B</option>
+                  <option value="C">C</option>
+                  <option value="D">D</option>
+                  <option value="E">E</option>
+                </select>
+              </div>
+            </div>
+
+            <p style="color: #64748b; font-size: 0.8rem; margin-top: 0; margin-bottom: 1rem;">
+              <strong>Class-wise Format columns (Tab-separated Excel copy):</strong><br />
+              <code>Student Name [Tab] Admission No [Tab] Father Name [Tab] Aadhar No [Tab] Subject [Tab] Term [Tab] Grade [Tab] Remarks</code>
+            </p>
+          } @else {
+            <p style="color: #64748b; font-size: 0.8rem; margin-top: 0; margin-bottom: 1rem;">
+              <strong>School-wide Format columns (Tab-separated Excel copy):</strong><br />
+              <code>Student Name [Tab] Admission No [Tab] Father Name [Tab] Aadhar No [Tab] Class [Tab] Section [Tab] Subject [Tab] Term [Tab] Grade [Tab] Remarks</code>
+            </p>
+          }
+
+          <textarea [(ngModel)]="pasteAreaText" rows="6" (input)="parseSpreadsheet()"
+            [placeholder]="bulkUploadMode() === 'CLASS' 
+              ? 'John Doe&#9;ADM-101&#9;Richard Doe&#9;1234-5678-9012&#9;Mathematics&#9;Term 1 Midterm&#9;95%&#9;Excellent problem-solving&#10;Jane Smith&#9;ADM-102&#9;Robert Smith&#9;9876-5432-1098&#9;Science & Physics&#9;Term 1 Midterm&#9;88%&#9;Very attentive'
+              : 'John Doe&#9;ADM-101&#9;Richard Doe&#9;1234-5678-9012&#9;1st&#9;A&#9;Mathematics&#9;Term 1 Midterm&#9;95%&#9;Excellent problem-solving&#10;Jane Smith&#9;ADM-102&#9;Robert Smith&#9;9876-5432-1098&#9;2nd&#9;B&#9;Science & Physics&#9;Term 1 Midterm&#9;88%&#9;Very attentive'"
             style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-size: 0.85rem; box-sizing: border-box; resize: vertical; margin-bottom: 1rem;">
           </textarea>
 
@@ -261,6 +322,11 @@ export class GradebookManagerComponent implements OnChanges {
   protected readonly parsedRows = signal<StudentGrade[]>([]);
   protected readonly isImporting = signal(false);
 
+  // New bulk upload state variables
+  protected readonly bulkUploadMode = signal<string>('CLASS'); // CLASS, SCHOOL
+  bulkClass: string = '1st';
+  bulkSection: string = 'A';
+
   pasteAreaText: string = '';
 
   newGrade: StudentGrade = {
@@ -313,17 +379,40 @@ export class GradebookManagerComponent implements OnChanges {
     lines.forEach(line => {
       if (!line.trim()) return;
 
-      // Split by tab (Excel default) or fallback to comma
       const parts = line.includes('\t') ? line.split('\t') : line.split(',');
       
-      if (parts.length >= 4) {
-        rows.push({
-          studentName: parts[0]?.trim() || 'Unknown Candidate',
-          subjectName: parts[1]?.trim() || 'Mathematics',
-          term: parts[2]?.trim() || 'Term 1 Midterm',
-          grade: parts[3]?.trim() || 'A',
-          remarks: parts[4]?.trim() || 'Good performance.'
-        });
+      if (this.bulkUploadMode() === 'CLASS') {
+        // Format: Student Name [0], Admission No [1], Father Name [2], Aadhar No [3], Subject [4], Term [5], Grade [6], Remarks [7]
+        if (parts.length >= 7) {
+          rows.push({
+            studentName: parts[0]?.trim() || 'Unknown Student',
+            admissionNo: parts[1]?.trim() || 'ADM-MOCK',
+            fatherName: parts[2]?.trim() || 'Unknown Father',
+            aadharNo: parts[3]?.trim() || 'MOCK-AADHAR',
+            classLevel: this.bulkClass,
+            section: this.bulkSection,
+            subjectName: parts[4]?.trim() || 'Mathematics',
+            term: parts[5]?.trim() || 'Term 1 Midterm',
+            grade: parts[6]?.trim() || 'A',
+            remarks: parts[7]?.trim() || 'Good performance.'
+          });
+        }
+      } else {
+        // Format: Student Name [0], Admission No [1], Father Name [2], Aadhar No [3], Class [4], Section [5], Subject [6], Term [7], Grade [8], Remarks [9]
+        if (parts.length >= 9) {
+          rows.push({
+            studentName: parts[0]?.trim() || 'Unknown Student',
+            admissionNo: parts[1]?.trim() || 'ADM-MOCK',
+            fatherName: parts[2]?.trim() || 'Unknown Father',
+            aadharNo: parts[3]?.trim() || 'MOCK-AADHAR',
+            classLevel: parts[4]?.trim() || '1st',
+            section: parts[5]?.trim() || 'A',
+            subjectName: parts[6]?.trim() || 'Mathematics',
+            term: parts[7]?.trim() || 'Term 1 Midterm',
+            grade: parts[8]?.trim() || 'A',
+            remarks: parts[9]?.trim() || 'Good performance.'
+          });
+        }
       }
     });
 

@@ -32,7 +32,16 @@ public class BillingService {
         return invoiceRepository.save(invoice);
     }
 
-    public List<StudentInvoice> getInvoices(Long tenantId, String studentName) {
+    public List<StudentInvoice> getInvoices(Long tenantId, String studentName, String gradeLevel, String section) {
+        if (gradeLevel != null && !gradeLevel.trim().isEmpty() && section != null && !section.trim().isEmpty()) {
+            if (studentName != null && !studentName.trim().isEmpty()) {
+                return invoiceRepository.findByTenantIdAndGradeLevelAndSectionAndStudentNameContainingIgnoreCaseOrderByCreatedAtDesc(
+                        tenantId, gradeLevel.trim(), section.trim(), studentName.trim());
+            } else {
+                return invoiceRepository.findByTenantIdAndGradeLevelAndSectionOrderByCreatedAtDesc(
+                        tenantId, gradeLevel.trim(), section.trim());
+            }
+        }
         if (studentName == null || studentName.trim().isEmpty()) {
             return invoiceRepository.findByTenantIdOrderByCreatedAtDesc(tenantId);
         }
