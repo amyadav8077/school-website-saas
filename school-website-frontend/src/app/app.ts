@@ -84,20 +84,26 @@ export class App implements OnInit {
     this.updateMaxVisibleTabs();
   }
 
+  @HostListener('document:click', [])
+  onDocumentClick() {
+    this.showMoreDropdown.set(false);
+  }
+
+  toggleMoreDropdown(event: Event) {
+    event.stopPropagation();
+    this.showMoreDropdown.set(!this.showMoreDropdown());
+  }
+
   private updateMaxVisibleTabs() {
     if (typeof window !== 'undefined') {
-      const width = window.innerWidth;
-      if (width >= 1400) {
-        this.maxVisibleTabs.set(7);
-      } else if (width >= 1200) {
-        this.maxVisibleTabs.set(5);
-      } else if (width >= 1024) {
-        this.maxVisibleTabs.set(4);
-      } else if (width >= 850) {
-        this.maxVisibleTabs.set(2);
-      } else {
-        this.maxVisibleTabs.set(1);
-      }
+      const containerWidth = window.innerWidth;
+      // Space for school brand logo and margins is roughly 380px.
+      // Each tab requires approx 120px to prevent overflow in a single row.
+      const availableWidth = containerWidth - 380;
+      const calculatedTabs = Math.floor(availableWidth / 120);
+      // Clamp between at least 1 and up to total pages
+      const finalCount = Math.max(1, calculatedTabs);
+      this.maxVisibleTabs.set(finalCount);
     }
   }
 

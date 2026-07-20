@@ -463,10 +463,10 @@
 
                   <!-- Render Remaining Pages inside a dynamic "More" dropdown -->
                   @if (schoolPages().length > maxVisibleTabs()) {
-                    <div (mouseenter)="showMoreDropdown.set(true)" 
-                         (mouseleave)="showMoreDropdown.set(false)"
-                         style="position: relative; display: inline-block;">
-                      <span class="nav-link" 
+                    <div style="position: relative; display: inline-block;">
+                      <span (click)="toggleMoreDropdown($event)" 
+                            class="nav-link" 
+                            style="cursor: pointer;"
                             [class.active]="schoolPages().slice(maxVisibleTabs()).includes(activePreviewPage())"
                             [style.color]="showMoreDropdown() ? primaryColor() : '#4b5563'">
                         More ▾
@@ -474,9 +474,9 @@
                       
                       <!-- More Dropdown Sub-menu Content -->
                       @if (showMoreDropdown()) {
-                        <div style="position: absolute; top: 100%; right: 0; background: white; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1); width: 220px; z-index: 100; padding: 0.5rem 0; box-sizing: border-box; text-align: left; margin-top: 0.5rem;">
+                        <div style="position: absolute; top: 100%; right: 0; background: white; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1); width: 220px; z-index: 1000; padding: 0.5rem 0; box-sizing: border-box; text-align: left; margin-top: 0.5rem;">
                           @for (p of schoolPages().slice(maxVisibleTabs()); track p.id) {
-                            <a (click)="selectPreviewPage(p)" 
+                            <a (click)="selectPreviewPage(p); $event.stopPropagation()" 
                                style="display: block; padding: 0.65rem 1rem; color: #475569; text-decoration: none; font-size: 0.85rem; cursor: pointer; transition: background 0.15s; font-weight: 600;"
                                onmouseenter="this.style.background='#f1f5f9'" 
                                onmouseleave="this.style.background='transparent'">
