@@ -22,16 +22,16 @@
     <!-- ========================================== -->
     <header style="text-align: center; margin-bottom: 3rem;">
       <span style="background-color: #dbeafe; color: #1e40af; font-size: 0.85rem; padding: 0.35rem 1rem; border-radius: 9999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Multi-Tenant SaaS Infrastructure</span>
-      <h1 style="color: #0f172a; font-size: 3rem; margin-top: 1rem; margin-bottom: 1rem; font-weight: 900; letter-spacing: -0.03em; line-height: 1.1;">
+      <h1 style="color: #0f172a; font-size: clamp(2rem, 7vw, 3rem); margin-top: 1rem; margin-bottom: 1rem; font-weight: 900; letter-spacing: -0.03em; line-height: 1.1;">
         Launch Your School's Digital Website & Portal in Seconds
       </h1>
-      <p style="color: #475569; font-size: 1.25rem; max-width: 700px; margin: 0 auto; line-height: 1.6;">
+      <p style="color: #475569; font-size: 1.15rem; max-width: 700px; margin: 0 auto; line-height: 1.6;">
         A comprehensive multi-tenant school CMS and administrative engine. Manage pages, admissions funnels, dynamic gradebooks, fee invoicing ledger, news bulletins, and help Desks in one unified platform.
       </p>
     </header>
 
     <!-- Core Grid: Onboarding Terminal & Features Grid -->
-    <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-bottom: 3.5rem; align-items: start;">
+    <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 3.5rem; align-items: start;">
       
       <!-- Instant Onboarding Terminal Card -->
       <app-tenant-onboarding (tenantOnboarded)="onTenantOnboarded($event)"></app-tenant-onboarding>
@@ -89,7 +89,7 @@
           <span style="font-size: 0.9rem;">Fill out the "Onboard New School" form above to launch the first multi-tenant portal!</span>
         </div>
       } @else {
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1.5rem;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;">
           @for (school of tenantsList(); track school.id) {
             <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 6px rgba(0,0,0,0.02); hover: box-shadow: 0 10px 15px rgba(0,0,0,0.05); transition: all 0.2s;">
               <div>
@@ -166,7 +166,7 @@
     </header>
 
      <!-- Health & Connection Status -->
-     <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+     <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
       <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between;">
         <div>
           <h3 style="font-size: 1rem; color: #334155; margin: 0 0 0.25rem 0; font-weight: 600;">SaaS Frontend Client</h3>
@@ -411,63 +411,87 @@
             </div>
           }
 
-          <!-- School Branded Header Navigation -->
-          <nav [style.border-top-color]="primaryColor()" style="border-top: 4px solid #1e3a8a; padding: 1.25rem 1rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03); transition: border-color 0.3s; background: #ffffff; flex-wrap: wrap; gap: 1rem;">
-            <div class="school-brand" (click)="selectPreviewPageBySlug('home')" style="cursor: pointer;">
-              <div class="logo-container" [style.background-color]="logoUrl().startsWith('data:') ? 'transparent' : primaryColor()">
-                @if (logoUrl().startsWith('data:') || logoUrl().startsWith('http') || logoUrl().startsWith('/')) {
-                  <img [src]="logoUrl()" style="width: 100%; height: 100%; object-fit: cover;" alt="logo" />
+          <!-- School Branded Header Navigation (With Mobile Hamburger Toggle) -->
+          <div style="position: relative; width: 100%; z-index: 1000; background: #ffffff;">
+            <nav [style.border-top-color]="primaryColor()" style="border-top: 4px solid #1e3a8a; padding: 1rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03); transition: border-color 0.3s; background: #ffffff; gap: 1rem; width: 100%; box-sizing: border-box;">
+              <div class="school-brand" (click)="selectPreviewPageBySlug('home')" style="cursor: pointer;">
+                <div class="logo-container" [style.background-color]="logoUrl().startsWith('data:') ? 'transparent' : primaryColor()">
+                  @if (logoUrl().startsWith('data:') || logoUrl().startsWith('http') || logoUrl().startsWith('/')) {
+                    <img [src]="logoUrl()" style="width: 100%; height: 100%; object-fit: cover;" alt="logo" />
+                  } @else {
+                    {{ logoUrl() }}
+                  }
+                </div>
+                <span class="school-name">
+                  {{ activeTenant().name }}
+                </span>
+              </div>
+
+              <!-- Desktop-Only Horizontal Page Navigation Tabs -->
+              <div class="desktop-nav" style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; justify-content: center;">
+                @if (schoolPages().length === 0) {
+                  <span class="nav-link active" (click)="selectPreviewPageBySlug('home')">Home</span>
+                  <span class="nav-link" (click)="selectPreviewPageBySlug('about')">About</span>
+                  <span class="nav-link" (click)="selectPreviewPageBySlug('admissions')">Admissions</span>
                 } @else {
-                  {{ logoUrl() }}
+                  @for (p of schoolPages(); track p.id) {
+                    <div (mouseenter)="showGradesDropdown.set(p.slug === 'grades')" 
+                         (mouseleave)="showGradesDropdown.set(false)"
+                         style="position: relative; display: inline-block;">
+                      <span (click)="selectPreviewPage(p)" 
+                            class="nav-link"
+                            [class.active]="activePreviewPage()?.id === p.id">
+                        {{ p.title }}
+                        @if (p.slug === 'grades') { ▾ }
+                      </span>
+                      
+                      <!-- Dropdown Sub-menu Content (Renders dynamically on hover) -->
+                      @if (p.slug === 'grades' && showGradesDropdown()) {
+                        <div style="position: absolute; top: 100%; left: 0; background: white; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1); width: 250px; z-index: 100; padding: 0.5rem 0; box-sizing: border-box; text-align: left; margin-top: 0.5rem;">
+                          <span style="display: block; padding: 0.4rem 1rem; font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; border-bottom: 1px solid #f1f5f9; margin-bottom: 0.25rem; padding-bottom: 0.4rem;">Select Grade Transcript</span>
+                          <a (click)="selectGradeLevelLookup('John Doe', p)" style="display: block; padding: 0.65rem 1rem; color: #475569; text-decoration: none; font-size: 0.85rem; cursor: pointer; transition: background 0.15s; font-weight: 600;" onmouseenter="this.style.background='#f1f5f9'" onmouseleave="this.style.background='transparent'">
+                            📊 High School (John Doe)
+                          </a>
+                          <a (click)="selectGradeLevelLookup('Jane Smith', p)" style="display: block; padding: 0.65rem 1rem; color: #475569; text-decoration: none; font-size: 0.85rem; cursor: pointer; transition: background 0.15s; font-weight: 600;" onmouseenter="this.style.background='#f1f5f9'" onmouseleave="this.style.background='transparent'">
+                            📊 Primary School (Jane Smith)
+                          </a>
+                        </div>
+                      }
+                    </div>
+                  }
                 }
               </div>
-              <span class="school-name">
-                {{ activeTenant().name }}
-              </span>
-            </div>
 
-            <!-- Dynamic Page Navigation Tabs -->
-            <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; justify-content: center;">
+              <!-- Mobile-Only Hamburger Toggle Button -->
+              <button class="hamburger-btn" (click)="isMobileMenuOpen.set(!isMobileMenuOpen())" [aria-label]="isMobileMenuOpen() ? 'Close Menu' : 'Open Menu'">
+                {{ isMobileMenuOpen() ? '✕' : '☰' }}
+              </button>
+            </nav>
+
+            <!-- Mobile-Only Collapsible Vertical Navigation Menu Drawer -->
+            <div class="mobile-nav-menu" [class.open]="isMobileMenuOpen()">
               @if (schoolPages().length === 0) {
-                <span class="nav-link active">Home</span>
-                <span class="nav-link">About</span>
-                <span class="nav-link">Admissions</span>
+                <span class="mobile-nav-link active" (click)="selectPreviewPageBySlug('home')">Home</span>
+                <span class="mobile-nav-link" (click)="selectPreviewPageBySlug('about')">About</span>
+                <span class="mobile-nav-link" (click)="selectPreviewPageBySlug('admissions')">Admissions</span>
               } @else {
                 @for (p of schoolPages(); track p.id) {
-                  <div (mouseenter)="showGradesDropdown.set(p.slug === 'grades')" 
-                       (mouseleave)="showGradesDropdown.set(false)"
-                       style="position: relative; display: inline-block;">
-                    <span (click)="selectPreviewPage(p)" 
-                          class="nav-link"
-                          [class.active]="activePreviewPage()?.id === p.id">
-                      {{ p.title }}
-                      @if (p.slug === 'grades') { ▾ }
-                    </span>
-                    
-                    <!-- Dropdown Sub-menu Content (Renders dynamically on hover) -->
-                    @if (p.slug === 'grades' && showGradesDropdown()) {
-                      <div style="position: absolute; top: 100%; left: 0; background: white; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1); width: 250px; z-index: 100; padding: 0.5rem 0; box-sizing: border-box; text-align: left; margin-top: 0.5rem;">
-                        <span style="display: block; padding: 0.4rem 1rem; font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; border-bottom: 1px solid #f1f5f9; margin-bottom: 0.25rem; padding-bottom: 0.4rem;">Select Grade Transcript</span>
-                        <a (click)="selectGradeLevelLookup('John Doe', p)" style="display: block; padding: 0.65rem 1rem; color: #475569; text-decoration: none; font-size: 0.85rem; cursor: pointer; transition: background 0.15s; font-weight: 600;" onmouseenter="this.style.background='#f1f5f9'" onmouseleave="this.style.background='transparent'">
-                          📊 High School (John Doe)
-                        </a>
-                        <a (click)="selectGradeLevelLookup('Jane Smith', p)" style="display: block; padding: 0.65rem 1rem; color: #475569; text-decoration: none; font-size: 0.85rem; cursor: pointer; transition: background 0.15s; font-weight: 600;" onmouseenter="this.style.background='#f1f5f9'" onmouseleave="this.style.background='transparent'">
-                          📊 Primary School (Jane Smith)
-                        </a>
-                      </div>
-                    }
-                  </div>
+                  <span (click)="selectPreviewPage(p)" 
+                        class="mobile-nav-link"
+                        [class.active]="activePreviewPage()?.id === p.id">
+                    📁 {{ p.title }}
+                  </span>
                 }
               }
             </div>
-          </nav>
+          </div>
 
           <!-- Website Page Body (Pushes the footer to the bottom of the page) -->
           <div style="flex: 1 0 auto; display: flex; flex-direction: column; width: 100%;">
 
           <!-- Prominent CBSE Compliance Header Bar (CBSE Cir No. 09/2021 Appendix IX prominent link requirement) -->
           @if (activeTenant()) {
-            <div style="background: #fffbeb; border-bottom: 1px solid #fef08a; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 700; color: #b45309;">
+            <div style="background: #fffbeb; border-bottom: 1px solid #fef08a; padding: 0.5rem 1.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 700; color: #b45309; flex-wrap: wrap; gap: 0.5rem; justify-content: center; text-align: center; width: 100%; box-sizing: border-box;">
               <span>⚠️ CBSE Appendix IX Compliance Desk Active</span>
               <button (click)="selectPreviewPageBySlug('disclosures')" style="background: #fbbf24; border: 1px solid #f59e0b; color: #0f172a; padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem;">
                 📜 VIEW MANDATORY PUBLIC DISCLOSURE (CBSE)
@@ -531,9 +555,9 @@
 
               @if (sec.type === 'FEATURES') {
                 <!-- FEATURES SECTION -->
-                <div style="padding: 3rem 2rem; background: #ffffff; text-align: center; border-bottom: 1px solid #e2e8f0;">
+                <div style="padding: 3rem 1.5rem; background: #ffffff; text-align: center; border-bottom: 1px solid #e2e8f0;">
                   <h3 [style.color]="primaryColor()" style="font-size: 1.5rem; font-weight: 700; margin-bottom: 2rem;">Our Core Focus & Facilities</h3>
-                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1200px; margin: 0 auto;">
+                  <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1200px; margin: 0 auto;">
                     <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; border: 1px solid #cbd5e1;">
                       <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎓</div>
                       <h4 style="font-size: 1.1rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">
@@ -675,7 +699,7 @@
                     <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto;">
                       We offer premium class hardware, high-tech academic laboratories, and certified sports setups to support all learners.
                     </p>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
                       @for (fac of getFacilitiesList(sec.config); track $index) {
                         <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; text-align: left;">
                           <div style="width: 100%; height: 200px; background: #1e293b;">
@@ -787,7 +811,7 @@
 
               <!-- Narayana-Style Academic Channels Grid -->
               @if (publicPrograms().length > 0) {
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto 4rem auto;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto 4rem auto;">
                   @for (prog of publicPrograms(); track prog.id) {
                     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; hover: box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: all 0.2s;">
                       <div>
@@ -823,7 +847,7 @@
                 @if (publicCourses().length === 0) {
                   <p style="color: #64748b; font-style: italic;">No specific courses registered. Add some in the Admin panel above!</p>
                 } @else {
-                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; text-align: left;">
+                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; text-align: left;">
                     @for (c of publicCourses(); track c.id) {
                       <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; background: #ffffff;">
                         <div>
@@ -846,13 +870,13 @@
 
           <!-- Dynamic Faculty Directory Showcase (Renders on 'faculty' page) -->
           @if (activeTenant() && activePreviewPage() && activePreviewPage().slug === 'faculty') {
-            <div style="padding: 3rem 2rem; background: #f8fafc; border-top: 1px solid #cbd5e1; flex: 1;">
+            <div style="padding: 3rem 1.5rem; background: #f8fafc; border-top: 1px solid #cbd5e1; flex: 1;">
               <h3 [style.color]="primaryColor()" style="font-size: 1.5rem; font-weight: 800; text-align: center; margin-top: 0; margin-bottom: 2rem;">Meet Our Academic Leaders</h3>
               
               @if (publicFaculty().length === 0) {
                 <p style="text-align: center; color: #64748b; font-style: italic;">No faculty members registered in the showcase yet. Add them in the Admin panel above!</p>
               } @else {
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto;">
                   @for (f of publicFaculty(); track f.id) {
                     <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.25rem; display: flex; gap: 1rem; align-items: flex-start; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
                       <div [style.background-color]="primaryColor()" style="width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white;">
@@ -900,13 +924,13 @@
 
           <!-- Dynamic School Events Calendar Page (Renders on 'events' page) -->
           @if (activeTenant() && activePreviewPage() && activePreviewPage().slug === 'events') {
-            <div style="padding: 3rem 2rem; background: #f8fafc; border-top: 1px solid #cbd5e1; flex: 1;">
+            <div style="padding: 3rem 1.5rem; background: #f8fafc; border-top: 1px solid #cbd5e1; flex: 1;">
               <h3 [style.color]="primaryColor()" style="font-size: 1.5rem; font-weight: 800; text-align: center; margin-top: 0; margin-bottom: 2rem;">Upcoming Academic Events</h3>
               
               @if (publicEvents().length === 0) {
                 <p style="text-align: center; color: #64748b; font-style: italic;">No upcoming school events scheduled in the calendar yet. Schedule them in the Admin panel above!</p>
               } @else {
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto;">
                   @for (ev of publicEvents(); track ev.id) {
                     <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.25rem; display: flex; gap: 1rem; align-items: flex-start; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
                       <div [style.background-color]="primaryColor()" style="color: white; padding: 0.5rem; border-radius: 6px; text-align: center; min-width: 60px; box-sizing: border-box;">

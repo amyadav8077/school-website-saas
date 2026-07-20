@@ -39,7 +39,7 @@ import { HttpClient } from '@angular/common/http';
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+        <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
           <div>
             <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">Primary Color</label>
             <div style="display: flex; gap: 0.5rem; align-items: center;">

@@ -75,6 +75,7 @@ export class App implements OnInit {
   protected readonly activeTenant = signal<any>(null);
   protected readonly schoolPages = signal<any[]>([]);
   protected readonly activePreviewPage = signal<any>(null);
+  protected readonly isMobileMenuOpen = signal<boolean>(false);
 
   // SaaS Hub tenants directory
   protected readonly tenantsList = signal<any[]>([]);
@@ -344,6 +345,7 @@ export class App implements OnInit {
 
   selectPreviewPage(page: any) {
     this.activePreviewPage.set(page);
+    this.isMobileMenuOpen.set(false);
     if (page.slug !== 'grades') {
       this.prefilledSearchName.set('');
     }
@@ -358,6 +360,7 @@ export class App implements OnInit {
     const page = this.schoolPages().find(p => p.slug === slug);
     if (page) {
       this.activePreviewPage.set(page);
+      this.isMobileMenuOpen.set(false);
     }
   }
 

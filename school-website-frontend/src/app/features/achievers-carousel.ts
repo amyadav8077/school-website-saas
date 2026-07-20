@@ -27,7 +27,7 @@ export interface StudentAchiever {
         <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 2rem; position: relative; min-height: 180px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 10px rgba(0,0,0,0.02);">
           
           <!-- Slider Content -->
-          <div style="display: flex; gap: 1.5rem; align-items: flex-start;">
+          <div style="display: flex; gap: 1.5rem; align-items: flex-start; flex-wrap: wrap;">
             <div [style.background-color]="primaryColor" style="width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; shrink: 0; flex-shrink: 0;">
               🎓
             </div>

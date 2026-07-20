@@ -26,7 +26,7 @@ export interface EnrichmentActivity {
         </div>
 
         <!-- Segment Tab Switcher -->
-        <div style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 2rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem;">
+        <div style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 2rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; flex-wrap: wrap;">
           <button (click)="activeType.set('SPORTS')" 
             style="border: 1px solid #cbd5e1; padding: 0.45rem 1.25rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;"
             [style.background-color]="activeType() === 'SPORTS' ? primaryColor : 'white'"
@@ -53,7 +53,7 @@ export interface EnrichmentActivity {
         <!-- Showcase Detail Cards -->
         <div>
           @for (act of filteredActivities(); track act.id) {
-            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.5rem; display: flex; gap: 1.5rem; align-items: start; box-shadow: inset 0 0 10px rgba(0,0,0,0.01);">
+            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.5rem; display: flex; gap: 1.5rem; align-items: start; box-shadow: inset 0 0 10px rgba(0,0,0,0.01); flex-wrap: wrap;">
               <div [style.background-color]="primaryColor" style="width: 50px; height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; color: white; flex-shrink: 0;">
                 @if (act.type === 'SPORTS') { 🏀 }
                 @else if (act.type === 'UNIFORMS') { 👕 }

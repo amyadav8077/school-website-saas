@@ -28,10 +28,10 @@ export interface StudentInvoice {
       </p>
 
       <!-- Student Record Lookup Bar -->
-      <form (ngSubmit)="searchStudentInvoices()" style="display: flex; gap: 0.5rem; margin-bottom: 2rem;">
+      <form (ngSubmit)="searchStudentInvoices()" style="display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap;">
         <input type="text" name="studentSearchName" [(ngModel)]="searchName" placeholder="Enter Student's Full Name (e.g. John Doe)" required
-          style="flex: 1; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem; box-sizing: border-box;" />
-        <button type="submit" [style.background-color]="primaryColor" style="border: 0; color: white; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 700; cursor: pointer;">
+          style="flex: 1; min-width: 240px; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem; box-sizing: border-box;" />
+        <button type="submit" [style.background-color]="primaryColor" style="border: 0; color: white; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 700; cursor: pointer; flex-grow: 1; max-width: 100%;">
           🔍 Find Invoices
         </button>
       </form>
@@ -52,9 +52,9 @@ export interface StudentInvoice {
             
             <div style="display: flex; flex-direction: column; gap: 1rem;">
               @for (inv of invoices(); track inv.id) {
-                <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.25rem; background: white; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.25rem; background: white; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 4px rgba(0,0,0,0.02); flex-wrap: wrap; gap: 1rem;">
                   <div>
-                    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.25rem;">
+                    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.25rem; flex-wrap: wrap;">
                       <span style="font-size: 0.75rem; font-weight: 700; color: #1e3a8a; background: #e0f2fe; padding: 0.15rem 0.35rem; border-radius: 4px;">INV-400{{ inv.id }}</span>
                       <strong style="font-size: 1.05rem; color: #0f172a;">{{ inv.feeItemName }}</strong>
                     </div>
@@ -64,7 +64,7 @@ export interface StudentInvoice {
                     }
                   </div>
                   
-                  <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+                  <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; min-width: 120px; flex-grow: 1;">
                     <span style="font-size: 1.25rem; font-weight: 800; color: #0f172a;">\${{ inv.amount }}</span>
                     
                     @if (inv.status === 'PENDING') {

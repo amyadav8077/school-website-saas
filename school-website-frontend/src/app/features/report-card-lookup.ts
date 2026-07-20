@@ -26,10 +26,10 @@ export interface StudentGrade {
       </p>
 
       <!-- Student Record Lookup Bar -->
-      <form (ngSubmit)="searchStudentGrades()" style="display: flex; gap: 0.5rem; margin-bottom: 2rem;">
+      <form (ngSubmit)="searchStudentGrades()" style="display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap;">
         <input type="text" name="studentSearchName" [(ngModel)]="searchName" placeholder="Enter Student's Full Name (e.g. John Doe)" required
-          style="flex: 1; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem; box-sizing: border-box;" />
-        <button type="submit" [style.background-color]="primaryColor" style="border: 0; color: white; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 700; cursor: pointer;">
+          style="flex: 1; min-width: 240px; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem; box-sizing: border-box;" />
+        <button type="submit" [style.background-color]="primaryColor" style="border: 0; color: white; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 700; cursor: pointer; flex-grow: 1; max-width: 100%;">
           🔍 View Report Card
         </button>
       </form>
@@ -59,26 +59,28 @@ export interface StudentGrade {
               </div>
 
               <!-- Grades Table -->
-              <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem; font-family: sans-serif; text-align: left; background: white; border: 1px solid #cbd5e1; margin-bottom: 1.5rem;">
-                <thead>
-                  <tr [style.background-color]="primaryColor" style="color: white;">
-                    <th style="padding: 0.75rem 1rem;">Subject</th>
-                    <th style="padding: 0.75rem 1rem;">Assessment Term</th>
-                    <th style="padding: 0.75rem 1rem; text-align: center;">Evaluation Score</th>
-                    <th style="padding: 0.75rem 1rem;">Teacher Feedback & Remarks</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @for (g of grades(); track g.id) {
-                    <tr style="border-bottom: 1px solid #cbd5e1;">
-                      <td style="padding: 0.75rem 1rem; font-weight: 700; color: #0f172a;">{{ g.subjectName }}</td>
-                      <td style="padding: 0.75rem 1rem; color: #475569;">{{ g.term }}</td>
-                      <td style="padding: 0.75rem 1rem; text-align: center; font-weight: 800;" [style.color]="primaryColor">{{ g.grade }}</td>
-                      <td style="padding: 0.75rem 1rem; color: #475569; font-size: 0.85rem; font-style: italic;">{{ g.remarks || 'No remarks recorded.' }}</td>
+              <div class="table-responsive-wrapper" style="border: none;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem; font-family: sans-serif; text-align: left; background: white; border: 1px solid #cbd5e1; margin-bottom: 0;">
+                  <thead>
+                    <tr [style.background-color]="primaryColor" style="color: white;">
+                      <th style="padding: 0.75rem 1rem;">Subject</th>
+                      <th style="padding: 0.75rem 1rem;">Assessment Term</th>
+                      <th style="padding: 0.75rem 1rem; text-align: center;">Evaluation Score</th>
+                      <th style="padding: 0.75rem 1rem;">Teacher Feedback & Remarks</th>
                     </tr>
-                  }
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    @for (g of grades(); track g.id) {
+                      <tr style="border-bottom: 1px solid #cbd5e1;">
+                        <td style="padding: 0.75rem 1rem; font-weight: 700; color: #0f172a;">{{ g.subjectName }}</td>
+                        <td style="padding: 0.75rem 1rem; color: #475569;">{{ g.term }}</td>
+                        <td style="padding: 0.75rem 1rem; text-align: center; font-weight: 800;" [style.color]="primaryColor">{{ g.grade }}</td>
+                        <td style="padding: 0.75rem 1rem; color: #475569; font-size: 0.85rem; font-style: italic;">{{ g.remarks || 'No remarks recorded.' }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
 
               <!-- Certificate Footer Stamp -->
               <div style="display: flex; justify-content: space-between; align-items: flex-end; font-family: sans-serif; font-size: 0.8rem; color: #64748b; margin-top: 2rem;">

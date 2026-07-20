@@ -35,7 +35,7 @@ import { HttpClient } from '@angular/common/http';
         <form (ngSubmit)="onSubmit()" #settingsForm="ngForm" style="display: flex; flex-direction: column; gap: 1.25rem;">
           
           <!-- Theme Preset & School Crest Row -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 0.5rem;">
+          <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 0.5rem;">
             <div>
               <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #475569; margin-bottom: 0.35rem;">🎨 Select Theme Preset (One-Click Design)</label>
               <select name="themeName" [(ngModel)]="form.themeName" (change)="onThemePresetChanged($event)" style="width: 100%; padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 6px; background: white; font-weight: 600;">
@@ -68,7 +68,7 @@ import { HttpClient } from '@angular/common/http';
           </div>
 
           <!-- Color Customizer -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+          <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
             <div>
               <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">Primary Color</label>
               <div style="display: flex; gap: 0.5rem; align-items: center;">
@@ -139,7 +139,7 @@ import { HttpClient } from '@angular/common/http';
               <span style="font-size: 0.8rem; color: #475569; display: block;">Add your school social links for the footer and Google Maps embed URL for the Contact page.</span>
             </div>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
               <div>
                 <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">📘 Facebook URL</label>
                 <input type="text" name="facebookUrl" [(ngModel)]="facebookUrl" placeholder="https://facebook.com/pioneer" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem; box-sizing: border-box;" />
@@ -150,7 +150,7 @@ import { HttpClient } from '@angular/common/http';
               </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
               <div>
                 <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">🐦 Twitter / X URL</label>
                 <input type="text" name="twitterUrl" [(ngModel)]="twitterUrl" placeholder="https://twitter.com/pioneer" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem; box-sizing: border-box;" />
@@ -178,7 +178,7 @@ import { HttpClient } from '@angular/common/http';
             </div>
             
             @if (bannerEnabled) {
-              <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1rem;">
+              <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1rem;">
                 <div>
                   <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Banner Announcement Message</label>
                   <input type="text" name="bannerText" [(ngModel)]="bannerText" required style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem;" />
@@ -192,7 +192,7 @@ import { HttpClient } from '@angular/common/http';
                 </div>
               </div>
 
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                 <div>
                   <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Button Catchy Label</label>
                   <input type="text" name="bannerButtonText" [(ngModel)]="bannerButtonText" required style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem;" />

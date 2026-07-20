@@ -52,7 +52,7 @@ export interface SchoolBranch {
       @if (filteredBranches().length === 0) {
         <p style="text-align: center; color: #64748b; font-style: italic;">No active branches registered matching this criteria.</p>
       } @else {
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
           @for (br of filteredBranches(); track br.id) {
             <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.5rem; background: white; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 6px rgba(0,0,0,0.02); hover: box-shadow: 0 8px 12px rgba(0,0,0,0.04); transition: all 0.2s;">
               <div>
