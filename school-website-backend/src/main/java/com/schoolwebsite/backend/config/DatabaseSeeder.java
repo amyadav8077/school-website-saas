@@ -609,7 +609,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                     .tenantId(tenantId)
                     .studentName("Harry Potter")
                     .admissionNo("ADM-901")
-                    .classLevel("High School (G9-12)")
+                    .classLevel("10th")
                     .section("A")
                     .fatherName("James Potter")
                     .aadharNo("1234-5678-9012")
@@ -622,7 +622,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                     .tenantId(tenantId)
                     .studentName("Ron Weasley")
                     .admissionNo("ADM-902")
-                    .classLevel("High School (G9-12)")
+                    .classLevel("12th")
                     .section("B")
                     .fatherName("Arthur Weasley")
                     .aadharNo("9876-5432-1098")
@@ -651,21 +651,29 @@ public class DatabaseSeeder implements CommandLineRunner {
             invoiceRepository.save(StudentInvoice.builder()
                     .tenantId(tenantId)
                     .studentName("John Doe")
-                    .gradeLevel("High School (G9-12)")
+                    .gradeLevel("10th")
                     .feeItemName(tuitionFee.getName())
                     .amount(tuitionFee.getAmount())
                     .status("PENDING")
                     .dueDate(LocalDateTime.now().plusDays(30))
+                    .admissionNo("ADM-101")
+                    .section("A")
+                    .fatherName("Richard Doe")
+                    .aadharNo("1234-5678-9012")
                     .build());
 
             invoiceRepository.save(StudentInvoice.builder()
                     .tenantId(tenantId)
                     .studentName("Jane Smith")
-                    .gradeLevel("Primary School (G1-5)")
+                    .gradeLevel("2nd")
                     .feeItemName(busFee.getName())
                     .amount(busFee.getAmount())
                     .status("PENDING")
                     .dueDate(LocalDateTime.now().plusDays(30))
+                    .admissionNo("ADM-102")
+                    .section("B")
+                    .fatherName("Robert Smith")
+                    .aadharNo("9876-5432-1098")
                     .build());
 
             // 7. Seed Admissions Inquiry leads
@@ -698,6 +706,11 @@ public class DatabaseSeeder implements CommandLineRunner {
                     .term("Term 1 Midterm")
                     .grade("A+")
                     .remarks("Demonstrates outstanding logical capability and mathematical problem-solving skills.")
+                    .admissionNo("ADM-101")
+                    .classLevel("10th")
+                    .section("A")
+                    .fatherName("Richard Doe")
+                    .aadharNo("1234-5678-9012")
                     .build());
 
             gradeRepository.save(StudentGrade.builder()
@@ -707,6 +720,11 @@ public class DatabaseSeeder implements CommandLineRunner {
                     .term("Term 1 Midterm")
                     .grade("A")
                     .remarks("Excellent lab experimentation focus and scientific writing clarity.")
+                    .admissionNo("ADM-101")
+                    .classLevel("10th")
+                    .section("A")
+                    .fatherName("Richard Doe")
+                    .aadharNo("1234-5678-9012")
                     .build());
 
             // 10. Seed News Bulletins & Circulars
