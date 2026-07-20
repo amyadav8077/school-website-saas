@@ -664,6 +664,65 @@ public class DatabaseSeeder implements CommandLineRunner {
 
             invoiceRepository.save(StudentInvoice.builder()
                     .tenantId(tenantId)
+                    .studentName("Harry Potter")
+                    .gradeLevel("10th")
+                    .feeItemName(tuitionFee.getName())
+                    .amount(tuitionFee.getAmount())
+                    .status("PAID")
+                    .dueDate(LocalDateTime.now().plusDays(30))
+                    .paymentDate(LocalDateTime.now().minusDays(1))
+                    .admissionNo("ADM-901")
+                    .section("A")
+                    .fatherName("James Potter")
+                    .aadharNo("1234-5678-9012")
+                    .build());
+
+            invoiceRepository.save(StudentInvoice.builder()
+                    .tenantId(tenantId)
+                    .studentName("Bruce Wayne")
+                    .gradeLevel("10th")
+                    .feeItemName(tuitionFee.getName())
+                    .amount(tuitionFee.getAmount())
+                    .status("PAID")
+                    .dueDate(LocalDateTime.now().plusDays(30))
+                    .paymentDate(LocalDateTime.now().minusDays(2))
+                    .admissionNo("ADM-103")
+                    .section("A")
+                    .fatherName("Thomas Wayne")
+                    .aadharNo("1111-2222-3333")
+                    .build());
+
+            invoiceRepository.save(StudentInvoice.builder()
+                    .tenantId(tenantId)
+                    .studentName("Ron Weasley")
+                    .gradeLevel("12th")
+                    .feeItemName(tuitionFee.getName())
+                    .amount(tuitionFee.getAmount())
+                    .status("PENDING")
+                    .dueDate(LocalDateTime.now().plusDays(30))
+                    .admissionNo("ADM-902")
+                    .section("B")
+                    .fatherName("Arthur Weasley")
+                    .aadharNo("9876-5432-1098")
+                    .build());
+
+            invoiceRepository.save(StudentInvoice.builder()
+                    .tenantId(tenantId)
+                    .studentName("Hermione Granger")
+                    .gradeLevel("12th")
+                    .feeItemName(tuitionFee.getName())
+                    .amount(tuitionFee.getAmount())
+                    .status("PAID")
+                    .dueDate(LocalDateTime.now().plusDays(30))
+                    .paymentDate(LocalDateTime.now().minusDays(3))
+                    .admissionNo("ADM-104")
+                    .section("B")
+                    .fatherName("Mr. Granger")
+                    .aadharNo("4444-5555-6666")
+                    .build());
+
+            invoiceRepository.save(StudentInvoice.builder()
+                    .tenantId(tenantId)
                     .studentName("Jane Smith")
                     .gradeLevel("2nd")
                     .feeItemName(busFee.getName())
@@ -674,6 +733,20 @@ public class DatabaseSeeder implements CommandLineRunner {
                     .section("B")
                     .fatherName("Robert Smith")
                     .aadharNo("9876-5432-1098")
+                    .build());
+
+            invoiceRepository.save(StudentInvoice.builder()
+                    .tenantId(tenantId)
+                    .studentName("Peter Parker")
+                    .gradeLevel("2nd")
+                    .feeItemName(busFee.getName())
+                    .amount(busFee.getAmount())
+                    .status("PENDING")
+                    .dueDate(LocalDateTime.now().plusDays(30))
+                    .admissionNo("ADM-105")
+                    .section("B")
+                    .fatherName("Richard Parker")
+                    .aadharNo("5555-6666-7777")
                     .build());
 
             // 7. Seed Admissions Inquiry leads
@@ -699,6 +772,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                     .build());
 
             // 9. Seed Student Grades
+            // Class 10th - John Doe
             gradeRepository.save(StudentGrade.builder()
                     .tenantId(tenantId)
                     .studentName("John Doe")
@@ -725,6 +799,96 @@ public class DatabaseSeeder implements CommandLineRunner {
                     .section("A")
                     .fatherName("Richard Doe")
                     .aadharNo("1234-5678-9012")
+                    .build());
+
+            // Class 10th - Harry Potter
+            gradeRepository.save(StudentGrade.builder()
+                    .tenantId(tenantId)
+                    .studentName("Harry Potter")
+                    .subjectName("Mathematics")
+                    .term("Term 1 Midterm")
+                    .grade("A")
+                    .remarks("Displays amazing focus and analytical resolution when working under pressure.")
+                    .admissionNo("ADM-901")
+                    .classLevel("10th")
+                    .section("A")
+                    .fatherName("James Potter")
+                    .aadharNo("1234-5678-9012")
+                    .build());
+
+            // Class 10th - Bruce Wayne
+            gradeRepository.save(StudentGrade.builder()
+                    .tenantId(tenantId)
+                    .studentName("Bruce Wayne")
+                    .subjectName("Computer Science")
+                    .term("Term 1 Midterm")
+                    .grade("A++")
+                    .remarks("Incredibly advanced structural logic and system scripting capabilities.")
+                    .admissionNo("ADM-103")
+                    .classLevel("10th")
+                    .section("A")
+                    .fatherName("Thomas Wayne")
+                    .aadharNo("1111-2222-3333")
+                    .build());
+
+            // Class 12th - Ron Weasley
+            gradeRepository.save(StudentGrade.builder()
+                    .tenantId(tenantId)
+                    .studentName("Ron Weasley")
+                    .subjectName("English Literature")
+                    .term("Term 1 Midterm")
+                    .grade("B+")
+                    .remarks("Highly imaginative essay writing and active participation in class discussions.")
+                    .admissionNo("ADM-902")
+                    .classLevel("12th")
+                    .section("B")
+                    .fatherName("Arthur Weasley")
+                    .aadharNo("9876-5432-1098")
+                    .build());
+
+            // Class 12th - Hermione Granger
+            gradeRepository.save(StudentGrade.builder()
+                    .tenantId(tenantId)
+                    .studentName("Hermione Granger")
+                    .subjectName("Mathematics")
+                    .term("Term 1 Midterm")
+                    .grade("A++")
+                    .remarks("Flawless problem solving, outstanding precision, and mathematical logic.")
+                    .admissionNo("ADM-104")
+                    .classLevel("12th")
+                    .section("B")
+                    .fatherName("Mr. Granger")
+                    .aadharNo("4444-5555-6666")
+                    .build());
+
+            // Class 2nd - Jane Smith
+            gradeRepository.save(StudentGrade.builder()
+                    .tenantId(tenantId)
+                    .studentName("Jane Smith")
+                    .subjectName("Primary Mathematics & Logic")
+                    .term("Term 1 Midterm")
+                    .grade("A")
+                    .remarks("Very attentive and quick to solve fractional logic and geometric visual puzzles.")
+                    .admissionNo("ADM-102")
+                    .classLevel("2nd")
+                    .section("B")
+                    .fatherName("Robert Smith")
+                    .aadharNo("9876-5432-1098")
+                    .build());
+
+            // Class 2nd - Peter Parker
+            gradeRepository.save(StudentGrade.builder()
+                    .tenantId(tenantId)
+                    .studentName("Peter Parker")
+                    .subjectName("Primary Mathematics & Logic")
+                    .term("Term 1 Midterm")
+                    .grade("A+")
+                    .remarks("Incredibly swift and creative spatial logic and visual puzzle solver.")
+                    .admissionNo("ADM-105")
+                    .classLevel("2nd")
+                    .section("B")
+                    .fatherName("Richard Parker")
+                    .aadharNo("5555-6666-7777")
                     .build());
 
             // 10. Seed News Bulletins & Circulars
