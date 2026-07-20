@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, HostListener } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -77,6 +77,29 @@ export class App implements OnInit {
   protected readonly activePreviewPage = signal<any>(null);
   protected readonly isMobileMenuOpen = signal<boolean>(false);
   protected readonly showMoreDropdown = signal<boolean>(false);
+  protected readonly maxVisibleTabs = signal<number>(5);
+
+  @HostListener('window:resize', [])
+  onResize() {
+    this.updateMaxVisibleTabs();
+  }
+
+  private updateMaxVisibleTabs() {
+    if (typeof window !== 'undefined') {
+      const width = window.innerWidth;
+      if (width >= 1400) {
+        this.maxVisibleTabs.set(7);
+      } else if (width >= 1200) {
+        this.maxVisibleTabs.set(5);
+      } else if (width >= 1024) {
+        this.maxVisibleTabs.set(4);
+      } else if (width >= 850) {
+        this.maxVisibleTabs.set(2);
+      } else {
+        this.maxVisibleTabs.set(1);
+      }
+    }
+  }
 
   // SaaS Hub tenants directory
   protected readonly tenantsList = signal<any[]>([]);
@@ -130,6 +153,7 @@ export class App implements OnInit {
 
   ngOnInit() {
     this.checkBackendHealth();
+    this.updateMaxVisibleTabs();
     
     if (typeof sessionStorage !== 'undefined') {
       const savedUser = sessionStorage.getItem('school_saas_user');
