@@ -168,3 +168,280 @@
   }
 }
 
+// ─── Global box-sizing & overflow prevention ──────────────────────────────────
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+img, video, iframe {
+  max-width: 100%;
+}
+
+// ─── Main app wrapper ─────────────────────────────────────────────────────────
+@media (max-width: 639px) {
+  main {
+    padding: 0.75rem 0.5rem !important;
+  }
+}
+
+// ─── Top bar (hub console / logout) ──────────────────────────────────────────
+.sw-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  @media (max-width: 639px) {
+    font-size: 0.78rem;
+
+    span { font-size: 0.78rem; }
+    button { font-size: 0.75rem; padding: 0.35rem 0.65rem; }
+  }
+}
+
+// ─── Hub landing hero ─────────────────────────────────────────────────────────
+@media (max-width: 639px) {
+  .sw-hub-hero p {
+    font-size: 0.95rem !important;
+  }
+}
+
+// ─── Role bar & workspace nav — keep flex-wrap ────────────────────────────────
+.sw-role-bar,
+.sw-workspace-nav {
+  flex-wrap: wrap;
+  gap: 0.75rem;
+
+  @media (max-width: 639px) {
+    padding: 0.65rem 0.75rem !important;
+    gap: 0.5rem !important;
+
+    button {
+      font-size: 0.75rem !important;
+      padding: 0.4rem 0.65rem !important;
+    }
+  }
+}
+
+// ─── Health status cards ──────────────────────────────────────────────────────
+.sw-health-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+
+  @media (max-width: 639px) {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+// ─── Hub onboarding + features grid ──────────────────────────────────────────
+.sw-onboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+
+  @media (max-width: 639px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+// ─── Tenant card grid ─────────────────────────────────────────────────────────
+.sw-tenant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+
+  @media (max-width: 639px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+// ─── School brand name (overflow on small screens) ────────────────────────────
+.school-name {
+  font-size: clamp(0.85rem, 2.5vw, 1.35rem) !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+
+  @media (max-width: 639px) {
+    max-width: 130px;
+    font-size: 0.85rem !important;
+  }
+}
+
+// ─── Hero section inside preview ──────────────────────────────────────────────
+.sw-hero-section {
+  padding: 4rem 2rem;
+  text-align: center;
+
+  h2 { font-size: clamp(1.4rem, 4vw, 2.25rem) !important; }
+  p  { font-size: clamp(0.85rem, 2vw, 1.1rem) !important; }
+
+  @media (max-width: 639px) {
+    padding: 2rem 1rem !important;
+  }
+}
+
+// ─── Section padding utility ──────────────────────────────────────────────────
+.sw-section-pad {
+  @media (max-width: 639px) {
+    padding: 2rem 1rem !important;
+  }
+}
+
+// ─── Responsive grids inside preview pages ────────────────────────────────────
+@media (max-width: 639px) {
+  // Features 3-col → 1-col
+  .sw-features-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  // Founders
+  .sw-founders-grid > div {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  // Facilities
+  .sw-facilities-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  // Photo grid → 2-col on mobile
+  .sw-photo-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+
+  // Courses / Programs / Faculty / Events
+  .sw-courses-grid,
+  .sw-programs-grid,
+  .sw-faculty-grid,
+  .sw-events-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+}
+
+// ─── Gallery filter buttons ───────────────────────────────────────────────────
+.sw-gallery-filters {
+  @media (max-width: 639px) {
+    gap: 0.4rem !important;
+
+    button {
+      font-size: 0.72rem !important;
+      padding: 0.3rem 0.6rem !important;
+    }
+  }
+}
+
+// ─── News / announcements list ────────────────────────────────────────────────
+@media (max-width: 639px) {
+  .sw-news-card {
+    padding: 1rem !important;
+  }
+}
+
+// ─── Footer ───────────────────────────────────────────────────────────────────
+.sw-footer {
+  @media (max-width: 639px) {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding: 1.25rem 1rem !important;
+    gap: 0.75rem !important;
+    font-size: 0.8rem !important;
+  }
+}
+
+// ─── Admin panel feature components ──────────────────────────────────────────
+// Ensure all admin sections don't overflow on tablet/mobile
+@media (max-width: 1023px) {
+  // Tables inside admin panels scroll horizontally
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 639px) {
+  // Admin form grids → single column
+  .admin-form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  // Admin card headers
+  .admin-card-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.5rem !important;
+  }
+}
+
+// ─── Announcement banner marquee ──────────────────────────────────────────────
+@media (max-width: 639px) {
+  marquee {
+    font-size: 0.75rem !important;
+  }
+
+  .sw-banner-btn {
+    font-size: 0.65rem !important;
+    padding: 0.25rem 0.5rem !important;
+  }
+}
+
+// ─── CBSE compliance bar ──────────────────────────────────────────────────────
+@media (max-width: 639px) {
+  .sw-cbse-bar {
+    font-size: 0.72rem !important;
+    padding: 0.4rem 0.75rem !important;
+    flex-direction: column !important;
+    text-align: center !important;
+
+    button {
+      font-size: 0.68rem !important;
+      padding: 0.2rem 0.5rem !important;
+    }
+  }
+}
+
+// ─── Tablet (640–1023px) tweaks ───────────────────────────────────────────────
+@media (min-width: 640px) and (max-width: 1023px) {
+  main {
+    padding: 1rem 0.75rem !important;
+  }
+
+  .school-name {
+    max-width: 200px !important;
+  }
+
+  .sw-hero-section {
+    padding: 2.5rem 1.5rem !important;
+  }
+}
+
+// ─── Touch targets — all buttons/interactive elements ≥ 44px ────────────────
+@media (max-width: 1023px) {
+  button, [role="button"], .nav-link, .mobile-nav-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // Exception: icon-only small buttons
+  .btn-icon-sm {
+    min-height: 32px;
+  }
+}
+

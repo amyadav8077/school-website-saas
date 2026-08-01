@@ -1,7 +1,10 @@
 package com.schoolwebsite.backend.billing;
 
-import com.schoolwebsite.backend.tenantsubscription.Tenant;
-import com.schoolwebsite.backend.tenantsubscription.TenantRepository;
+import com.schoolwebsite.backend.billing.entity.FeeItem;
+import com.schoolwebsite.backend.billing.entity.StudentInvoice;
+import com.schoolwebsite.backend.billing.service.BillingService;
+import com.schoolwebsite.backend.tenantsubscription.entity.Tenant;
+import com.schoolwebsite.backend.tenantsubscription.repository.TenantRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

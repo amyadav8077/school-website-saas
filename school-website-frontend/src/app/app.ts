@@ -4,41 +4,42 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { TenantOnboardingComponent } from './features/tenant-onboarding';
-import { BrandingSettingsComponent } from './features/branding-settings';
-import { PageBuilderComponent } from './features/page-builder';
-import { AdmissionsFormComponent } from './features/admissions-form';
-import { AdmissionsManagerComponent } from './features/admissions-manager';
-import { AcademicsManagerComponent } from './features/academics-manager';
-import { BillingManagerComponent } from './features/billing-manager';
-import { PaymentPortalComponent } from './features/payment-portal';
-import { ContactFormComponent } from './features/contact-form';
-import { SupportManagerComponent } from './features/support-manager';
-import { NewsManagerComponent } from './features/news-manager';
-import { AchieversCarouselComponent } from './features/achievers-carousel';
-import { GradebookManagerComponent } from './features/gradebook-manager';
-import { ReportCardLookupComponent } from './features/report-card-lookup';
-import { CampusGalleryComponent } from './features/campus-gallery';
-import { SchoolBranchesComponent } from './features/school-branches';
-import { CampusEnrichmentComponent } from './features/campus-enrichment';
-import { CareersPortalComponent } from './features/careers-portal';
-import { CareersManagerComponent } from './features/careers-manager';
-import { PublicDisclosuresComponent } from './features/public-disclosures';
-import { TCManagerComponent } from './features/tc-manager';
-import { TCLookupComponent } from './features/tc-lookup';
-import { LoginComponent } from './features/login';
-import { UserProfileComponent } from './features/user-profile';
+import { TenantOnboardingComponent } from './admin/tenant-onboarding/tenant-onboarding.component';
+import { BrandingSettingsComponent } from './admin/branding-settings/branding-settings.component';
+import { PageBuilderComponent } from './admin/page-builder/page-builder.component';
+import { AdmissionsFormComponent } from './pages/admissions/admissions-form.component';
+import { AdmissionsManagerComponent } from './admin/admissions-manager/admissions-manager.component';
+import { AcademicsManagerComponent } from './admin/academics-manager/academics-manager.component';
+import { BillingManagerComponent } from './admin/billing-manager/billing-manager.component';
+import { PaymentPortalComponent } from './pages/payment/payment-portal.component';
+import { ContactFormComponent } from './pages/contact/contact-form.component';
+import { SupportManagerComponent } from './admin/support-manager/support-manager.component';
+import { NewsManagerComponent } from './admin/news-manager/news-manager.component';
+import { AchieversCarouselComponent } from './pages/achievers/achievers-carousel.component';
+import { GradebookManagerComponent } from './admin/gradebook-manager/gradebook-manager.component';
+import { ReportCardLookupComponent } from './pages/grades/report-card-lookup.component';
+import { CampusGalleryComponent } from './pages/gallery/campus-gallery.component';
+import { SchoolBranchesComponent } from './pages/branches/school-branches.component';
+import { CampusEnrichmentComponent } from './pages/enrichment/campus-enrichment.component';
+import { CareersPortalComponent } from './pages/careers/careers-portal.component';
+import { CareersManagerComponent } from './admin/careers-manager/careers-manager.component';
+import { PublicDisclosuresComponent } from './pages/disclosures/public-disclosures.component';
+import { TCManagerComponent } from './admin/tc-manager/tc-manager.component';
+import { TCLookupComponent } from './pages/tc-lookup/tc-lookup.component';
+import { LoginComponent } from './admin/login/login.component';
+import { UserProfileComponent } from './admin/user-profile/user-profile.component';
 
 @Component({
   selector: 'app-root',
   imports: [
-    RouterOutlet, 
+    RouterOutlet,
     CommonModule,
     FormsModule,
-    TenantOnboardingComponent, 
-    BrandingSettingsComponent, 
-    PageBuilderComponent, 
-    AdmissionsFormComponent, 
+    LoginComponent,
+    TenantOnboardingComponent,
+    BrandingSettingsComponent,
+    PageBuilderComponent,
+    AdmissionsFormComponent,
     AdmissionsManagerComponent,
     AcademicsManagerComponent,
     BillingManagerComponent,
@@ -57,8 +58,7 @@ import { UserProfileComponent } from './features/user-profile';
     PublicDisclosuresComponent,
     TCManagerComponent,
     TCLookupComponent,
-    LoginComponent,
-    UserProfileComponent
+    UserProfileComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
@@ -298,9 +298,9 @@ export class App implements OnInit {
   }
 
   loadTenantPages(tenantId: number) {
-    this.http.get<any[]>(`http://localhost:8080/api/sites/${tenantId}/pages`)
+    this.http.get<any>(`http://localhost:8080/api/sites/${tenantId}/pages`)
       .subscribe({
-        next: (data) => {
+        next: (data: any[]) => {
           const pageSortOrder: Record<string, number> = {
             'home': 1,
             'courses': 2,
@@ -342,36 +342,21 @@ export class App implements OnInit {
 
   loadTenantCatalogs(tenantId: number) {
     this.http.get<any[]>(`http://localhost:8080/api/sites/${tenantId}/courses`)
-      .subscribe({
-        next: (data) => this.publicCourses.set(data),
-        error: (err) => console.error(err)
-      });
+      .subscribe({ next: (data) => this.publicCourses.set(data), error: (err) => console.error(err) });
 
     this.http.get<any[]>(`http://localhost:8080/api/sites/${tenantId}/programs`)
-      .subscribe({
-        next: (data) => this.publicPrograms.set(data),
-        error: (err) => console.error(err)
-      });
+      .subscribe({ next: (data) => this.publicPrograms.set(data), error: (err) => console.error(err) });
 
     this.http.get<any[]>(`http://localhost:8080/api/sites/${tenantId}/faculty`)
-      .subscribe({
-        next: (data) => this.publicFaculty.set(data),
-        error: (err) => console.error(err)
-      });
+      .subscribe({ next: (data) => this.publicFaculty.set(data), error: (err) => console.error(err) });
   }
 
   loadTenantNotifications(tenantId: number) {
     this.http.get<any[]>(`http://localhost:8080/api/sites/${tenantId}/news`)
-      .subscribe({
-        next: (data) => this.publicNews.set(data),
-        error: (err) => console.error(err)
-      });
+      .subscribe({ next: (data) => this.publicNews.set(data), error: (err) => console.error(err) });
 
     this.http.get<any[]>(`http://localhost:8080/api/sites/${tenantId}/events`)
-      .subscribe({
-        next: (data) => this.publicEvents.set(data),
-        error: (err) => console.error(err)
-      });
+      .subscribe({ next: (data) => this.publicEvents.set(data), error: (err) => console.error(err) });
   }
 
   selectPreviewPage(page: any) {

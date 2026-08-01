@@ -1,7 +1,9 @@
 package com.schoolwebsite.backend.grades;
 
-import com.schoolwebsite.backend.tenantsubscription.Tenant;
-import com.schoolwebsite.backend.tenantsubscription.TenantRepository;
+import com.schoolwebsite.backend.grades.entity.StudentGrade;
+import com.schoolwebsite.backend.grades.repository.StudentGradeRepository;
+import com.schoolwebsite.backend.tenantsubscription.entity.Tenant;
+import com.schoolwebsite.backend.tenantsubscription.repository.TenantRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

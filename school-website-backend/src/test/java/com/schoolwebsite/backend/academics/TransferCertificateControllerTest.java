@@ -1,7 +1,9 @@
 package com.schoolwebsite.backend.academics;
 
-import com.schoolwebsite.backend.tenantsubscription.Tenant;
-import com.schoolwebsite.backend.tenantsubscription.TenantRepository;
+import com.schoolwebsite.backend.academics.entity.TransferCertificate;
+import com.schoolwebsite.backend.academics.repository.TransferCertificateRepository;
+import com.schoolwebsite.backend.tenantsubscription.entity.Tenant;
+import com.schoolwebsite.backend.tenantsubscription.repository.TenantRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

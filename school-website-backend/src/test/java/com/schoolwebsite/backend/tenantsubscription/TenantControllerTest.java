@@ -1,5 +1,9 @@
 package com.schoolwebsite.backend.tenantsubscription;
 
+import com.schoolwebsite.backend.common.exception.AppException;
+import com.schoolwebsite.backend.tenantsubscription.dto.TenantOnboardRequest;
+import com.schoolwebsite.backend.tenantsubscription.dto.TenantResponse;
+import com.schoolwebsite.backend.tenantsubscription.service.TenantService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -54,7 +58,7 @@ public class TenantControllerTest {
         tenantService.onboardTenant(request);
 
         // Second onboarding with same subdomain should fail
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(AppException.class, () -> {
             tenantService.onboardTenant(request);
         });
     }
