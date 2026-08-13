@@ -8,125 +8,236 @@ import { HttpClient } from '@angular/common/http';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div style="min-height: 100vh; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); display: flex; align-items: center; justify-content: center; padding: 1.5rem; font-family: system-ui, -apple-system, sans-serif;">
-      
-      <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; width: 100%; max-width: 440px; padding: 2.5rem; box-sizing: border-box; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
-        
-        <!-- Header Branded Logo & Title -->
-        <div style="text-align: center; margin-bottom: 2rem;">
-          <span style="font-size: 3rem; display: block; margin-bottom: 0.5rem; animation: pulse 2s infinite;">🛡️</span>
-          <h2 style="color: white; font-size: 1.75rem; font-weight: 800; margin: 0; letter-spacing: -0.025em;">SchoolSaaS.com</h2>
-          <span style="color: #94a3b8; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-top: 0.25rem;">Multi-Tenant Unified Console</span>
+    <!-- OPTION A — SPLIT SCREEN (ANIMATED) -->
+    <div class="split">
+      <!-- Left brand panel -->
+      <aside class="brand-panel">
+        <div class="bp-gradient"></div>
+        <div class="bp-shapes">
+          <span class="ring ring-1"></span>
+          <span class="ring ring-2"></span>
+          <span class="dot dot-1"></span>
+          <span class="dot dot-2"></span>
+          <span class="dot dot-3"></span>
         </div>
-
-        @if (errorMessage()) {
-          <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.85rem; font-weight: 500; text-align: left;">
-            ⚠️ {{ errorMessage() }}
+        <div class="bp-content">
+          <div class="bp-logo reveal" style="--d:0.05s">
+            <img src="school_website_saas_logo_512x512.png" alt="logo" />
+            <span>SchoolSaaS</span>
           </div>
-        }
+          <h1 class="bp-headline reveal" style="--d:0.15s">
+            <span class="shimmer">Run every school website</span><br/>from one console.
+          </h1>
+          <p class="bp-sub reveal" style="--d:0.25s">Multi-tenant branding, page builder, admissions, billing, and more — unified in a single secure platform.</p>
+          <ul class="bp-features">
+            <li class="reveal" style="--d:0.35s"><span class="chk">✓</span> Instant tenant onboarding &amp; cloning</li>
+            <li class="reveal" style="--d:0.45s"><span class="chk">✓</span> Live branding with per-school themes</li>
+            <li class="reveal" style="--d:0.55s"><span class="chk">✓</span> Admissions, grades &amp; billing built-in</li>
+          </ul>
+        </div>
+        <div class="bp-footer reveal" style="--d:0.65s">© 2026 SchoolSaaS · Unified Console</div>
+      </aside>
 
-        @if (successMessage()) {
-          <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #a7f3d0; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.85rem; font-weight: 500; text-align: left;">
-            ✅ {{ successMessage() }}
+      <!-- Right form panel -->
+      <main class="form-panel">
+        <div class="fp-inner">
+          <div class="fp-head">
+            <h2 class="pop" [attr.data-view]="currentView()">{{ currentView() === 'LOGIN' ? 'Welcome back' : currentView() === 'FORGOT' ? 'Reset password' : 'Verify code' }}</h2>
+            <p class="pop-sub">{{ currentView() === 'LOGIN' ? 'Sign in to your administrative console.' : currentView() === 'FORGOT' ? 'We\\'ll send you a secure OTP token.' : 'Enter the OTP and choose a new password.' }}</p>
           </div>
-        }
 
-        <!-- VIEW 1: Standard login form -->
-        @if (currentView() === 'LOGIN') {
-          <form (ngSubmit)="onSubmit()" #loginForm="ngForm" style="display: flex; flex-direction: column; gap: 1.25rem;">
-            <div>
-              <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; text-align: left;">Username</label>
-              <input type="text" name="username" [(ngModel)]="credentials.username" required placeholder="Enter username..." 
-                style="width: 100%; padding: 0.75rem 1rem; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white; font-size: 0.95rem; box-sizing: border-box; outline: none; transition: border-color 0.2s;"
-                onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'" />
-            </div>
+          @if (errorMessage()) {
+            <div class="alert alert-error shake"><span>⚠️</span> {{ errorMessage() }}</div>
+          }
+          @if (successMessage()) {
+            <div class="alert alert-success"><span>✅</span> {{ successMessage() }}</div>
+          }
 
-            <div>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin: 0;">Secret Password</label>
-                <span (click)="setView('FORGOT')" style="font-size: 0.75rem; color: #60a5fa; cursor: pointer; font-weight: 600;" class="hover-underline">Forgot Password?</span>
+          <!-- LOGIN -->
+          @if (currentView() === 'LOGIN') {
+            <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="stack">
+              <div class="field stagger" style="--i:1">
+                <input type="text" name="username" [(ngModel)]="credentials.username" required placeholder=" " autocomplete="username" />
+                <label>Username</label>
+                <span class="underline"></span>
               </div>
-              <input type="password" name="password" [(ngModel)]="credentials.password" required placeholder="••••••••" 
-                style="width: 100%; padding: 0.75rem 1rem; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white; font-size: 0.95rem; box-sizing: border-box; outline: none; transition: border-color 0.2s;"
-                onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'" />
-            </div>
-
-            <button type="submit" [disabled]="!loginForm.form.valid || isLoading()"
-              style="background: #2563eb; color: white; border: 0; padding: 0.85rem; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);"
-              [style.opacity]="loginForm.form.valid && !isLoading() ? '1' : '0.6'"
-              onmouseenter="this.style.background='#1d4ed8'" onmouseleave="this.style.background='#2563eb'">
-              {{ isLoading() ? 'Securing terminal...' : '🔒 Authenticate & Access Console' }}
-            </button>
-          </form>
-
-          <div style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 1.5rem; padding-top: 1.25rem; text-align: center; font-size: 0.75rem; color: #64748b; line-height: 1.4;">
-            <strong>Tip for Testing Credentials:</strong><br />
-            Project Super Admin: <code style="color: #60a5fa;">admin</code> / <code style="color: #60a5fa;">admin123</code><br />
-            (Email: <code style="color: #94a3b8;">admin@schoolsaas.com</code> | Phone: <code style="color: #94a3b8;">+15550199000</code>)<br />
-            Pioneer School Admin: <code style="color: #60a5fa;">pioneer_admin</code> / <code style="color: #60a5fa;">pioneer123</code><br />
-            (Email: <code style="color: #94a3b8;">admin@pioneer.edu</code> | Phone: <code style="color: #94a3b8;">+91401023344</code>)
-          </div>
-        }
-
-        <!-- VIEW 2: Request OTP screen -->
-        @if (currentView() === 'FORGOT') {
-          <div style="display: flex; flex-direction: column; gap: 1.25rem; text-align: left;">
-            <div>
-              <h3 style="color: white; font-size: 1.15rem; font-weight: 700; margin: 0 0 0.25rem 0;">🔑 Reset Administrative Password</h3>
-              <p style="color: #94a3b8; font-size: 0.8rem; line-height: 1.4; margin: 0;">Enter your registered admin email address or mobile number to generate a secure OTP validation token.</p>
-            </div>
-
-            <div>
-              <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Registered Email or Mobile Phone</label>
-              <input type="text" [(ngModel)]="forgotContact" placeholder="e.g. admin@schoolsaas.com or +15550199000" 
-                style="width: 100%; padding: 0.75rem 1rem; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white; font-size: 0.95rem; box-sizing: border-box; outline: none;" />
-            </div>
-
-            <div style="display: flex; gap: 0.75rem;">
-              <button (click)="setView('LOGIN')" style="flex: 1; background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 0.75rem; border-radius: 8px; font-weight: 700; cursor: pointer;">Cancel</button>
-              <button (click)="onRequestOtp()" [disabled]="!forgotContact || isLoading()" style="flex: 1.5; background: #2563eb; color: white; border: 0; padding: 0.75rem; border-radius: 8px; font-weight: 700; cursor: pointer;">
-                {{ isLoading() ? 'Dispatching OTP...' : '⚡ Send Verification Code' }}
+              <div class="field stagger" style="--i:2">
+                <input type="password" name="password" [(ngModel)]="credentials.password" required placeholder=" " autocomplete="current-password" />
+                <label>Password</label>
+                <span class="underline"></span>
+                <span (click)="setView('FORGOT')" class="link float-link">Forgot?</span>
+              </div>
+              <button type="submit" [disabled]="!loginForm.form.valid || isLoading()" class="btn btn-primary stagger" style="--i:3">
+                <span class="btn-shine"></span>
+                @if (isLoading()) { <span class="spinner"></span> Signing in... } @else { Sign in to console }
               </button>
-            </div>
-          </div>
-        }
+            </form>
 
-        <!-- VIEW 3: Verify OTP & override password screen -->
-        @if (currentView() === 'RESET') {
-          <div style="display: flex; flex-direction: column; gap: 1.25rem; text-align: left;">
-            <div>
-              <h3 style="color: white; font-size: 1.15rem; font-weight: 700; margin: 0 0 0.25rem 0;">💬 Verify Security OTP Code</h3>
-              <p style="color: #94a3b8; font-size: 0.8rem; line-height: 1.4; margin: 0;">We have dispatched a 6-digit verification code to <strong style="color: #60a5fa;">{{ forgotContact }}</strong>. Check your console logs or copy the prefilled demo code below!</p>
+            <div class="hint stagger" style="--i:4">
+              <strong>Test credentials</strong>
+              <div>Super Admin: <code>admin</code> / <code>admin123</code></div>
+              <div>Pioneer Admin: <code>pioneer_admin</code> / <code>pioneer123</code></div>
             </div>
+          }
 
-            <div style="background: rgba(96, 165, 250, 0.1); border: 1px solid rgba(96, 165, 250, 0.2); padding: 0.75rem; border-radius: 6px; font-size: 0.75rem; color: #93c5fd; text-align: center;">
-              🔑 <strong>Simulated OTP Code Dispatched:</strong> <code style="font-weight: 700; color: white; font-size: 0.85rem; letter-spacing: 0.05em; background: rgba(0,0,0,0.2); padding: 0.15rem 0.4rem; border-radius: 4px; display: inline-block; margin-left: 0.25rem;">{{ demoPrefilledOtp }}</code>
+          <!-- FORGOT -->
+          @if (currentView() === 'FORGOT') {
+            <div class="stack">
+              <div class="field stagger" style="--i:1">
+                <input type="text" [(ngModel)]="forgotContact" placeholder=" " />
+                <label>Registered Email or Mobile</label>
+                <span class="underline"></span>
+              </div>
+              <div class="btn-row stagger" style="--i:2">
+                <button (click)="setView('LOGIN')" class="btn btn-ghost">Cancel</button>
+                <button (click)="onRequestOtp()" [disabled]="!forgotContact || isLoading()" class="btn btn-primary grow">
+                  <span class="btn-shine"></span>
+                  @if (isLoading()) { <span class="spinner"></span> Sending... } @else { Send code }
+                </button>
+              </div>
             </div>
+          }
 
-            <div>
-              <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Enter 6-Digit OTP</label>
-              <input type="text" [(ngModel)]="resetOtp" placeholder="Enter 6-digit code..." 
-                style="width: 100%; padding: 0.75rem 1rem; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white; font-size: 0.95rem; box-sizing: border-box; outline: none; letter-spacing: 0.1em; text-align: center; font-weight: 700;" />
+          <!-- RESET -->
+          @if (currentView() === 'RESET') {
+            <div class="stack">
+              <div class="otp-banner stagger" style="--i:1">🔑 Demo OTP: <code>{{ demoPrefilledOtp }}</code></div>
+              <div class="field stagger" style="--i:2">
+                <input type="text" [(ngModel)]="resetOtp" maxlength="6" class="otp-input" placeholder=" " />
+                <label>6-Digit OTP</label>
+                <span class="underline"></span>
+              </div>
+              <div class="field stagger" style="--i:3">
+                <input type="password" [(ngModel)]="resetNewPassword" placeholder=" " />
+                <label>New Password</label>
+                <span class="underline"></span>
+              </div>
+              <div class="btn-row stagger" style="--i:4">
+                <button (click)="setView('FORGOT')" class="btn btn-ghost">Back</button>
+                <button (click)="onResetPassword()" [disabled]="!resetOtp || !resetNewPassword || isLoading()" class="btn btn-success grow">
+                  <span class="btn-shine"></span>
+                  @if (isLoading()) { <span class="spinner"></span> Saving... } @else { Reset password }
+                </button>
+              </div>
             </div>
-
-            <div>
-              <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Enter New Secure Password</label>
-              <input type="password" [(ngModel)]="resetNewPassword" placeholder="Minimum 6 characters..." 
-                style="width: 100%; padding: 0.75rem 1rem; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white; font-size: 0.95rem; box-sizing: border-box; outline: none;" />
-            </div>
-
-            <div style="display: flex; gap: 0.75rem;">
-              <button (click)="setView('FORGOT')" style="flex: 1; background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 0.75rem; border-radius: 8px; font-weight: 700; cursor: pointer;">Back</button>
-              <button (click)="onResetPassword()" [disabled]="!resetOtp || !resetNewPassword || isLoading()" style="flex: 1.5; background: #10b981; color: white; border: 0; padding: 0.75rem; border-radius: 8px; font-weight: 700; cursor: pointer;">
-                {{ isLoading() ? 'Overriding password...' : '💾 Reset & Save Password' }}
-              </button>
-            </div>
-          </div>
-        }
-
-      </div>
+          }
+        </div>
+      </main>
     </div>
-  `
+  `,
+  styles: [`
+    * { box-sizing: border-box; }
+    :host { --brand:#2563eb; --brand2:#7c3aed; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; }
+
+    .split { min-height: 100vh; display: grid; grid-template-columns: 1.05fr 1fr; font-family: 'Inter', system-ui, sans-serif; }
+
+    /* ── Left ─────────────────────────────────────────────── */
+    .brand-panel { position: relative; overflow: hidden; color: #fff; display: flex; flex-direction: column; justify-content: space-between; padding: 3rem; }
+    .bp-gradient { position: absolute; inset: 0; background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 45%, #7c3aed 100%); background-size: 220% 220%; animation: gradShift 12s ease infinite; }
+    @keyframes gradShift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+    .bp-shapes { position: absolute; inset: 0; overflow: hidden; }
+    .ring { position: absolute; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.18); }
+    .ring-1 { width: 380px; height: 380px; top: -120px; right: -100px; animation: spin 40s linear infinite; }
+    .ring-2 { width: 240px; height: 240px; bottom: -80px; left: -60px; animation: spin 30s linear infinite reverse; }
+    .dot { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.55); box-shadow: 0 0 12px rgba(255,255,255,0.5); }
+    .dot-1 { width: 10px; height: 10px; top: 22%; left: 30%; animation: float 5s ease-in-out infinite; }
+    .dot-2 { width: 7px; height: 7px; bottom: 26%; right: 32%; animation: float 6s ease-in-out infinite; }
+    .dot-3 { width: 5px; height: 5px; top: 60%; left: 18%; animation: float 7s ease-in-out infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
+
+    .bp-content { position: relative; z-index: 1; margin: auto 0; }
+    .bp-logo { display: flex; align-items: center; gap: 0.65rem; font-weight: 800; font-size: 1.25rem; letter-spacing: -0.02em; }
+    .bp-logo img { width: 42px; height: 42px; border-radius: 10px; background: rgba(255,255,255,0.15); padding: 4px; animation: float 4s ease-in-out infinite; }
+    .bp-headline { font-size: 2.4rem; font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; margin: 2rem 0 1rem; }
+    .shimmer { background: linear-gradient(90deg, #fff 0%, #c7d2fe 25%, #fff 50%); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 4s linear infinite; }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+    .bp-sub { font-size: 1rem; color: rgba(255,255,255,0.82); line-height: 1.6; max-width: 30ch; }
+    .bp-features { list-style: none; padding: 0; margin: 2rem 0 0; display: flex; flex-direction: column; gap: 0.9rem; }
+    .bp-features li { display: flex; align-items: center; gap: 0.7rem; font-size: 0.95rem; color: rgba(255,255,255,0.92); }
+    .chk { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.2); font-size: 0.75rem; }
+    .bp-footer { position: relative; z-index: 1; font-size: 0.78rem; color: rgba(255,255,255,0.7); }
+
+    /* Reveal entrance (left panel) */
+    .reveal { opacity: 0; transform: translateY(16px); animation: reveal 0.7s cubic-bezier(0.16,1,0.3,1) forwards; animation-delay: var(--d, 0s); }
+    @keyframes reveal { to { opacity: 1; transform: translateY(0); } }
+
+    /* ── Right ────────────────────────────────────────────── */
+    .form-panel { display: flex; align-items: center; justify-content: center; padding: 2rem; background: #f8fafc; position: relative; }
+    .fp-inner { width: 100%; max-width: 400px; }
+
+    .fp-head { overflow: hidden; }
+    .fp-head h2 { font-size: 1.9rem; font-weight: 800; color: var(--ink); margin: 0 0 0.35rem; letter-spacing: -0.03em; }
+    .pop { animation: pop 0.45s cubic-bezier(0.16,1,0.3,1); }
+    .pop-sub { color: var(--muted); font-size: 0.92rem; margin: 0 0 1.75rem; animation: pop 0.5s cubic-bezier(0.16,1,0.3,1); }
+    @keyframes pop { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+    .alert { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.85rem; font-weight: 500; margin-bottom: 1.25rem; }
+    .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; }
+    .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; animation: pop 0.4s ease; }
+    .shake { animation: shake 0.45s cubic-bezier(0.36,0.07,0.19,0.97); }
+    @keyframes shake { 10%,90% { transform: translateX(-1px);} 20%,80% { transform: translateX(2px);} 30%,50%,70% { transform: translateX(-4px);} 40%,60% { transform: translateX(4px);} }
+
+    .stack { display: flex; flex-direction: column; gap: 1.35rem; }
+
+    /* Staggered entrance for form rows */
+    .stagger { opacity: 0; transform: translateY(14px); animation: reveal 0.5s cubic-bezier(0.16,1,0.3,1) forwards; animation-delay: calc(var(--i, 1) * 0.08s); }
+
+    /* Floating-label field with animated underline */
+    .field { position: relative; }
+    .field input {
+      width: 100%; padding: 1.15rem 1rem 0.5rem; border-radius: 10px;
+      border: 1.5px solid var(--line); background: #fff; color: var(--ink);
+      font-size: 0.95rem; outline: none; transition: border-color 0.2s, box-shadow 0.25s, transform 0.2s;
+    }
+    .field input:focus { border-color: var(--brand); box-shadow: 0 6px 18px -8px rgba(37,99,235,0.4); transform: translateY(-1px); }
+    .field label { position: absolute; left: 1rem; top: 0.9rem; color: var(--muted); font-size: 0.92rem; pointer-events: none; transition: all 0.18s ease; }
+    .field input:focus + label, .field input:not(:placeholder-shown) + label {
+      top: 0.35rem; font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--brand);
+    }
+    .underline { position: absolute; left: 50%; bottom: 0; height: 2px; width: 0; background: linear-gradient(90deg, var(--brand), var(--brand2)); border-radius: 2px; transform: translateX(-50%); transition: width 0.3s ease; }
+    .field input:focus ~ .underline { width: 100%; }
+    .otp-input { text-align: center; letter-spacing: 0.4em; font-weight: 700; }
+    .float-link { position: absolute; right: 0.9rem; top: 0.95rem; }
+
+    .link { font-size: 0.78rem; color: var(--brand); cursor: pointer; font-weight: 600; }
+    .link:hover { text-decoration: underline; }
+
+    /* Buttons with shine sweep */
+    .btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.9rem 1rem; border-radius: 10px; border: 0; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: transform 0.15s, box-shadow 0.25s, background 0.2s, opacity 0.2s; }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn:not(:disabled):hover { transform: translateY(-2px); }
+    .btn:not(:disabled):active { transform: translateY(0) scale(0.99); }
+    .btn-primary { color: #fff; background: linear-gradient(135deg, #2563eb, #4f46e5); box-shadow: 0 8px 20px -6px rgba(37,99,235,0.5); }
+    .btn-primary:not(:disabled):hover { box-shadow: 0 14px 28px -8px rgba(37,99,235,0.7); }
+    .btn-success { color: #fff; background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 20px -6px rgba(16,185,129,0.5); }
+    .btn-ghost { color: #334155; background: #fff; border: 1.5px solid var(--line); }
+    .btn-ghost:hover { background: #f1f5f9; }
+    .btn-row { display: flex; gap: 0.75rem; }
+    .grow { flex: 1.6; } .btn-row .btn-ghost { flex: 1; }
+
+    .btn-shine { position: absolute; top: 0; left: -120%; width: 60%; height: 100%; background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent); transform: skewX(-20deg); transition: left 0.6s ease; }
+    .btn:not(:disabled):hover .btn-shine { left: 130%; }
+
+    .spinner { width: 15px; height: 15px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; animation: spin 0.7s linear infinite; }
+
+    .hint { margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--line); font-size: 0.78rem; color: var(--muted); line-height: 1.7; }
+    .hint strong { display: block; color: #334155; margin-bottom: 0.35rem; }
+    .hint code { background: #eef2ff; color: var(--brand); padding: 0.05rem 0.35rem; border-radius: 4px; }
+
+    .otp-banner { background: #eef2ff; border: 1px solid #c7d2fe; padding: 0.7rem; border-radius: 10px; font-size: 0.8rem; color: #4338ca; text-align: center; }
+    .otp-banner code { font-weight: 800; color: var(--ink); background: #fff; padding: 0.1rem 0.45rem; border-radius: 5px; margin-left: 0.3rem; }
+
+    @media (max-width: 900px) {
+      .split { grid-template-columns: 1fr; }
+      .brand-panel { display: none; }
+      .form-panel { min-height: 100vh; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .stagger, .pop, .pop-sub, .shimmer, .shake, .btn-shine, .dot, .ring { animation: none !important; opacity: 1 !important; transform: none !important; }
+    }
+  `]
 })
 export class LoginComponent {
   @Output() loginSuccess = new EventEmitter<any>();
@@ -134,13 +245,9 @@ export class LoginComponent {
   protected readonly isLoading = signal(false);
   protected readonly errorMessage = signal('');
   protected readonly successMessage = signal('');
-  protected readonly currentView = signal('LOGIN'); // LOGIN, FORGOT, RESET
+  protected readonly currentView = signal('LOGIN');
 
-  credentials = {
-    username: '',
-    password: ''
-  };
-
+  credentials = { username: '', password: '' };
   forgotContact = '';
   resetOtp = '';
   resetNewPassword = '';
@@ -158,13 +265,9 @@ export class LoginComponent {
     this.isLoading.set(true);
     this.errorMessage.set('');
     this.successMessage.set('');
-
     this.http.post<any>('http://localhost:8080/api/auth/login', this.credentials)
       .subscribe({
-        next: (res) => {
-          this.isLoading.set(false);
-          this.loginSuccess.emit(res);
-        },
+        next: (res) => { this.isLoading.set(false); this.loginSuccess.emit(res); },
         error: (err) => {
           this.isLoading.set(false);
           this.errorMessage.set(err.error?.message || 'Connection failed. Please ensure the backend is running.');
@@ -177,14 +280,13 @@ export class LoginComponent {
     this.isLoading.set(true);
     this.errorMessage.set('');
     this.successMessage.set('');
-
     this.http.post<any>('http://localhost:8080/api/auth/forgot-password/request', { contact: this.forgotContact })
       .subscribe({
         next: (res) => {
           this.isLoading.set(false);
           this.successMessage.set('A secure verification OTP code has been generated and dispatched!');
           this.demoPrefilledOtp = res.otp || '';
-          this.resetOtp = res.otp || ''; // Pre-fill for painless testing!
+          this.resetOtp = res.otp || '';
           this.setView('RESET');
         },
         error: (err) => {
@@ -199,13 +301,7 @@ export class LoginComponent {
     this.isLoading.set(true);
     this.errorMessage.set('');
     this.successMessage.set('');
-
-    const payload = {
-      contact: this.forgotContact,
-      otp: this.resetOtp,
-      newPassword: this.resetNewPassword
-    };
-
+    const payload = { contact: this.forgotContact, otp: this.resetOtp, newPassword: this.resetNewPassword };
     this.http.post<any>('http://localhost:8080/api/auth/forgot-password/reset', payload)
       .subscribe({
         next: (res) => {

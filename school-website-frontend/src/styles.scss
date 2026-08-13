@@ -1,5 +1,210 @@
 /* You can add global styles to this file, and also import other style files */
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM  (Option A — light app + brand accents)
+   Reusable tokens, primitives (.ds-*) and animations used across the app.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  /* Brand accents (fall back to defaults, overridden per-tenant at runtime) */
+  --ds-brand:        var(--tenant-primary, #2563eb);
+  --ds-brand-2:      var(--tenant-secondary, #7c3aed);
+  --ds-accent:       var(--tenant-accent, #f59e0b);
+  --ds-brand-grad:   linear-gradient(135deg, var(--tenant-primary, #2563eb), #4f46e5);
+
+  /* Neutrals */
+  --ds-ink:      #0f172a;
+  --ds-body:     #334155;
+  --ds-muted:    #64748b;
+  --ds-line:     #e2e8f0;
+  --ds-surface:  #ffffff;
+  --ds-bg:       #f6f7fb;
+
+  /* Radius & shadows */
+  --ds-radius-sm: 8px;
+  --ds-radius:    12px;
+  --ds-radius-lg: 20px;
+  --ds-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+  --ds-shadow:    0 10px 30px -12px rgba(15, 23, 42, 0.18);
+  --ds-shadow-lg: 0 20px 50px -15px rgba(15, 23, 42, 0.25);
+
+  /* Motion */
+  --ds-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--ds-body);
+  background: var(--ds-bg);
+}
+
+/* ── Card ─────────────────────────────────────────────────────────────────── */
+.ds-card {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-radius-lg);
+  box-shadow: var(--ds-shadow);
+  transition: transform 0.25s var(--ds-ease), box-shadow 0.25s var(--ds-ease);
+}
+.ds-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--ds-shadow-lg);
+}
+
+/* ── Buttons (with shine sweep) ───────────────────────────────────────────── */
+.ds-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.25rem;
+  border-radius: var(--ds-radius);
+  border: 0;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.25s, background 0.2s, opacity 0.2s;
+}
+.ds-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.ds-btn:not(:disabled):hover { transform: translateY(-2px); }
+.ds-btn:not(:disabled):active { transform: translateY(0) scale(0.99); }
+.ds-btn::after {
+  content: '';
+  position: absolute; top: 0; left: -120%;
+  width: 60%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+}
+.ds-btn:not(:disabled):hover::after { left: 130%; }
+
+.ds-btn-primary {
+  color: #fff;
+  background: var(--ds-brand-grad);
+  box-shadow: 0 8px 20px -6px rgba(37, 99, 235, 0.5);
+}
+.ds-btn-primary:not(:disabled):hover { box-shadow: 0 14px 28px -8px rgba(37, 99, 235, 0.7); }
+
+.ds-btn-success {
+  color: #fff;
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 8px 20px -6px rgba(16, 185, 129, 0.5);
+}
+.ds-btn-danger {
+  color: #fff;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  box-shadow: 0 8px 20px -6px rgba(239, 68, 68, 0.5);
+}
+.ds-btn-ghost {
+  color: var(--ds-body);
+  background: #fff;
+  border: 1.5px solid var(--ds-line);
+}
+.ds-btn-ghost:hover { background: #f1f5f9; }
+
+/* ── Floating-label field ─────────────────────────────────────────────────── */
+.ds-field { position: relative; }
+.ds-field > input,
+.ds-field > select,
+.ds-field > textarea {
+  width: 100%;
+  padding: 1.15rem 1rem 0.5rem;
+  border-radius: var(--ds-radius);
+  border: 1.5px solid var(--ds-line);
+  background: #fff;
+  color: var(--ds-ink);
+  font: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.25s, transform 0.2s;
+}
+.ds-field > input:focus,
+.ds-field > select:focus,
+.ds-field > textarea:focus {
+  border-color: var(--ds-brand);
+  box-shadow: 0 6px 18px -8px rgba(37, 99, 235, 0.4);
+  transform: translateY(-1px);
+}
+.ds-field > label {
+  position: absolute; left: 1rem; top: 0.9rem;
+  color: var(--ds-muted); font-size: 0.92rem;
+  pointer-events: none; transition: all 0.18s ease;
+}
+.ds-field > input:focus + label,
+.ds-field > input:not(:placeholder-shown) + label,
+.ds-field > textarea:focus + label,
+.ds-field > textarea:not(:placeholder-shown) + label {
+  top: 0.35rem; font-size: 0.66rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em; color: var(--ds-brand);
+}
+
+/* ── Alerts ───────────────────────────────────────────────────────────────── */
+.ds-alert {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.75rem 1rem; border-radius: var(--ds-radius);
+  font-size: 0.85rem; font-weight: 500; margin-bottom: 1.25rem;
+}
+.ds-alert-error   { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; }
+.ds-alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; animation: dsPop 0.4s ease; }
+.ds-alert-info    { background: #eef2ff; border: 1px solid #c7d2fe; color: #4338ca; }
+
+/* ── Chips / badges ───────────────────────────────────────────────────────── */
+.ds-chip {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 0.25rem 0.7rem; border-radius: 9999px;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em;
+  background: #eef2ff; color: var(--ds-brand);
+}
+
+/* ── Section heading with gradient accent ─────────────────────────────────── */
+.ds-heading {
+  font-weight: 800; letter-spacing: -0.02em; color: var(--ds-ink);
+}
+.ds-heading-grad {
+  background: linear-gradient(90deg, var(--ds-brand), var(--ds-brand-2));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+/* ── Animations / utilities ───────────────────────────────────────────────── */
+.ds-reveal  { opacity: 0; transform: translateY(16px); animation: dsReveal 0.7s var(--ds-ease) forwards; animation-delay: var(--d, 0s); }
+.ds-stagger { opacity: 0; transform: translateY(14px); animation: dsReveal 0.5s var(--ds-ease) forwards; animation-delay: calc(var(--i, 1) * 0.08s); }
+.ds-pop     { animation: dsPop 0.45s var(--ds-ease); }
+.ds-shake   { animation: dsShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+.ds-float   { animation: dsFloat 4s ease-in-out infinite; }
+.ds-shimmer {
+  background: linear-gradient(90deg, currentColor 0%, rgba(255,255,255,0.6) 25%, currentColor 50%);
+  background-size: 200% 100%; -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; animation: dsShimmer 4s linear infinite;
+}
+.ds-spinner {
+  width: 15px; height: 15px; border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4); border-top-color: #fff;
+  animation: dsSpin 0.7s linear infinite;
+}
+
+@keyframes dsReveal  { to { opacity: 1; transform: translateY(0); } }
+@keyframes dsPop     { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes dsShake   { 10%,90% { transform: translateX(-1px);} 20%,80% { transform: translateX(2px);} 30%,50%,70% { transform: translateX(-4px);} 40%,60% { transform: translateX(4px);} }
+@keyframes dsFloat   { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-6px);} }
+@keyframes dsShimmer { to { background-position: -200% 0; } }
+@keyframes dsSpin    { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-reveal, .ds-stagger, .ds-pop, .ds-shake, .ds-float, .ds-shimmer {
+    animation: none !important; opacity: 1 !important; transform: none !important;
+  }
+  .ds-btn::after { display: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Existing styles below
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 /* Attractive Navigation styles */
 .nav-link {
   cursor: pointer;
