@@ -118,7 +118,14 @@ public class DatabaseSeeder implements CommandLineRunner {
                     "{\"title\":\"Nurturing Potential, Inspiring Excellence\",\"subtitle\":\"Welcome to SaaS Pioneer Academy — where high-tech labs, championship athletics, and world-class mentorship shape tomorrow's leaders.\"}")
                     .build());
             pageSectionRepository.save(PageSection.builder().pageId(home.getId()).type("CAROUSEL").positionOrder(2)
-                    .config("{\"img1\":\"https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=800&q=80\",\"img2\":\"https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80\",\"img3\":\"https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80\"}")
+                    .config("{\"images\":["
+                            + "{\"url\":\"https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1600&q=80\",\"caption\":\"Iconic Campus & Architecture\",\"subtitle\":\"A sprawling, green campus designed to inspire curiosity and calm.\"},"
+                            + "{\"url\":\"https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1600&q=80\",\"caption\":\"Collaborative Learning Spaces\",\"subtitle\":\"Bright, modern classrooms built for interactive, concept-driven learning.\"},"
+                            + "{\"url\":\"https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1600&q=80\",\"caption\":\"High-Tech STEM Laboratories\",\"subtitle\":\"Industry-grade labs, robotics stations and 3D printing studios.\"},"
+                            + "{\"url\":\"https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&w=1600&q=80\",\"caption\":\"Vibrant Library & Reading Halls\",\"subtitle\":\"Thousands of titles and quiet corners for deep focus.\"},"
+                            + "{\"url\":\"https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=1600&q=80\",\"caption\":\"Championship Athletics\",\"subtitle\":\"Synthetic tracks, courts and certified coaches for every sport.\"},"
+                            + "{\"url\":\"https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1600&q=80\",\"caption\":\"A Culture of Reading & Research\",\"subtitle\":\"Nurturing lifelong learners through literature and inquiry.\"}"
+                            + "]}")
                     .build());
             pageSectionRepository.save(PageSection.builder().pageId(home.getId()).type("FEATURES").positionOrder(3)
                     .config("{\"f1_title\":\"STEM & Robotics Labs\",\"f1_desc\":\"Industry-grade hardware and 3D printing stations\",\"f2_title\":\"Championship Athletics\",\"f2_desc\":\"Synthetic tracks, courts and certified coaches\",\"f3_title\":\"Smart Classrooms\",\"f3_desc\":\"Interactive digital boards and climate-controlled halls\"}")
