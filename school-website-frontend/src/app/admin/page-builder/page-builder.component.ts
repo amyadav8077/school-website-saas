@@ -23,18 +23,18 @@ export interface Page {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div style="background: white; padding: 2rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
-      <h2 style="font-size: 1.5rem; color: #1e293b; margin-top: 0; margin-bottom: 0.5rem; font-weight: 700;">CMS School Page Builder</h2>
+    <div class="ds-card ds-reveal" style="padding: 2rem; margin-bottom: 2rem;">
+      <h2 class="ds-heading" style="font-size: 1.5rem; margin-top: 0; margin-bottom: 0.5rem;">CMS School <span class="ds-heading-grad">Page Builder</span></h2>
       <p style="color: #64748b; font-size: 0.9rem; margin-top: 0; margin-bottom: 1.5rem;">Create school pages and compile their structural sections for: <strong style="color: #0f172a;">{{ tenantName }}</strong></p>
 
       @if (successMessage()) {
-        <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem; color: #047857;">
+        <div class="ds-alert ds-alert-success">
           <strong>Success!</strong> {{ successMessage() }}
         </div>
       }
 
       @if (errorMessage()) {
-        <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem; color: #b91c1c;">
+        <div class="ds-alert ds-alert-error ds-shake">
           <strong>Error:</strong> {{ errorMessage() }}
         </div>
       }
@@ -53,7 +53,7 @@ export interface Page {
               }
             </select>
             @if (selectedPageId) {
-              <button (click)="deleteSelectedPage()" style="background: #ef4444; color: white; border: 0; padding: 0.75rem; border-radius: 6px; font-weight: 600; cursor: pointer;">
+              <button (click)="deleteSelectedPage()" class="ds-btn ds-btn-danger">
                 🗑️ Delete
               </button>
             }
@@ -80,7 +80,7 @@ export interface Page {
           <form (ngSubmit)="createNewPage()" style="display: flex; gap: 0.5rem;">
             <input type="text" name="newPageTitle" [(ngModel)]="newPageForm.title" placeholder="Page Title" required style="flex: 1; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem;" />
             <input type="text" name="newPageSlug" [(ngModel)]="newPageForm.slug" placeholder="slug" required style="width: 80px; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem;" />
-            <button type="submit" style="background: #1e3a8a; color: white; border: 0; padding: 0.65rem 1.25rem; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.9rem;">
+            <button type="submit" class="ds-btn ds-btn-primary" style="font-size: 0.9rem;">
               + Create
             </button>
           </form>
@@ -92,10 +92,10 @@ export interface Page {
       @if (selectedPage()) {
         <div>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-            <h3 style="margin: 0; font-size: 1.25rem; color: #1e293b; font-weight: 700;">
+            <h3 class="ds-heading" style="margin: 0; font-size: 1.25rem;">
               Composition Sections for: <span style="color: #2563eb;">{{ selectedPage()?.title }}</span>
             </h3>
-            <span style="background: #dbeafe; color: #1e40af; font-size: 0.8rem; padding: 0.25rem 0.5rem; border-radius: 9999px; font-weight: 600;">
+            <span class="ds-chip">
               {{ activeSections().length }} section(s)
             </span>
           </div>
@@ -109,7 +109,7 @@ export interface Page {
           } @else {
             <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
               @for (sec of activeSections(); track $index; let idx = $index) {
-                <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+                <div class="ds-card" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
                   <!-- Section Header Controls -->
                   <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -118,9 +118,9 @@ export interface Page {
                     </div>
                     <!-- Order & Delete Controls -->
                     <div style="display: flex; gap: 0.35rem;">
-                      <button (click)="moveSection(idx, -1)" [disabled]="idx === 0" style="padding: 0.25rem 0.5rem; background: white; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">▲</button>
-                      <button (click)="moveSection(idx, 1)" [disabled]="idx === activeSections().length - 1" style="padding: 0.25rem 0.5rem; background: white; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">▼</button>
-                      <button (click)="removeSection(idx)" style="padding: 0.25rem 0.5rem; background: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">🗑️ Remove</button>
+                      <button (click)="moveSection(idx, -1)" [disabled]="idx === 0" class="ds-btn ds-btn-ghost" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">▲</button>
+                      <button (click)="moveSection(idx, 1)" [disabled]="idx === activeSections().length - 1" class="ds-btn ds-btn-ghost" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">▼</button>
+                      <button (click)="removeSection(idx)" class="ds-btn ds-btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">🗑️ Remove</button>
                     </div>
                   </div>
 
@@ -166,7 +166,7 @@ export interface Page {
                       <div style="grid-column: span 2; display: flex; flex-direction: column; gap: 1rem;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                           <strong style="font-size: 0.85rem; color: #475569;">Carousel Slides (No Limit)</strong>
-                          <button (click)="addCarouselImage(idx)" style="background: #2563eb; color: white; border: 0; padding: 0.35rem 0.75rem; border-radius: 4px; font-weight: 600; font-size: 0.75rem; cursor: pointer;">
+                          <button (click)="addCarouselImage(idx)" class="ds-btn ds-btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">
                             ➕ Add Slide Image
                           </button>
                         </div>
@@ -186,7 +186,7 @@ export interface Page {
                               <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 0.15rem;">Slide Caption</label>
                               <input type="text" [(ngModel)]="img.caption" style="width: 100%; padding: 0.35rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.8rem;" />
                             </div>
-                            <button (click)="removeCarouselImage(idx, imgIdx)" [disabled]="getCarouselImages(idx).length <= 1" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: 0; color: #ef4444; font-weight: 700; cursor: pointer; font-size: 0.8rem;">
+                            <button (click)="removeCarouselImage(idx, imgIdx)" [disabled]="getCarouselImages(idx).length <= 1" class="ds-btn ds-btn-danger" style="position: absolute; top: 0.5rem; right: 0.5rem; padding: 0.25rem 0.6rem; font-size: 0.8rem;">
                               Remove ❌
                             </button>
                           </div>
@@ -196,7 +196,7 @@ export interface Page {
                       <div style="grid-column: span 2; display: flex; flex-direction: column; gap: 1rem;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                           <strong style="font-size: 0.85rem; color: #475569;">School Video Items (No Limit)</strong>
-                          <button (click)="addVideoItem(idx)" style="background: #2563eb; color: white; border: 0; padding: 0.35rem 0.75rem; border-radius: 4px; font-weight: 600; font-size: 0.75rem; cursor: pointer;">
+                          <button (click)="addVideoItem(idx)" class="ds-btn ds-btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">
                             ➕ Add Video
                           </button>
                         </div>
@@ -211,7 +211,7 @@ export interface Page {
                               <input type="text" [(ngModel)]="vid.url" style="width: 100%; padding: 0.35rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.8rem;" />
                               <input type="file" (change)="onVideoUpload($event, idx, vidIdx)" accept="video/*" style="font-size: 0.75rem; margin-top: 0.25rem;" />
                             </div>
-                            <button (click)="removeVideoItem(idx, vidIdx)" [disabled]="getVideoList(idx).length <= 1" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: 0; color: #ef4444; font-weight: 700; cursor: pointer; font-size: 0.8rem;">
+                            <button (click)="removeVideoItem(idx, vidIdx)" [disabled]="getVideoList(idx).length <= 1" class="ds-btn ds-btn-danger" style="position: absolute; top: 0.5rem; right: 0.5rem; padding: 0.25rem 0.6rem; font-size: 0.8rem;">
                               Remove ❌
                             </button>
                           </div>
@@ -242,7 +242,7 @@ export interface Page {
                       <div style="grid-column: span 2; display: flex; flex-direction: column; gap: 1rem;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                           <strong style="font-size: 0.85rem; color: #475569;">Founders List (No Limit)</strong>
-                          <button (click)="addFounder(idx)" style="background: #2563eb; color: white; border: 0; padding: 0.35rem 0.75rem; border-radius: 4px; font-weight: 600; font-size: 0.75rem; cursor: pointer;">
+                          <button (click)="addFounder(idx)" class="ds-btn ds-btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">
                             ➕ Add Founder
                           </button>
                         </div>
@@ -272,7 +272,7 @@ export interface Page {
                                 <input type="file" (change)="onFounderPhotoUpload($event, idx, fIdx)" accept="image/*" style="font-size: 0.75rem; margin-top: 0.25rem;" />
                               </div>
                             </div>
-                            <button (click)="removeFounder(idx, fIdx)" [disabled]="getFoundersList(idx).length <= 1" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: 0; color: #ef4444; font-weight: 700; cursor: pointer; font-size: 0.8rem;">
+                            <button (click)="removeFounder(idx, fIdx)" [disabled]="getFoundersList(idx).length <= 1" class="ds-btn ds-btn-danger" style="position: absolute; top: 0.5rem; right: 0.5rem; padding: 0.25rem 0.6rem; font-size: 0.8rem;">
                               Remove ❌
                             </button>
                           </div>
@@ -282,7 +282,7 @@ export interface Page {
                       <div style="grid-column: span 2; display: flex; flex-direction: column; gap: 1rem;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                           <strong style="font-size: 0.85rem; color: #475569;">Facilities Catalog (No Limit)</strong>
-                          <button (click)="addFacility(idx)" style="background: #2563eb; color: white; border: 0; padding: 0.35rem 0.75rem; border-radius: 4px; font-weight: 600; font-size: 0.75rem; cursor: pointer;">
+                          <button (click)="addFacility(idx)" class="ds-btn ds-btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">
                             ➕ Add Facility
                           </button>
                         </div>
@@ -306,7 +306,7 @@ export interface Page {
                                 <input type="file" (change)="onFacilityPhotoUpload($event, idx, fIdx)" accept="image/*" style="font-size: 0.75rem; margin-top: 0.25rem;" />
                               </div>
                             </div>
-                            <button (click)="removeFacility(idx, fIdx)" [disabled]="getFacilitiesList(idx).length <= 1" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: 0; color: #ef4444; font-weight: 700; cursor: pointer; font-size: 0.8rem;">
+                            <button (click)="removeFacility(idx, fIdx)" [disabled]="getFacilitiesList(idx).length <= 1" class="ds-btn ds-btn-danger" style="position: absolute; top: 0.5rem; right: 0.5rem; padding: 0.25rem 0.6rem; font-size: 0.8rem;">
                               Remove ❌
                             </button>
                           </div>
@@ -316,7 +316,7 @@ export interface Page {
                       <div style="grid-column: span 2; display: flex; flex-direction: column; gap: 1rem;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                           <strong style="font-size: 0.85rem; color: #475569;">Photo Grid Images (No Limit)</strong>
-                          <button (click)="addPhotoGridItem(idx)" style="background: #2563eb; color: white; border: 0; padding: 0.35rem 0.75rem; border-radius: 4px; font-weight: 600; font-size: 0.75rem; cursor: pointer;">
+                          <button (click)="addPhotoGridItem(idx)" class="ds-btn ds-btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">
                             ➕ Add Photo Grid Item
                           </button>
                         </div>
@@ -347,7 +347,7 @@ export interface Page {
                                 <input type="file" (change)="onPhotoGridUpload($event, idx, pIdx)" accept="image/*" style="font-size: 0.75rem; margin-top: 0.25rem;" />
                               </div>
                             </div>
-                            <button (click)="removePhotoGridItem(idx, pIdx)" [disabled]="getPhotoGridList(idx).length <= 1" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: 0; color: #ef4444; font-weight: 700; cursor: pointer; font-size: 0.8rem;">
+                            <button (click)="removePhotoGridItem(idx, pIdx)" [disabled]="getPhotoGridList(idx).length <= 1" class="ds-btn ds-btn-danger" style="position: absolute; top: 0.5rem; right: 0.5rem; padding: 0.25rem 0.6rem; font-size: 0.8rem;">
                               Remove ❌
                             </button>
                           </div>
@@ -362,44 +362,44 @@ export interface Page {
 
           <!-- Save Layout / Save Settings -->
           <div style="display: flex; gap: 1rem; border-top: 1px solid #cbd5e1; padding-top: 1.5rem; justify-content: flex-end; margin-bottom: 2rem;">
-            <button (click)="savePageLayout()" [disabled]="isSaving()" style="background: #10b981; color: white; border: 0; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 700; cursor: pointer;">
-              {{ isSaving() ? 'Saving...' : '💾 Save Page Sections' }}
+            <button (click)="savePageLayout()" [disabled]="isSaving()" class="ds-btn ds-btn-success">
+              @if (isSaving()) { <span class="ds-spinner"></span> Saving... } @else { 💾 Save Page Sections }
             </button>
           </div>
 
           <!-- Section Palette -->
           <div style="background: #f1f5f9; padding: 1.5rem; border-radius: 8px; border: 1px solid #cbd5e1;">
-            <h4 style="margin-top: 0; margin-bottom: 0.75rem; color: #1e293b; font-size: 1rem; font-weight: 700;">Section Palette</h4>
+            <h4 class="ds-heading" style="margin-top: 0; margin-bottom: 0.75rem; font-size: 1rem;">Section Palette</h4>
             <p style="color: #64748b; font-size: 0.8rem; margin-top: 0; margin-bottom: 1rem;">Click to append a predefined template section block to this page:</p>
             <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-              <button (click)="addSectionToPage('HERO')" style="background: white; border: 1px solid #cbd5e1; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600; color: #334155; font-size: 0.85rem;">
+              <button (click)="addSectionToPage('HERO')" class="ds-btn ds-btn-ghost" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
                 ➕ Hero Banner Block
               </button>
-              <button (click)="addSectionToPage('FEATURES')" style="background: white; border: 1px solid #cbd5e1; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600; color: #334155; font-size: 0.85rem;">
+              <button (click)="addSectionToPage('FEATURES')" class="ds-btn ds-btn-ghost" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
                 ➕ Highlighting Features
               </button>
-              <button (click)="addSectionToPage('NOTICES')" style="background: white; border: 1px solid #cbd5e1; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600; color: #334155; font-size: 0.85rem;">
+              <button (click)="addSectionToPage('NOTICES')" class="ds-btn ds-btn-ghost" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
                 ➕ School Notice Board
               </button>
-              <button (click)="addSectionToPage('DISCLOSURES')" style="background: white; border: 1px solid #cbd5e1; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600; color: #334155; font-size: 0.85rem;">
+              <button (click)="addSectionToPage('DISCLOSURES')" class="ds-btn ds-btn-ghost" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
                 ➕ Compliance Disclosures
               </button>
-              <button (click)="addSectionToPage('CAROUSEL')" style="background: white; border: 1px solid #cbd5e1; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600; color: #334155; font-size: 0.85rem;">
+              <button (click)="addSectionToPage('CAROUSEL')" class="ds-btn ds-btn-ghost" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
                 ➕ Image Slider Block
               </button>
-              <button (click)="addSectionToPage('VIDEO')" style="background: white; border: 1px solid #cbd5e1; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600; color: #334155; font-size: 0.85rem;">
+              <button (click)="addSectionToPage('VIDEO')" class="ds-btn ds-btn-ghost" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
                 ➕ Video Player Block
               </button>
-              <button (click)="addSectionToPage('INTRO')" style="background: white; border: 1px solid #cbd5e1; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600; color: #334155; font-size: 0.85rem;">
+              <button (click)="addSectionToPage('INTRO')" class="ds-btn ds-btn-ghost" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
                 ➕ School Intro Block
               </button>
-              <button (click)="addSectionToPage('FOUNDERS')" style="background: white; border: 1px solid #cbd5e1; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600; color: #334155; font-size: 0.85rem;">
+              <button (click)="addSectionToPage('FOUNDERS')" class="ds-btn ds-btn-ghost" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
                 ➕ Founders Board Block
               </button>
-              <button (click)="addSectionToPage('FACILITIES')" style="background: white; border: 1px solid #cbd5e1; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600; color: #334155; font-size: 0.85rem;">
+              <button (click)="addSectionToPage('FACILITIES')" class="ds-btn ds-btn-ghost" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
                 ➕ Facilities Grid Block
               </button>
-              <button (click)="addSectionToPage('PHOTO_GRID')" style="background: white; border: 1px solid #cbd5e1; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600; color: #334155; font-size: 0.85rem;">
+              <button (click)="addSectionToPage('PHOTO_GRID')" class="ds-btn ds-btn-ghost" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
                 ➕ Photos Grid Gallery
               </button>
             </div>

@@ -25,7 +25,7 @@ export interface Faculty {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div style="background: white; padding: 2rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
+    <div class="ds-card ds-reveal" style="padding: 2rem; margin-bottom: 2rem;">
       <!-- Tab Header Toggle -->
       <div style="display: flex; gap: 1rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.75rem; margin-bottom: 1.5rem;">
         <button (click)="activeTab.set('COURSES')" 
@@ -45,7 +45,7 @@ export interface Faculty {
       <!-- Tab 1: Course Manager -->
       @if (activeTab() === 'COURSES') {
         <div>
-          <h3 style="margin-top: 0; margin-bottom: 1rem; color: #1e293b; font-weight: 700; font-size: 1.2rem;">Add New Academic Course</h3>
+          <h3 class="ds-heading" style="margin-top: 0; margin-bottom: 1rem; font-size: 1.2rem;">Add New Academic Course</h3>
           
           <form (ngSubmit)="addCourse()" #courseForm="ngForm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; background: #f8fafc; padding: 1.25rem; border-radius: 6px; border: 1px solid #e2e8f0;">
             <div>
@@ -69,19 +69,19 @@ export interface Faculty {
                 <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Syllabus Outline / Key Topics (Optional)</label>
                 <input type="text" name="syllabusSummary" [(ngModel)]="newCourse.syllabusSummary" placeholder="e.g. Mechanics, Thermodynamics, Quantum Basics" style="width: 100%; padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
               </div>
-              <button type="submit" [disabled]="!courseForm.form.valid" style="background: #1e3a8a; color: white; border: 0; padding: 0.65rem 1.25rem; border-radius: 4px; font-weight: 600; cursor: pointer;">
+              <button type="submit" [disabled]="!courseForm.form.valid" class="ds-btn ds-btn-primary">
                 Add Course
               </button>
             </div>
           </form>
 
-          <h3 style="margin-bottom: 0.75rem; color: #1e293b; font-weight: 700; font-size: 1.2rem;">Current Courses</h3>
+          <h3 class="ds-heading" style="margin-bottom: 0.75rem; font-size: 1.2rem;">Current Courses</h3>
           @if (courses().length === 0) {
             <p style="color: #64748b; font-style: italic;">No courses have been added to this school yet.</p>
           } @else {
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
               @for (c of courses(); track c.id) {
-                <div style="background: white; border: 1px solid #cbd5e1; border-radius: 6px; padding: 1rem; display: flex; flex-direction: column; justify-content: space-between;">
+                <div class="ds-card ds-card-hover" style="padding: 1rem; display: flex; flex-direction: column; justify-content: space-between;">
                   <div>
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
                       <strong style="font-size: 1.05rem; color: #0f172a;">{{ c.name }}</strong>
@@ -93,7 +93,7 @@ export interface Faculty {
                     }
                   </div>
                   <div style="text-align: right; margin-top: 0.75rem; border-top: 1px solid #f1f5f9; padding-top: 0.5rem;">
-                    <button (click)="deleteCourse(c.id!)" style="background: none; border: 0; color: #ef4444; font-size: 0.8rem; font-weight: 600; cursor: pointer;">
+                    <button (click)="deleteCourse(c.id!)" class="ds-btn ds-btn-danger" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">
                       🗑️ Delete Course
                     </button>
                   </div>
@@ -107,7 +107,7 @@ export interface Faculty {
       <!-- Tab 2: Faculty Manager -->
       @if (activeTab() === 'FACULTY') {
         <div>
-          <h3 style="margin-top: 0; margin-bottom: 1rem; color: #1e293b; font-weight: 700; font-size: 1.2rem;">Add New Faculty Member</h3>
+          <h3 class="ds-heading" style="margin-top: 0; margin-bottom: 1rem; font-size: 1.2rem;">Add New Faculty Member</h3>
           
           <form (ngSubmit)="addFaculty()" #facultyForm="ngForm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; background: #f8fafc; padding: 1.25rem; border-radius: 6px; border: 1px solid #e2e8f0;">
             <div>
@@ -127,19 +127,19 @@ export interface Faculty {
               <input type="text" name="bio" [(ngModel)]="newFaculty.bio" required placeholder="e.g. Passionate researcher with over 15 years teaching..." style="width: 100%; padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
             </div>
             <div style="grid-column: span 2; display: flex; justify-content: flex-end; margin-top: 0.5rem;">
-              <button type="submit" [disabled]="!facultyForm.form.valid" style="background: #1e3a8a; color: white; border: 0; padding: 0.65rem 1.25rem; border-radius: 4px; font-weight: 600; cursor: pointer;">
+              <button type="submit" [disabled]="!facultyForm.form.valid" class="ds-btn ds-btn-primary">
                 Add Faculty Member
               </button>
             </div>
           </form>
 
-          <h3 style="margin-bottom: 0.75rem; color: #1e293b; font-weight: 700; font-size: 1.2rem;">Our Faculty List</h3>
+          <h3 class="ds-heading" style="margin-bottom: 0.75rem; font-size: 1.2rem;">Our Faculty List</h3>
           @if (faculty().length === 0) {
             <p style="color: #64748b; font-style: italic;">No faculty members have been added to this school yet.</p>
           } @else {
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
               @for (f of faculty(); track f.id) {
-                <div style="background: white; border: 1px solid #cbd5e1; border-radius: 6px; padding: 1rem; display: flex; gap: 1rem; align-items: flex-start; justify-content: space-between;">
+                <div class="ds-card ds-card-hover" style="padding: 1rem; display: flex; gap: 1rem; align-items: flex-start; justify-content: space-between;">
                   <div style="display: flex; gap: 1rem;">
                     <div style="width: 50px; height: 50px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
                       👨‍🏫
@@ -151,7 +151,7 @@ export interface Faculty {
                       <p style="color: #475569; font-size: 0.8rem; margin: 0; line-height: 1.4;">{{ f.bio }}</p>
                     </div>
                   </div>
-                  <button (click)="deleteFaculty(f.id!)" style="background: none; border: 0; color: #ef4444; font-size: 0.8rem; font-weight: 600; cursor: pointer; white-space: nowrap;">
+                  <button (click)="deleteFaculty(f.id!)" class="ds-btn ds-btn-danger" style="padding: 0.35rem 0.6rem; font-size: 0.8rem; white-space: nowrap;">
                     🗑️ Remove
                   </button>
                 </div>

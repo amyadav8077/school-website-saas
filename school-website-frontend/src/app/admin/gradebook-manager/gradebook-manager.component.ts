@@ -22,8 +22,8 @@ export interface StudentGrade {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div style="background: white; padding: 2rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
-      <h2 style="font-size: 1.5rem; color: #1e293b; margin-top: 0; margin-bottom: 0.5rem; font-weight: 700;">Academic Gradebook & Marks Manager</h2>
+    <div class="ds-card ds-reveal" style="padding: 2rem; margin-bottom: 2rem;">
+      <h2 class="ds-heading" style="font-size: 1.5rem; margin-top: 0; margin-bottom: 0.5rem;">Academic Gradebook & <span class="ds-heading-grad">Marks Manager</span></h2>
       <p style="color: #64748b; font-size: 0.9rem; margin-top: 0; margin-bottom: 1.5rem;">Input assessment scores and teacher remarks for students of: <strong style="color: #0f172a;">{{ tenantName }}</strong></p>
 
       <!-- Tab Selectors: Single Entry vs Bulk Excel Import -->
@@ -133,7 +133,7 @@ export interface StudentGrade {
           </div>
 
           <div style="text-align: right;">
-            <button type="submit" [disabled]="!gradeForm.form.valid" style="background: #1e3a8a; color: white; border: 0; padding: 0.65rem 1.25rem; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+            <button type="submit" [disabled]="!gradeForm.form.valid" class="ds-btn ds-btn-primary" style="font-size: 0.85rem;">
               Record Score Entry
             </button>
           </div>
@@ -143,7 +143,7 @@ export interface StudentGrade {
       <!-- Mode 2: Bulk Excel / Spreadsheet Importer -->
       @if (managerMode() === 'BULK') {
         <div style="background: #f8fafc; padding: 1.5rem; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
-          <h3 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.15rem; color: #1e293b; font-weight: 700;">Excel / Spreadsheet Copy-Paste Importer</h3>
+          <h3 class="ds-heading" style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.15rem;">Excel / Spreadsheet Copy-Paste Importer</h3>
           
           <!-- Bulk Mode Switcher -->
           <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
@@ -216,7 +216,7 @@ export interface StudentGrade {
           </textarea>
 
           <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-            <button (click)="parseSpreadsheet()" [disabled]="!pasteAreaText.trim()" style="background: #1e3a8a; color: white; border: 0; padding: 0.55rem 1.25rem; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+            <button (click)="parseSpreadsheet()" [disabled]="!pasteAreaText.trim()" class="ds-btn ds-btn-primary" style="font-size: 0.85rem;">
               Parse & Preview Rows
             </button>
           </div>
@@ -252,11 +252,11 @@ export interface StudentGrade {
               </div>
 
               <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-                <button (click)="clearParsed()" style="background: white; border: 1px solid #cbd5e1; color: #475569; padding: 0.55rem 1.25rem; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                <button (click)="clearParsed()" class="ds-btn ds-btn-ghost" style="font-size: 0.85rem;">
                   Clear All
                 </button>
-                <button (click)="importParsedRows()" [disabled]="isImporting()" style="background: #10b981; color: white; border: 0; padding: 0.55rem 1.25rem; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 0.85rem;">
-                  {{ isImporting() ? 'Importing ledger...' : 'Confirm Bulk Import to Database' }}
+                <button (click)="importParsedRows()" [disabled]="isImporting()" class="ds-btn ds-btn-success" style="font-size: 0.85rem;">
+                  @if (isImporting()) { <span class="ds-spinner"></span> Importing ledger... } @else { Confirm Bulk Import to Database }
                 </button>
               </div>
             </div>
@@ -265,7 +265,7 @@ export interface StudentGrade {
       }
 
       <!-- Grade Records List -->
-      <h3 style="margin-bottom: 0.75rem; color: #1e293b; font-weight: 700; font-size: 1.2rem;">All Logged Grades</h3>
+      <h3 class="ds-heading" style="margin-bottom: 0.75rem; font-size: 1.2rem;">All Logged Grades</h3>
       @if (grades().length === 0) {
         <p style="color: #64748b; font-style: italic;">No gradebook entries recorded yet.</p>
       } @else {
@@ -297,7 +297,7 @@ export interface StudentGrade {
                   <td style="padding: 0.75rem 1rem; font-weight: 700; color: #1e3a8a;">{{ g.grade }}</td>
                   <td style="padding: 0.75rem 1rem; color: #475569; max-width: 200px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">{{ g.remarks || 'No remarks recorded.' }}</td>
                   <td style="padding: 0.75rem 1rem; text-align: right;">
-                    <button (click)="deleteGradeRecord(g.id!)" style="background: none; border: 0; color: #ef4444; font-size: 0.8rem; font-weight: 600; cursor: pointer;">
+                    <button (click)="deleteGradeRecord(g.id!)" class="ds-btn ds-btn-danger" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">
                       🗑️ Delete
                     </button>
                   </td>

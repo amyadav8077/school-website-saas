@@ -31,8 +31,8 @@ export interface StudentInvoice {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div style="background: white; padding: 2rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
-      <h2 style="font-size: 1.5rem; color: #1e293b; margin-top: 0; margin-bottom: 0.5rem; font-weight: 700;">Financial Fee & Invoicing Office</h2>
+    <div class="ds-card ds-reveal" style="padding: 2rem; margin-bottom: 2rem;">
+      <h2 class="ds-heading" style="font-size: 1.5rem; margin-top: 0; margin-bottom: 0.5rem;">Financial Fee & <span class="ds-heading-grad">Invoicing Office</span></h2>
       <p style="color: #64748b; font-size: 0.9rem; margin-top: 0; margin-bottom: 1.5rem;">Configure fee models and assign invoices to students of: <strong style="color: #0f172a;">{{ tenantName }}</strong></p>
 
       <!-- Tab Selectors: Single Invoice vs Bulk Importer -->
@@ -73,7 +73,7 @@ export interface StudentInvoice {
           
           <!-- Create Fee Item Category -->
           <div style="background: #f8fafc; padding: 1.25rem; border-radius: 6px; border: 1px solid #e2e8f0; align-self: start;">
-            <h3 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem; color: #1e293b; font-weight: 700;">1. Add Fee Category</h3>
+            <h3 class="ds-heading" style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem;">1. Add Fee Category</h3>
             <form (ngSubmit)="addFeeItem()" #feeForm="ngForm" style="display: flex; flex-direction: column; gap: 0.85rem;">
               <div>
                 <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Fee Name</label>
@@ -94,7 +94,7 @@ export interface StudentInvoice {
                   </select>
                 </div>
               </div>
-              <button type="submit" [disabled]="!feeForm.form.valid" style="background: #1e3a8a; color: white; border: 0; padding: 0.6rem; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 0.85rem; margin-top: 0.25rem;">
+              <button type="submit" [disabled]="!feeForm.form.valid" class="ds-btn ds-btn-primary" style="font-size: 0.85rem; margin-top: 0.25rem;">
                 Create Fee Category
               </button>
             </form>
@@ -102,7 +102,7 @@ export interface StudentInvoice {
 
           <!-- Generate Student Invoice -->
           <div style="background: #f8fafc; padding: 1.25rem; border-radius: 6px; border: 1px solid #e2e8f0;">
-            <h3 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem; color: #1e293b; font-weight: 700;">2. Generate Student Invoice</h3>
+            <h3 class="ds-heading" style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem;">2. Generate Student Invoice</h3>
             <form (ngSubmit)="generateInvoice()" #invoiceForm="ngForm" style="display: flex; flex-direction: column; gap: 0.85rem;">
               
               <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 0.5rem;">
@@ -170,7 +170,7 @@ export interface StudentInvoice {
                 </div>
               </div>
 
-              <button type="submit" [disabled]="!invoiceForm.form.valid || !selectedFeeId" style="background: #10b981; color: white; border: 0; padding: 0.6rem; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 0.85rem; margin-top: 0.25rem;">
+              <button type="submit" [disabled]="!invoiceForm.form.valid || !selectedFeeId" class="ds-btn ds-btn-success" style="font-size: 0.85rem; margin-top: 0.25rem;">
                 Generate Invoice
               </button>
             </form>
@@ -182,7 +182,7 @@ export interface StudentInvoice {
       <!-- Mode 2: Bulk Excel / Spreadsheet Importer -->
       @if (managerMode() === 'BULK') {
         <div style="background: #f8fafc; padding: 1.5rem; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
-          <h3 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.15rem; color: #1e293b; font-weight: 700;">Excel / Spreadsheet Copy-Paste Importer</h3>
+          <h3 class="ds-heading" style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.15rem;">Excel / Spreadsheet Copy-Paste Importer</h3>
           
           <!-- Bulk Mode Switcher -->
           <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
@@ -287,11 +287,11 @@ export interface StudentInvoice {
               </div>
 
               <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-                <button (click)="clearParsed()" style="background: white; border: 1px solid #cbd5e1; color: #475569; padding: 0.55rem 1.25rem; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                <button (click)="clearParsed()" class="ds-btn ds-btn-ghost" style="font-size: 0.85rem;">
                   Clear All
                 </button>
-                <button (click)="importParsedRows()" [disabled]="isImporting()" style="background: #10b981; color: white; border: 0; padding: 0.55rem 1.25rem; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 0.85rem;">
-                  {{ isImporting() ? \'Importing ledger...\' : \'Confirm Bulk Import to Database\' }}
+                <button (click)="importParsedRows()" [disabled]="isImporting()" class="ds-btn ds-btn-success" style="font-size: 0.85rem;">
+                  @if (isImporting()) { <span class="ds-spinner"></span> Importing ledger... } @else { Confirm Bulk Import to Database }
                 </button>
               </div>
             </div>
@@ -300,7 +300,7 @@ export interface StudentInvoice {
       }
 
       <!-- Invoices Pipeline List -->
-      <h3 style="margin-bottom: 0.75rem; color: #1e293b; font-weight: 700; font-size: 1.2rem;">All Student Invoices</h3>
+      <h3 class="ds-heading" style="margin-bottom: 0.75rem; font-size: 1.2rem;">All Student Invoices</h3>
       @if (invoices().length === 0) {
         <p style="color: #64748b; font-style: italic;">No student invoices have been generated yet. Use the panel above to issue fee bills.</p>
       } @else {
@@ -332,9 +332,9 @@ export interface StudentInvoice {
                   <td style="padding: 0.75rem 1rem; font-weight: 700; color: #0f172a;">\${{ inq.amount }}</td>
                   <td style="padding: 0.75rem 1rem;">
                     @if (inq.status === 'PENDING') {
-                      <span style="background: #ffedd5; color: #b45309; padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">PENDING</span>
+                      <span class="ds-chip" style="background: #ffedd5; color: #b45309;">PENDING</span>
                     } @else if (inq.status === 'PAID') {
-                      <span style="background: #dcfce7; color: #15803d; padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">PAID</span>
+                      <span class="ds-chip" style="background: #dcfce7; color: #15803d;">PAID</span>
                     }
                   </td>
                   <td style="padding: 0.75rem 1rem; color: #64748b;">

@@ -8,8 +8,8 @@ import { HttpClient } from '@angular/common/http';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div style="background: white; padding: 2rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
-      <h2 style="font-size: 1.5rem; color: #1e293b; margin-top: 0; margin-bottom: 0.5rem; font-weight: 700;">Edit School Branding Settings</h2>
+    <div class="ds-card ds-reveal" style="padding: 2rem; margin-bottom: 2rem;">
+      <h2 class="ds-heading" style="font-size: 1.5rem; margin-top: 0; margin-bottom: 0.5rem;">Edit School <span class="ds-heading-grad">Branding Settings</span></h2>
       
       @if (userRole !== 'SCHOOL_ADMIN') {
         <div style="background: #f8fafc; border: 1px dashed #cbd5e1; padding: 2rem; text-align: center; border-radius: 8px; color: #64748b;">
@@ -21,13 +21,13 @@ import { HttpClient } from '@angular/common/http';
         <p style="color: #64748b; font-size: 0.9rem; margin-top: 0; margin-bottom: 1.5rem;">Editing configuration for: <strong style="color: #0f172a;">{{ tenantName }}</strong> (subdomain: <strong style="color: #0f172a;">{{ subdomain }}</strong>)</p>
 
         @if (successMessage()) {
-          <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem; color: #047857;">
+          <div class="ds-alert ds-alert-success">
             <strong>Success!</strong> {{ successMessage() }}
           </div>
         }
         
         @if (errorMessage()) {
-          <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem; color: #b91c1c;">
+          <div class="ds-alert ds-alert-error ds-shake">
             <strong>Error:</strong> {{ errorMessage() }}
           </div>
         }
@@ -213,9 +213,8 @@ import { HttpClient } from '@angular/common/http';
           </div>
 
           <button type="submit" [disabled]="!settingsForm.form.valid || isLoading()"
-            style="background-color: #0f172a; color: white; border: 0; padding: 0.85rem 1.5rem; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s;"
-            [style.opacity]="settingsForm.form.valid && !isLoading() ? '1' : '0.6'">
-            {{ isLoading() ? 'Updating...' : 'Save & Propagate Brand Theme' }}
+            class="ds-btn ds-btn-success">
+            @if (isLoading()) { <span class="ds-spinner"></span> Updating... } @else { Save & Propagate Brand Theme }
           </button>
         </form>
       }

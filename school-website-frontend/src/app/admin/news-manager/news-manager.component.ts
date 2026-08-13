@@ -24,7 +24,7 @@ export interface SchoolNews {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div style="background: white; padding: 2rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
+    <div class="ds-card ds-reveal" style="padding: 2rem; margin-bottom: 2rem;">
       <!-- Tab Header Toggle -->
       <div style="display: flex; gap: 1rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.75rem; margin-bottom: 1.5rem;">
         <button (click)="activeTab.set('NEWS')" 
@@ -44,7 +44,7 @@ export interface SchoolNews {
       <!-- Tab 1: News Circular Manager -->
       @if (activeTab() === 'NEWS') {
         <div>
-          <h3 style="margin-top: 0; margin-bottom: 1rem; color: #1e293b; font-weight: 700; font-size: 1.2rem;">Publish News Bulletin / Circular</h3>
+          <h3 class="ds-heading" style="margin-top: 0; margin-bottom: 1rem; font-size: 1.2rem;">Publish News Bulletin / Circular</h3>
           
           <form (ngSubmit)="publishNews()" #newsForm="ngForm" style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1rem; margin-bottom: 2rem; background: #f8fafc; padding: 1.25rem; border-radius: 6px; border: 1px solid #e2e8f0;">
             <div>
@@ -60,22 +60,22 @@ export interface SchoolNews {
               <textarea name="content" [(ngModel)]="newNews.content" required rows="3" placeholder="Type the complete circular or announcement here..." style="width: 100%; padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box; resize: vertical;"></textarea>
             </div>
             <div style="grid-column: span 2; text-align: right;">
-              <button type="submit" [disabled]="!newsForm.form.valid" style="background: #1e3a8a; color: white; border: 0; padding: 0.65rem 1.25rem; border-radius: 4px; font-weight: 600; cursor: pointer;">
+              <button type="submit" [disabled]="!newsForm.form.valid" class="ds-btn ds-btn-primary">
                 Publish Announcement
               </button>
             </div>
           </form>
 
-          <h3 style="margin-bottom: 0.75rem; color: #1e293b; font-weight: 700; font-size: 1.2rem;">Published Bulletins</h3>
+          <h3 class="ds-heading" style="margin-bottom: 0.75rem; font-size: 1.2rem;">Published Bulletins</h3>
           @if (newsList().length === 0) {
             <p style="color: #64748b; font-style: italic;">No announcements published yet.</p>
           } @else {
             <div style="display: flex; flex-direction: column; gap: 1rem;">
               @for (n of newsList(); track n.id) {
-                <div style="background: white; border: 1px solid #cbd5e1; border-radius: 6px; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                <div class="ds-card ds-card-hover" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem;">
                   <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                     <strong style="font-size: 1.1rem; color: #0f172a;">{{ n.title }}</strong>
-                    <button (click)="deleteNews(n.id!)" style="background: none; border: 0; color: #ef4444; font-size: 0.8rem; font-weight: 600; cursor: pointer;">
+                    <button (click)="deleteNews(n.id!)" class="ds-btn ds-btn-danger" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">
                       🗑️ Remove
                     </button>
                   </div>
@@ -94,7 +94,7 @@ export interface SchoolNews {
       <!-- Tab 2: Events Calendar Manager -->
       @if (activeTab() === 'EVENTS') {
         <div>
-          <h3 style="margin-top: 0; margin-bottom: 1rem; color: #1e293b; font-weight: 700; font-size: 1.2rem;">Schedule School Event</h3>
+          <h3 class="ds-heading" style="margin-top: 0; margin-bottom: 1rem; font-size: 1.2rem;">Schedule School Event</h3>
           
           <form (ngSubmit)="scheduleEvent()" #eventForm="ngForm" style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1rem; margin-bottom: 2rem; background: #f8fafc; padding: 1.25rem; border-radius: 6px; border: 1px solid #e2e8f0;">
             <div>
@@ -114,19 +114,19 @@ export interface SchoolNews {
               <input type="text" name="description" [(ngModel)]="newEvent.description" required placeholder="Details about timing, entry requirements, chief guest details..." style="width: 100%; padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
             </div>
             <div style="grid-column: span 2; text-align: right;">
-              <button type="submit" [disabled]="!eventForm.form.valid" style="background: #1e3a8a; color: white; border: 0; padding: 0.65rem 1.25rem; border-radius: 4px; font-weight: 600; cursor: pointer;">
+              <button type="submit" [disabled]="!eventForm.form.valid" class="ds-btn ds-btn-primary">
                 Schedule Event
               </button>
             </div>
           </form>
 
-          <h3 style="margin-bottom: 0.75rem; color: #1e293b; font-weight: 700; font-size: 1.2rem;">Scheduled Events</h3>
+          <h3 class="ds-heading" style="margin-bottom: 0.75rem; font-size: 1.2rem;">Scheduled Events</h3>
           @if (events().length === 0) {
             <p style="color: #64748b; font-style: italic;">No events scheduled in the calendar yet.</p>
           } @else {
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
               @for (ev of events(); track ev.id) {
-                <div style="background: white; border: 1px solid #cbd5e1; border-radius: 6px; padding: 1rem; display: flex; flex-direction: column; justify-content: space-between;">
+                <div class="ds-card ds-card-hover" style="padding: 1rem; display: flex; flex-direction: column; justify-content: space-between;">
                   <div>
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
                       <strong style="font-size: 1.05rem; color: #0f172a;">{{ ev.title }}</strong>
@@ -136,7 +136,7 @@ export interface SchoolNews {
                     <p style="color: #475569; font-size: 0.85rem; margin: 0; line-height: 1.4;">{{ ev.description }}</p>
                   </div>
                   <div style="text-align: right; margin-top: 0.75rem; border-top: 1px solid #f1f5f9; padding-top: 0.5rem;">
-                    <button (click)="deleteEvent(ev.id!)" style="background: none; border: 0; color: #ef4444; font-size: 0.8rem; font-weight: 600; cursor: pointer;">
+                    <button (click)="deleteEvent(ev.id!)" class="ds-btn ds-btn-danger" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">
                       🗑️ Cancel Event
                     </button>
                   </div>

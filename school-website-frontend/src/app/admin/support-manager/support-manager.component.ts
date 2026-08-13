@@ -19,8 +19,8 @@ export interface SupportInquiry {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div style="background: white; padding: 2rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
-      <h2 style="font-size: 1.5rem; color: #1e293b; margin-top: 0; margin-bottom: 0.5rem; font-weight: 700;">Public Support Desk & Query Resolver</h2>
+    <div class="ds-card ds-reveal" style="padding: 2rem; margin-bottom: 2rem;">
+      <h2 class="ds-heading" style="font-size: 1.5rem; margin-top: 0; margin-bottom: 0.5rem;">Public Support Desk & <span class="ds-heading-grad">Query Resolver</span></h2>
       <p style="color: #64748b; font-size: 0.9rem; margin-top: 0; margin-bottom: 1.5rem;">Respond to contact forms and support queries submitted by visitors of: <strong style="color: #0f172a;">{{ tenantName }}</strong></p>
 
       @if (inquiries().length === 0) {
@@ -32,7 +32,7 @@ export interface SupportInquiry {
       } @else {
         <div style="display: flex; flex-direction: column; gap: 1rem;">
           @for (inq of inquiries(); track inq.id) {
-            <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.25rem; background: #f8fafc;">
+            <div class="ds-card" style="padding: 1.25rem;">
               <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem;">
                 <div>
                   <strong style="font-size: 1.1rem; color: #0f172a; display: block;">{{ inq.subject }}</strong>
@@ -40,9 +40,9 @@ export interface SupportInquiry {
                 </div>
                 <div>
                   @if (inq.status === 'PENDING') {
-                    <span style="background: #fee2e2; color: #b91c1c; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">UNRESOLVED</span>
+                    <span class="ds-chip" style="background: #fee2e2; color: #b91c1c;">UNRESOLVED</span>
                   } @else {
-                    <span style="background: #dcfce7; color: #15803d; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">RESOLVED</span>
+                    <span class="ds-chip" style="background: #dcfce7; color: #15803d;">RESOLVED</span>
                   }
                 </div>
               </div>
@@ -53,7 +53,7 @@ export interface SupportInquiry {
               @if (inq.status === 'PENDING') {
                 <div style="display: flex; gap: 0.5rem; background: white; padding: 0.75rem; border-radius: 6px; border: 1px solid #e2e8f0; align-items: center;">
                   <input type="text" [(ngModel)]="notesMap[inq.id]" placeholder="Type resolution note (e.g. Called back and explained assessments)..." style="flex: 1; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem;" />
-                  <button (click)="resolveQuery(inq.id)" [disabled]="!notesMap[inq.id]" style="background: #1e3a8a; color: white; border: 0; padding: 0.5rem 1rem; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                  <button (click)="resolveQuery(inq.id)" [disabled]="!notesMap[inq.id]" class="ds-btn ds-btn-success" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
                     Resolve
                   </button>
                 </div>

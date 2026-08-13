@@ -17,8 +17,8 @@ export interface JobApplication {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div style="background: white; padding: 2rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
-      <h2 style="font-size: 1.5rem; color: #1e293b; margin-top: 0; margin-bottom: 0.5rem; font-weight: 700;">Applicant Tracking System (ATS)</h2>
+    <div class="ds-card ds-reveal" style="padding: 2rem; margin-bottom: 2rem;">
+      <h2 class="ds-heading" style="font-size: 1.5rem; margin-top: 0; margin-bottom: 0.5rem;">Applicant Tracking System <span class="ds-heading-grad">(ATS)</span></h2>
       <p style="color: #64748b; font-size: 0.9rem; margin-top: 0; margin-bottom: 1.5rem;">Review resumes and shortlist candidate applicants for: <strong style="color: #0f172a;">{{ tenantName }}</strong></p>
 
       @if (applications().length === 0) {
@@ -51,23 +51,23 @@ export interface JobApplication {
                   <td style="padding: 1rem; font-weight: 600; color: #475569;">{{ app.jobTitle }}</td>
                   <td style="padding: 1rem;">
                     @if (app.status === 'PENDING') {
-                      <span style="background: #ffedd5; color: #b45309; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">PENDING</span>
+                      <span class="ds-chip" style="background: #ffedd5; color: #b45309;">PENDING</span>
                     } @else if (app.status === 'REVIEWED') {
-                      <span style="background: #e0f2fe; color: #0369a1; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">REVIEWED</span>
+                      <span class="ds-chip" style="background: #e0f2fe; color: #0369a1;">REVIEWED</span>
                     } @else if (app.status === 'SHORTLISTED') {
-                      <span style="background: #dcfce7; color: #15803d; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">SHORTLISTED</span>
+                      <span class="ds-chip" style="background: #dcfce7; color: #15803d;">SHORTLISTED</span>
                     } @else if (app.status === 'REJECTED') {
-                      <span style="background: #fee2e2; color: #b91c1c; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">REJECTED</span>
+                      <span class="ds-chip" style="background: #fee2e2; color: #b91c1c;">REJECTED</span>
                     }
                   </td>
                   <td style="padding: 1rem; text-align: right; white-space: nowrap;">
                     <div style="display: flex; gap: 0.25rem; justify-content: flex-end;">
                       @if (app.status === 'PENDING') {
-                        <button (click)="updateStatus(app.id, 'REVIEWED')" style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; padding: 0.35rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Mark Reviewed</button>
+                        <button (click)="updateStatus(app.id, 'REVIEWED')" class="ds-btn ds-btn-ghost" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">Mark Reviewed</button>
                       }
                       @if (app.status !== 'SHORTLISTED' && app.status !== 'REJECTED') {
-                        <button (click)="updateStatus(app.id, 'SHORTLISTED')" style="background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; padding: 0.35rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Shortlist</button>
-                        <button (click)="updateStatus(app.id, 'REJECTED')" style="background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; padding: 0.35rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Reject</button>
+                        <button (click)="updateStatus(app.id, 'SHORTLISTED')" class="ds-btn ds-btn-success" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">Shortlist</button>
+                        <button (click)="updateStatus(app.id, 'REJECTED')" class="ds-btn ds-btn-danger" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">Reject</button>
                       }
                     </div>
                   </td>
