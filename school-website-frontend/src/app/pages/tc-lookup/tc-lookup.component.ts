@@ -21,11 +21,11 @@ export interface TransferCertificate {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 2.5rem; max-width: 850px; margin: 2rem auto; box-shadow: 0 4px 6px rgba(0,0,0,0.05); box-sizing: border-box; width: 100%;">
+    <div class="ds-card ds-reveal" style="padding: 2.5rem; max-width: 850px; margin: 2rem auto; box-sizing: border-box; width: 100%;">
       
       <div style="text-align: center; margin-bottom: 2rem;">
         <span [style.color]="accentColor" style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.5rem;">Certificate Verification</span>
-        <h3 [style.color]="primaryColor" style="font-size: 1.5rem; font-weight: 800; margin: 0; letter-spacing: -0.025em; line-height: 1.2;">Verify and Download Transfer Certificate</h3>
+        <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 1.5rem; font-weight: 800; margin: 0; letter-spacing: -0.025em; line-height: 1.2;">Verify and Download Transfer Certificate</h3>
         <p style="color: #64748b; font-size: 0.9rem; margin-top: 0.5rem; margin-bottom: 1.5rem;">
           To comply with CBSE board verification parameters, search for active student records class-wise or verify using credentials.
         </p>
@@ -87,7 +87,7 @@ export interface TransferCertificate {
               style="width: 100%; padding: 0.7rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; box-sizing: border-box;" />
           </div>
           <div style="width: 100%; display: flex; align-items: flex-end; margin-top: 0.5rem;">
-            <button type="submit" [disabled]="!classSearchForm.form.valid || isLoading()" [style.background-color]="primaryColor" style="width: 100%; border: 0; color: white; padding: 0.75rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: opacity 0.2s;">
+            <button type="submit" class="ds-btn" [disabled]="!classSearchForm.form.valid || isLoading()" [style.background-color]="primaryColor" style="width: 100%; border: 0; color: white; padding: 0.75rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: opacity 0.2s;">
               {{ isLoading() ? 'Searching TC registry...' : '🔍 Find Certificates' }}
             </button>
           </div>
@@ -117,7 +117,7 @@ export interface TransferCertificate {
               style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 0.95rem; background: white;" />
           </div>
 
-          <button type="submit" [disabled]="!verifyForm.form.valid || isLoading()" [style.background-color]="primaryColor"
+          <button type="submit" class="ds-btn" [disabled]="!verifyForm.form.valid || isLoading()" [style.background-color]="primaryColor"
             style="border: 0; color: white; padding: 0.75rem; border-radius: 6px; font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: background 0.2s;">
             {{ isLoading() ? 'Searching compliance records...' : '🔍 Verify Transfer Certificate' }}
           </button>
@@ -130,17 +130,17 @@ export interface TransferCertificate {
           
           <!-- Class Mode Matching list -->
           @if (lookupMode() === 'CLASS' && certificatesList().length > 0 && !certificate()) {
-            <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
-              <h4 style="color: #0f172a; font-size: 1.1rem; font-weight: 700; margin-top: 0; margin-bottom: 1rem;">🔍 Matching Transfer Certificates in {{ classForm.classLevel }} (Section {{ classForm.section }})</h4>
+            <div class="ds-card" style="padding: 1.5rem; margin-bottom: 2rem;">
+              <h4 class="ds-heading" style="color: #0f172a; font-size: 1.1rem; font-weight: 700; margin-top: 0; margin-bottom: 1rem;">🔍 Matching Transfer Certificates in {{ classForm.classLevel }} (Section {{ classForm.section }})</h4>
               
               <div style="display: flex; flex-direction: column; gap: 0.75rem;">
                 @for (tc of certificatesList(); track tc.id) {
-                  <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; flex-wrap: wrap; gap: 0.75rem;">
+                  <div class="ds-card ds-card-hover" style="padding: 1rem; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; flex-wrap: wrap; gap: 0.75rem;">
                     <div style="text-align: left;">
                       <strong style="color: #0f172a; font-size: 1rem; display: block;">{{ tc.studentName }}</strong>
                       <span style="font-size: 0.8rem; color: #64748b;">Adm No: {{ tc.admissionNo }} • Father: {{ tc.fatherName }}</span>
                     </div>
-                    <button (click)="selectTC(tc)" [style.background-color]="primaryColor" style="border: 0; color: white; padding: 0.45rem 1rem; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.85rem;">
+                    <button (click)="selectTC(tc)" class="ds-btn" [style.background-color]="primaryColor" style="border: 0; color: white; padding: 0.45rem 1rem; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.85rem;">
                       📜 View Certificate
                     </button>
                   </div>
@@ -151,7 +151,7 @@ export interface TransferCertificate {
 
           @if (!certificate() && (lookupMode() === 'SECURE' || (lookupMode() === 'CLASS' && certificatesList().length === 0))) {
             <!-- Error Alert -->
-            <div style="background-color: #fef2f2; border: 1px solid #fca5a5; padding: 1.5rem; border-radius: 8px; text-align: center; color: #b91c1c;">
+            <div class="ds-alert ds-alert-error ds-shake" style="flex-direction: column; padding: 1.5rem; text-align: center;">
               <span style="font-size: 2.5rem; display: block; margin-bottom: 0.5rem;">⚠️</span>
               <strong style="display: block; font-size: 1.05rem; margin-bottom: 0.25rem;">No Verification Record Found</strong>
               <p style="font-size: 0.85rem; line-height: 1.5; margin: 0;">
@@ -162,7 +162,7 @@ export interface TransferCertificate {
           } @else if (certificate()) {
             
             @if (lookupMode() === 'CLASS' && certificatesList().length > 1) {
-              <button (click)="certificate.set(null)" style="background: none; border: 1px solid #cbd5e1; color: #475569; padding: 0.45rem 1rem; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.85rem; margin-bottom: 1rem; display: block;">
+              <button (click)="certificate.set(null)" class="ds-btn ds-btn-ghost" style="padding: 0.45rem 1rem; font-size: 0.85rem; margin-bottom: 1rem; display: block;">
                 ⬅️ Back to Search List
               </button>
             }
@@ -192,7 +192,7 @@ export interface TransferCertificate {
 
               <!-- Download Button -->
               <div style="text-align: center; border-top: 1px solid #cbd5e1; padding-top: 1.5rem;">
-                <a [href]="certificate()?.pdfUrl" download [style.background-color]="primaryColor" style="display: inline-flex; align-items: center; gap: 0.5rem; color: white; padding: 0.75rem 1.5rem; border-radius: 6px; text-decoration: none; font-family: sans-serif; font-size: 0.95rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15); transition: background 0.2s; cursor: pointer;">
+                <a [href]="certificate()?.pdfUrl" download class="ds-btn" [style.background-color]="primaryColor" style="display: inline-flex; align-items: center; gap: 0.5rem; color: white; padding: 0.75rem 1.5rem; border-radius: 6px; text-decoration: none; font-family: sans-serif; font-size: 0.95rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15); transition: background 0.2s; cursor: pointer;">
                   ⬇️ Download Verified Transfer Certificate (PDF)
                 </a>
               </div>

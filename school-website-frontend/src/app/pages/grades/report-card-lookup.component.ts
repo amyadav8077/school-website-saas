@@ -22,8 +22,8 @@ export interface StudentGrade {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); max-width: 850px; margin: 2rem auto;">
-      <h3 [style.color]="primaryColor" style="font-size: 1.5rem; font-weight: 800; margin-top: 0; margin-bottom: 0.5rem; text-align: center; transition: color 0.3s;">
+    <div class="ds-card ds-reveal" style="padding: 2rem; max-width: 850px; margin: 2rem auto;">
+      <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 1.5rem; font-weight: 800; margin-top: 0; margin-bottom: 0.5rem; text-align: center; transition: color 0.3s;">
         Parent Academic Report Card Lookup
       </h3>
       <p style="color: #64748b; font-size: 0.9rem; text-align: center; margin-bottom: 1.5rem;">
@@ -69,7 +69,7 @@ export interface StudentGrade {
             style="width: 100%; padding: 0.7rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; box-sizing: border-box;" />
         </div>
         <div style="width: 100%; display: flex; align-items: flex-end; margin-top: 0.5rem;">
-          <button type="submit" [style.background-color]="primaryColor" style="width: 100%; border: 0; color: white; padding: 0.75rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: opacity 0.2s;">
+          <button type="submit" class="ds-btn" [style.background-color]="primaryColor" style="width: 100%; border: 0; color: white; padding: 0.75rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: opacity 0.2s;">
             🔍 Find Report Cards (Class-wise)
           </button>
         </div>
@@ -79,7 +79,7 @@ export interface StudentGrade {
       @if (hasSearched()) {
         <div style="display: flex; flex-direction: column; gap: 2rem; width: 100%;">
           @if (grades().length === 0) {
-            <div style="background: #f8fafc; border: 1px dashed #cbd5e1; padding: 2.5rem; text-align: center; border-radius: 8px; color: #64748b;">
+            <div class="ds-alert ds-alert-info" style="flex-direction: column; padding: 2.5rem; text-align: center;">
               <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">📊</span>
               <p style="font-size: 0.95rem; margin: 0; font-weight: 600;">No grade entries found matching your search</p>
               <p style="font-size: 0.85rem; margin-top: 0.25rem;">Verify details or generate some student scores in the Admin panel above!</p>

@@ -17,11 +17,11 @@ export interface EnrichmentActivity {
   imports: [CommonModule],
   template: `
     @if (activities().length > 0) {
-      <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 2.5rem; max-width: 1200px; margin: 3rem auto; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+      <div class="ds-card ds-reveal" style="padding: 2.5rem; max-width: 1200px; margin: 3rem auto;">
         
         <div style="text-align: center; margin-bottom: 2rem;">
           <span [style.color]="accentColor" style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.5rem;">Co-Curriculars & Parity</span>
-          <h3 [style.color]="primaryColor" style="font-size: 1.75rem; font-weight: 800; margin: 0; letter-spacing: -0.025em; line-height: 1.2;">Holistic Development & Student Welfare</h3>
+          <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 1.75rem; font-weight: 800; margin: 0; letter-spacing: -0.025em; line-height: 1.2;">Holistic Development & Student Welfare</h3>
           <p style="color: #64748b; font-size: 0.9rem; margin-top: 0.5rem; margin-bottom: 0;">At our academy, student growth extends far beyond classrooms. Explore our flagship fitness leagues, uniform parities, and STEM arenas.</p>
         </div>
 
@@ -53,7 +53,7 @@ export interface EnrichmentActivity {
         <!-- Showcase Detail Cards -->
         <div>
           @for (act of filteredActivities(); track act.id) {
-            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.5rem; display: flex; gap: 1.5rem; align-items: start; box-shadow: inset 0 0 10px rgba(0,0,0,0.01); flex-wrap: wrap;">
+            <div class="ds-card" style="background: #f8fafc; padding: 1.5rem; display: flex; gap: 1.5rem; align-items: start; flex-wrap: wrap;">
               <div [style.background-color]="primaryColor" style="width: 50px; height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; color: white; flex-shrink: 0;">
                 @if (act.type === 'SPORTS') { 🏀 }
                 @else if (act.type === 'UNIFORMS') { 👕 }

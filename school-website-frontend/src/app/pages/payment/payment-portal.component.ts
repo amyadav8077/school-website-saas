@@ -19,8 +19,8 @@ export interface StudentInvoice {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); max-width: 950px; margin: 2rem auto;">
-      <h3 [style.color]="primaryColor" style="font-size: 1.5rem; font-weight: 800; margin-top: 0; margin-bottom: 0.5rem; text-align: center; transition: color 0.3s;">
+    <div class="ds-card ds-reveal" style="padding: 2rem; max-width: 950px; margin: 2rem auto;">
+      <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 1.5rem; font-weight: 800; margin-top: 0; margin-bottom: 0.5rem; text-align: center; transition: color 0.3s;">
         Parent & Student Fee Payment Portal
       </h3>
       <p style="color: #64748b; font-size: 0.9rem; text-align: center; margin-bottom: 1.5rem;">
@@ -66,7 +66,7 @@ export interface StudentInvoice {
             style="width: 100%; padding: 0.7rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; box-sizing: border-box;" />
         </div>
         <div style="width: 100%; display: flex; align-items: flex-end; margin-top: 0.5rem;">
-          <button type="submit" [style.background-color]="primaryColor" style="width: 100%; border: 0; color: white; padding: 0.75rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: opacity 0.2s;">
+          <button type="submit" class="ds-btn" [style.background-color]="primaryColor" style="width: 100%; border: 0; color: white; padding: 0.75rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: opacity 0.2s;">
             🔍 Find Issued Bills (Class-wise)
           </button>
         </div>
@@ -88,10 +88,10 @@ export interface StudentInvoice {
             
             <div style="display: flex; flex-direction: column; gap: 1rem;">
               @for (inv of invoices(); track inv.id) {
-                <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.25rem; background: white; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 4px rgba(0,0,0,0.02); flex-wrap: wrap; gap: 1rem;">
+                <div class="ds-card ds-card-hover" style="padding: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
                   <div>
                     <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.25rem; flex-wrap: wrap;">
-                      <span style="font-size: 0.75rem; font-weight: 700; color: #1e3a8a; background: #e0f2fe; padding: 0.15rem 0.35rem; border-radius: 4px;">INV-400{{ inv.id }}</span>
+                      <span class="ds-chip">INV-400{{ inv.id }}</span>
                       <strong style="font-size: 1.05rem; color: #0f172a;">{{ inv.feeItemName }}</strong>
                     </div>
                     <span style="font-size: 0.8rem; color: #64748b; display: block;">Due Date: {{ inv.dueDate | date:'mediumDate' }}</span>
@@ -104,11 +104,11 @@ export interface StudentInvoice {
                     <span style="font-size: 1.25rem; font-weight: 800; color: #0f172a;">\${{ inv.amount }}</span>
                     
                     @if (inv.status === 'PENDING') {
-                      <button (click)="openCheckoutModal(inv)" [style.background-color]="accentColor" style="border: 0; color: #0f172a; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.85rem; box-shadow: 0 2px 4px rgba(0,0,0,0.15);">
+                      <button (click)="openCheckoutModal(inv)" class="ds-btn" [style.background-color]="accentColor" style="border: 0; color: #0f172a; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.85rem; box-shadow: 0 2px 4px rgba(0,0,0,0.15);">
                         💳 Pay Fees Now
                       </button>
                     } @else {
-                      <span style="background: #dcfce7; color: #15803d; font-size: 0.8rem; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 700;">🟢 PAID</span>
+                      <span class="ds-chip" style="background: #dcfce7; color: #15803d;">🟢 PAID</span>
                     }
                   </div>
                 </div>
@@ -127,7 +127,7 @@ export interface StudentInvoice {
               <div>
                 <div style="text-align: center; margin-bottom: 1.5rem;">
                   <span style="font-size: 2rem;">🔒</span>
-                  <h4 style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-top: 0.5rem; margin-bottom: 0.25rem;">Secure Student Payment Gateway</h4>
+                  <h4 class="ds-heading" style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-top: 0.5rem; margin-bottom: 0.25rem;">Secure Student Payment Gateway</h4>
                   <p style="color: #64748b; font-size: 0.85rem; margin: 0;">Checkout Sandbox with simulated processing</p>
                 </div>
 
@@ -160,10 +160,10 @@ export interface StudentInvoice {
                     </div>
                   </div>
                   <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
-                    <button type="button" (click)="showCheckoutModal.set(false)" style="flex: 1; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 600; background: white; cursor: pointer;">
+                    <button type="button" (click)="showCheckoutModal.set(false)" class="ds-btn ds-btn-ghost" style="flex: 1; padding: 0.65rem;">
                       Cancel
                     </button>
-                    <button type="submit" [style.background-color]="primaryColor" style="flex: 1.5; padding: 0.65rem; border: 0; color: white; border-radius: 6px; font-weight: 700; cursor: pointer;">
+                    <button type="submit" class="ds-btn" [style.background-color]="primaryColor" style="flex: 1.5; padding: 0.65rem; border: 0; color: white; border-radius: 6px; font-weight: 700; cursor: pointer;">
                       Authorize Pay
                     </button>
                   </div>
@@ -182,16 +182,16 @@ export interface StudentInvoice {
             @if (checkoutState() === 'SUCCESS') {
               <div style="text-align: center; padding: 1rem 0;">
                 <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎉</div>
-                <h4 style="font-size: 1.4rem; font-weight: 800; color: #15803d; margin-top: 0.5rem; margin-bottom: 0.25rem;">Payment Successful!</h4>
+                <h4 class="ds-heading" style="font-size: 1.4rem; font-weight: 800; color: #15803d; margin-top: 0.5rem; margin-bottom: 0.25rem;">Payment Successful!</h4>
                 <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 1.5rem;">Transaction authorized. Receipt generated.</p>
 
-                <div style="background: #ecfdf5; border: 1px solid #bbf7d0; padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem; font-size: 0.85rem; text-align: left;">
+                <div class="ds-alert ds-alert-success" style="flex-direction: column; align-items: stretch; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.85rem; text-align: left;">
                   <div>Receipt: <strong style="color: #0f172a;">RCP-902{{ selectedInvoice()?.id }}</strong></div>
                   <div>Cleared: <strong style="color: #0f172a;">\${{ selectedInvoice()?.amount }}</strong></div>
                   <div>Account: <strong style="color: #0f172a;">Visa ending in 4242</strong></div>
                 </div>
 
-                <button (click)="closeSuccess()" [style.background-color]="primaryColor" style="width: 100%; padding: 0.75rem; border: 0; color: white; border-radius: 6px; font-weight: 700; cursor: pointer;">
+                <button (click)="closeSuccess()" class="ds-btn" [style.background-color]="primaryColor" style="width: 100%; padding: 0.75rem; border: 0; color: white; border-radius: 6px; font-weight: 700; cursor: pointer;">
                   Print Receipt & Close Portal
                 </button>
               </div>

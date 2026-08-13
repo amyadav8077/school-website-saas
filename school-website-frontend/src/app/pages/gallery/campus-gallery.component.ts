@@ -16,11 +16,11 @@ export interface GalleryItem {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 2.5rem; max-width: 1200px; margin: 2rem auto; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+    <div class="ds-card ds-reveal" style="padding: 2.5rem; max-width: 1200px; margin: 2rem auto;">
       
       <div style="text-align: center; margin-bottom: 2.5rem;">
         <span [style.color]="accentColor" style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.5rem;">Inside our Campus</span>
-        <h3 [style.color]="primaryColor" style="font-size: 2rem; font-weight: 800; margin: 0; letter-spacing: -0.025em; line-height: 1.2;">Experience Our Vibrant Campus Life</h3>
+        <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 2rem; font-weight: 800; margin: 0; letter-spacing: -0.025em; line-height: 1.2;">Experience Our Vibrant Campus Life</h3>
         <p style="color: #64748b; font-size: 0.95rem; margin-top: 0.5rem; margin-bottom: 0;">Explore real highlights of our sports meets, STEM exhibitions, annual celebrations, and assemblies.</p>
       </div>
 
@@ -50,7 +50,7 @@ export interface GalleryItem {
       } @else {
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
           @for (item of filteredItems(); track item.id) {
-            <div style="border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; background: #ffffff; box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="ds-card ds-card-hover" style="overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;">
               
               <!-- Media Frame -->
               <div style="position: relative; width: 100%; height: 160px; background: #e2e8f0; overflow: hidden; display: flex; align-items: center; justify-content: center;">
@@ -98,7 +98,7 @@ export interface GalleryItem {
             </div>
 
             <div style="margin-top: 1rem; text-align: right;">
-              <button (click)="closeVideo()" [style.background-color]="primaryColor" style="color: white; border: 0; padding: 0.55rem 1.25rem; border-radius: 6px; font-weight: 700; cursor: pointer;">
+              <button (click)="closeVideo()" class="ds-btn" [style.background-color]="primaryColor" style="color: white; border: 0; padding: 0.55rem 1.25rem; border-radius: 6px; font-weight: 700; cursor: pointer;">
                 Close Player
               </button>
             </div>

@@ -17,17 +17,17 @@ export interface JobPosting {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 2.5rem; max-width: 1200px; margin: 2rem auto; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+    <div class="ds-card ds-reveal" style="padding: 2.5rem; max-width: 1200px; margin: 2rem auto;">
       
       <div style="text-align: center; margin-bottom: 2.5rem;">
         <span [style.color]="accentColor" style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.5rem;">Join Our Faculty</span>
-        <h3 [style.color]="primaryColor" style="font-size: 2rem; font-weight: 800; margin: 0; letter-spacing: -0.025em; line-height: 1.2;">Work with India's Leading School Network</h3>
+        <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 2rem; font-weight: 800; margin: 0; letter-spacing: -0.025em; line-height: 1.2;">Work with India's Leading School Network</h3>
         <p style="color: #64748b; font-size: 0.95rem; margin-top: 0.5rem; margin-bottom: 0;">Explore open administrative, teaching, and coaching vacancies. Help us shape the academic leaders of tomorrow.</p>
       </div>
 
       <!-- Vacancies List Grid -->
       @if (jobs().length === 0) {
-        <div style="background: #f8fafc; border: 1px dashed #cbd5e1; padding: 3rem; text-align: center; border-radius: 8px; color: #64748b;">
+        <div class="ds-alert ds-alert-info" style="flex-direction: column; padding: 3rem; text-align: center;">
           <span style="font-size: 2.5rem; display: block; margin-bottom: 0.5rem;">💼</span>
           <p style="font-size: 1rem; margin: 0; font-weight: 600;">No active vacancies published currently.</p>
           <p style="font-size: 0.85rem; margin-top: 0.25rem;">Check back soon or submit a general expression of interest at our campus office.</p>
@@ -35,7 +35,7 @@ export interface JobPosting {
       } @else {
         <div style="display: flex; flex-direction: column; gap: 1.25rem;">
           @for (job of jobs(); track job.id) {
-            <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.5rem; background: white; display: flex; justify-content: space-between; align-items: start; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+            <div class="ds-card ds-card-hover" style="padding: 1.5rem; display: flex; justify-content: space-between; align-items: start;">
               <div style="flex: 1; padding-right: 1.5rem;">
                 <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
                   <strong [style.color]="primaryColor" style="font-size: 1.2rem;">{{ job.title }}</strong>
@@ -52,7 +52,7 @@ export interface JobPosting {
                 <p style="color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0;">{{ job.description }}</p>
               </div>
 
-              <button (click)="openApplyModal(job)" [style.background-color]="primaryColor" style="border: 0; color: white; padding: 0.65rem 1.25rem; border-radius: 6px; font-weight: 700; cursor: pointer; white-space: nowrap; margin-top: 0.25rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+              <button (click)="openApplyModal(job)" class="ds-btn" [style.background-color]="primaryColor" style="border: 0; color: white; padding: 0.65rem 1.25rem; border-radius: 6px; font-weight: 700; cursor: pointer; white-space: nowrap; margin-top: 0.25rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                 Apply Now ➡️
               </button>
             </div>
@@ -68,9 +68,9 @@ export interface JobPosting {
             @if (successMessage()) {
               <div style="text-align: center; padding: 1.5rem 0;">
                 <span style="font-size: 3rem;">🎉</span>
-                <h4 style="font-size: 1.4rem; font-weight: 800; color: #15803d; margin-top: 0.5rem; margin-bottom: 0.25rem;">Application Submitted!</h4>
+                <h4 class="ds-heading" style="font-size: 1.4rem; font-weight: 800; color: #15803d; margin-top: 0.5rem; margin-bottom: 0.25rem;">Application Submitted!</h4>
                 <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 1.5rem;">{{ successMessage() }}</p>
-                <button (click)="closeApplyModal()" [style.background-color]="primaryColor" style="width: 100%; padding: 0.75rem; border: 0; color: white; border-radius: 6px; font-weight: 700; cursor: pointer;">
+                <button (click)="closeApplyModal()" class="ds-btn" [style.background-color]="primaryColor" style="width: 100%; padding: 0.75rem; border: 0; color: white; border-radius: 6px; font-weight: 700; cursor: pointer;">
                   Close Portal
                 </button>
               </div>
@@ -83,7 +83,7 @@ export interface JobPosting {
                 </div>
 
                 @if (errorMessage()) {
-                  <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 0.75rem; border-radius: 4px; margin-bottom: 1.5rem; color: #b91c1c; font-size: 0.85rem;">
+                  <div class="ds-alert ds-alert-error ds-shake" style="margin-bottom: 1.5rem;">
                     <strong>Error:</strong> {{ errorMessage() }}
                   </div>
                 }
@@ -105,10 +105,10 @@ export interface JobPosting {
                   </div>
                   
                   <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
-                    <button type="button" (click)="closeApplyModal()" style="flex: 1; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 600; background: white; cursor: pointer;">
+                    <button type="button" (click)="closeApplyModal()" class="ds-btn ds-btn-ghost" style="flex: 1; padding: 0.65rem;">
                       Cancel
                     </button>
-                    <button type="submit" [disabled]="!applyForm.form.valid || isLoading()" [style.background-color]="primaryColor" style="flex: 1.5; padding: 0.65rem; border: 0; color: white; border-radius: 6px; font-weight: 700; cursor: pointer;">
+                    <button type="submit" class="ds-btn" [disabled]="!applyForm.form.valid || isLoading()" [style.background-color]="primaryColor" style="flex: 1.5; padding: 0.65rem; border: 0; color: white; border-radius: 6px; font-weight: 700; cursor: pointer;">
                       {{ isLoading() ? 'Submitting...' : 'Submit Resume' }}
                     </button>
                   </div>

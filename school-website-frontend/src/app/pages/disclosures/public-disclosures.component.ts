@@ -17,7 +17,7 @@ export interface BoardResult {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 2.5rem; max-width: 1200px; margin: 2rem auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+    <div class="ds-card ds-reveal" style="padding: 2.5rem; max-width: 1200px; margin: 2rem auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
       
       <!-- Top CBSE Circular Seal header -->
       <div style="border: 2px solid #b91c1c; background: #fffbeb; padding: 1.5rem; border-radius: 8px; margin-bottom: 2.5rem; display: flex; gap: 1.5rem; align-items: center;">
@@ -31,7 +31,7 @@ export interface BoardResult {
       </div>
 
       <!-- Section A: General Info -->
-      <h3 [style.color]="primaryColor" style="font-size: 1.3rem; font-weight: 800; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-top: 0; margin-bottom: 1rem; text-transform: uppercase;">
+      <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 1.3rem; font-weight: 800; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-top: 0; margin-bottom: 1rem; text-transform: uppercase;">
         A. General Institutional Information
       </h3>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2.5rem; font-size: 0.9rem; color: #475569;">
@@ -44,7 +44,7 @@ export interface BoardResult {
       </div>
 
       <!-- Section B: Documents & Certificates -->
-      <h3 [style.color]="primaryColor" style="font-size: 1.3rem; font-weight: 800; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1rem; text-transform: uppercase;">
+      <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 1.3rem; font-weight: 800; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1rem; text-transform: uppercase;">
         B. Mandatory Self-Attested Documents
       </h3>
       <div style="overflow-x: auto; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 2.5rem;">
@@ -92,7 +92,7 @@ export interface BoardResult {
       </div>
 
       <!-- Section C: Results and Academics -->
-      <h3 [style.color]="primaryColor" style="font-size: 1.3rem; font-weight: 800; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1rem; text-transform: uppercase;">
+      <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 1.3rem; font-weight: 800; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1rem; text-transform: uppercase;">
         C. Results & Academics Disclosures
       </h3>
       <div style="overflow-x: auto; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 2.5rem;">
@@ -130,7 +130,7 @@ export interface BoardResult {
       </div>
 
       <!-- Section D: 3-Year Board Exam Results -->
-      <h3 [style.color]="primaryColor" style="font-size: 1.3rem; font-weight: 800; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1rem; text-transform: uppercase;">
+      <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 1.3rem; font-weight: 800; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1rem; text-transform: uppercase;">
         D. Last Three-Year Board Examination Results
       </h3>
 

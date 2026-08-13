@@ -18,11 +18,11 @@ export interface SchoolBranch {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 2.5rem; max-width: 1200px; margin: 2rem auto; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+    <div class="ds-card ds-reveal" style="padding: 2.5rem; max-width: 1200px; margin: 2rem auto;">
       
       <div style="text-align: center; margin-bottom: 2rem;">
         <span [style.color]="accentColor" style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.5rem;">Our Network</span>
-        <h3 [style.color]="primaryColor" style="font-size: 1.75rem; font-weight: 800; margin: 0; letter-spacing: -0.025em; line-height: 1.2;">Branches Across the Country</h3>
+        <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 1.75rem; font-weight: 800; margin: 0; letter-spacing: -0.025em; line-height: 1.2;">Branches Across the Country</h3>
         <p style="color: #64748b; font-size: 0.9rem; margin-top: 0.5rem; margin-bottom: 0;">Select your state and city below to find a local academic campus with championship mentoring near you.</p>
       </div>
 
@@ -54,7 +54,7 @@ export interface SchoolBranch {
       } @else {
         <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
           @for (br of filteredBranches(); track br.id) {
-            <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.5rem; background: white; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 6px rgba(0,0,0,0.02); hover: box-shadow: 0 8px 12px rgba(0,0,0,0.04); transition: all 0.2s;">
+            <div class="ds-card ds-card-hover" style="padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between;">
               <div>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.5rem;">
                   <strong [style.color]="primaryColor" style="font-size: 1.1rem;">{{ br.name }}</strong>

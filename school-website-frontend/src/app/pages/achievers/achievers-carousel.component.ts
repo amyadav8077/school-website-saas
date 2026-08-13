@@ -17,14 +17,14 @@ export interface StudentAchiever {
   imports: [CommonModule],
   template: `
     @if (achievers().length > 0) {
-      <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 2.5rem; max-width: 1100px; margin: 3rem auto; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+      <div class="ds-card ds-reveal" style="background: #f8fafc; padding: 2.5rem; max-width: 1100px; margin: 3rem auto;">
         <div style="text-align: center; margin-bottom: 2rem;">
           <span [style.color]="accentColor" style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.5rem;">Our Achievers</span>
-          <h3 [style.color]="primaryColor" style="font-size: 1.75rem; font-weight: 800; margin: 0; letter-spacing: -0.02em;">Showcasing Success & Academic Ranks</h3>
+          <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 1.75rem; font-weight: 800; margin: 0; letter-spacing: -0.02em;">Showcasing Success & Academic Ranks</h3>
         </div>
 
         <!-- Slider Card -->
-        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 2rem; position: relative; min-height: 180px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 10px rgba(0,0,0,0.02);">
+        <div class="ds-card" style="padding: 2rem; position: relative; min-height: 180px; display: flex; flex-direction: column; justify-content: space-between;">
           
           <!-- Slider Content -->
           <div style="display: flex; gap: 1.5rem; align-items: flex-start; flex-wrap: wrap;">
@@ -49,10 +49,10 @@ export interface StudentAchiever {
 
           <!-- Slider Controls -->
           <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1.5rem; border-top: 1px solid #f1f5f9; padding-top: 1rem;">
-            <button (click)="prevSlide()" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid #cbd5e1; background: white; cursor: pointer; font-weight: 700; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
+            <button (click)="prevSlide()" class="ds-btn ds-btn-ghost" style="width: 32px; height: 32px; border-radius: 50%; padding: 0;">
               ◀
             </button>
-            <button (click)="nextSlide()" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid #cbd5e1; background: white; cursor: pointer; font-weight: 700; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
+            <button (click)="nextSlide()" class="ds-btn ds-btn-ghost" style="width: 32px; height: 32px; border-radius: 50%; padding: 0;">
               ▶
             </button>
           </div>

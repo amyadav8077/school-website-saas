@@ -8,8 +8,8 @@ import { HttpClient } from '@angular/common/http';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); max-width: 750px; margin: 2rem auto;">
-      <h3 [style.color]="primaryColor" style="font-size: 1.5rem; font-weight: 800; margin-top: 0; margin-bottom: 0.5rem; text-align: center; transition: color 0.3s;">
+    <div class="ds-card ds-reveal" style="padding: 2rem; max-width: 750px; margin: 2rem auto;">
+      <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 1.5rem; font-weight: 800; margin-top: 0; margin-bottom: 0.5rem; text-align: center; transition: color 0.3s;">
         Send Message to School Office
       </h3>
       <p style="color: #64748b; font-size: 0.9rem; text-align: center; margin-bottom: 1.5rem;">
@@ -17,14 +17,14 @@ import { HttpClient } from '@angular/common/http';
       </p>
 
       @if (successMessage()) {
-        <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 1.25rem; border-radius: 4px; margin-bottom: 1.5rem; color: #065f46; text-align: center;">
+        <div class="ds-alert ds-alert-success" style="flex-direction: column; padding: 1.25rem; margin-bottom: 1.5rem; text-align: center;">
           <div style="font-size: 2rem; margin-bottom: 0.5rem;">✉️</div>
           <strong style="display: block; font-size: 1.1rem; margin-bottom: 0.25rem;">Message Sent!</strong>
           <span style="font-size: 0.9rem;">{{ successMessage() }}</span>
         </div>
       } @else {
         @if (errorMessage()) {
-          <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem; color: #b91c1c; font-size: 0.9rem;">
+          <div class="ds-alert ds-alert-error ds-shake" style="margin-bottom: 1.5rem;">
             <strong>Error:</strong> {{ errorMessage() }}
           </div>
         }
@@ -55,7 +55,7 @@ import { HttpClient } from '@angular/common/http';
               style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 0.95rem; resize: vertical;"></textarea>
           </div>
 
-          <button type="submit" [disabled]="!contactForm.form.valid || isLoading()"
+          <button type="submit" class="ds-btn" [disabled]="!contactForm.form.valid || isLoading()"
             [style.background-color]="primaryColor"
             style="border: 0; color: white; padding: 0.85rem 1.5rem; border-radius: 6px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05);"
             [style.opacity]="contactForm.form.valid && !isLoading() ? '1' : '0.6'">
