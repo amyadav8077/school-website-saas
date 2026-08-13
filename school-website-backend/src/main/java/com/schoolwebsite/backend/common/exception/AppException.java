@@ -1,7 +1,8 @@
 package com.schoolwebsite.backend.common.exception;
 
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
+
+import lombok.Getter;
 
 @Getter
 public class AppException extends RuntimeException {
@@ -14,6 +15,10 @@ public class AppException extends RuntimeException {
         super(message);
         this.status = status;
         this.errorCode = errorCode;
+    }
+
+    public static AppException of(ErrorCode errorCode, Object... args) {
+        return new AppException(errorCode.format(args), errorCode.getStatus(), errorCode.getCode());
     }
 
     public static AppException notFound(String message) {

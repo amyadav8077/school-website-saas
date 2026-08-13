@@ -1,11 +1,11 @@
 package com.schoolwebsite.backend.academics.repository;
 
-import com.schoolwebsite.backend.academics.entity.*;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.schoolwebsite.backend.academics.entity.*;
 
 @Repository
 public interface AcademicProgramRepository extends JpaRepository<AcademicProgram, Long> {

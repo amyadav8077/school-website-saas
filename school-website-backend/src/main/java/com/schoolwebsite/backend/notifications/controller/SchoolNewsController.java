@@ -1,16 +1,17 @@
 package com.schoolwebsite.backend.notifications.controller;
 
-import com.schoolwebsite.backend.notifications.entity.*;
-import com.schoolwebsite.backend.notifications.service.*;
+import java.util.List;
 
-import com.schoolwebsite.backend.common.dto.ApiResponse;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.schoolwebsite.backend.common.dto.ApiResponse;
+import com.schoolwebsite.backend.notifications.entity.*;
+import com.schoolwebsite.backend.notifications.service.*;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api")
@@ -25,8 +26,7 @@ public class SchoolNewsController {
     }
 
     @PostMapping("/admin/sites/{tenantId}/news")
-    public ResponseEntity<ApiResponse<SchoolNews>> createNews(
-            @PathVariable Long tenantId,
+    public ResponseEntity<ApiResponse<SchoolNews>> createNews(@PathVariable Long tenantId,
             @Valid @RequestBody SchoolNews news) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.ok("News article created successfully", service.createNews(tenantId, news)));

@@ -1,13 +1,12 @@
 package com.schoolwebsite.backend.pagebuilder.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
+import lombok.*;
+
 @Entity
-@Table(name = "pages", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"tenant_id", "slug"})
-})
+@Table(name = "pages", uniqueConstraints = {@UniqueConstraint(columnNames = {"tenant_id", "slug"})})
 @Getter
 @Setter
 @NoArgsConstructor

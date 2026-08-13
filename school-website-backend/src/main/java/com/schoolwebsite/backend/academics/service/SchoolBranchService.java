@@ -1,37 +1,14 @@
 package com.schoolwebsite.backend.academics.service;
 
-import com.schoolwebsite.backend.academics.entity.*;
-import com.schoolwebsite.backend.academics.repository.*;
-
-import com.schoolwebsite.backend.common.exception.AppException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class SchoolBranchService {
+import com.schoolwebsite.backend.academics.entity.SchoolBranch;
 
-    private final SchoolBranchRepository repository;
+public interface SchoolBranchService {
 
-    @Transactional(readOnly = true)
-    public List<SchoolBranch> getBranchesByTenant(Long tenantId) {
-        return repository.findByTenantId(tenantId);
-    }
+    List<SchoolBranch> getBranchesByTenant(Long tenantId);
 
-    @Transactional
-    public SchoolBranch createBranch(Long tenantId, SchoolBranch branch) {
-        branch.setTenantId(tenantId);
-        return repository.save(branch);
-    }
+    SchoolBranch createBranch(Long tenantId, SchoolBranch branch);
 
-    @Transactional
-    public void deleteBranch(Long id) {
-        if (!repository.existsById(id)) {
-            throw AppException.notFound("School branch not found with id: " + id);
-        }
-        repository.deleteById(id);
-    }
+    void deleteBranch(Long id);
 }

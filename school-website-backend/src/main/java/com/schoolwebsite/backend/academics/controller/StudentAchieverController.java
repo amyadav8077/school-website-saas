@@ -1,22 +1,22 @@
 package com.schoolwebsite.backend.academics.controller;
 
-import com.schoolwebsite.backend.academics.entity.*;
-import com.schoolwebsite.backend.academics.service.*;
+import java.util.List;
 
-import com.schoolwebsite.backend.common.dto.ApiResponse;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.schoolwebsite.backend.academics.entity.*;
+import com.schoolwebsite.backend.academics.service.*;
+import com.schoolwebsite.backend.common.dto.ApiResponse;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class StudentAchieverController {
-
     private final StudentAchieverService service;
 
     @GetMapping("/sites/{tenantId}/achievers")
@@ -25,11 +25,10 @@ public class StudentAchieverController {
     }
 
     @PostMapping("/admin/sites/{tenantId}/achievers")
-    public ResponseEntity<ApiResponse<StudentAchiever>> createAchiever(
-            @PathVariable Long tenantId,
+    public ResponseEntity<ApiResponse<StudentAchiever>> createAchiever(@PathVariable Long tenantId,
             @Valid @RequestBody StudentAchiever achiever) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.ok("Student achiever created successfully", service.createAchiever(tenantId, achiever)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                ApiResponse.ok("Student achiever created successfully", service.createAchiever(tenantId, achiever)));
     }
 
     @DeleteMapping("/admin/achievers/{id}")

@@ -1,8 +1,9 @@
 package com.schoolwebsite.backend.siteconfiguration.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "site_configs")

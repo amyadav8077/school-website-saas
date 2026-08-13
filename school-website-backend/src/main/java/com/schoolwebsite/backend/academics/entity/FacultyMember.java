@@ -1,8 +1,9 @@
 package com.schoolwebsite.backend.academics.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "faculty_members")
@@ -12,7 +13,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class FacultyMember {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

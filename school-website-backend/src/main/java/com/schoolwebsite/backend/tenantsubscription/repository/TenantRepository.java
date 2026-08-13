@@ -1,15 +1,17 @@
 package com.schoolwebsite.backend.tenantsubscription.repository;
 
-import com.schoolwebsite.backend.tenantsubscription.entity.*;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import com.schoolwebsite.backend.tenantsubscription.entity.*;
 
 @Repository
 public interface TenantRepository extends JpaRepository<Tenant, Long> {
     Optional<Tenant> findBySubdomain(String subdomain);
+
     boolean existsBySubdomain(String subdomain);
+
     boolean existsByName(String name);
 }

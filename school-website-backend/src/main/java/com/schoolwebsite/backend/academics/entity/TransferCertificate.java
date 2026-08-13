@@ -1,8 +1,9 @@
 package com.schoolwebsite.backend.academics.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transfer_certificates")

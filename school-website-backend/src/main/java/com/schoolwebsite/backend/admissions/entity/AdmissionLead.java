@@ -1,8 +1,9 @@
 package com.schoolwebsite.backend.admissions.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "admission_leads")

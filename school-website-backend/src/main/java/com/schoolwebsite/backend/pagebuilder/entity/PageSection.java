@@ -1,8 +1,9 @@
 package com.schoolwebsite.backend.pagebuilder.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "page_sections")

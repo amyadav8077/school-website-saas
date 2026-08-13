@@ -1,22 +1,22 @@
 package com.schoolwebsite.backend.academics.controller;
 
-import com.schoolwebsite.backend.academics.entity.*;
-import com.schoolwebsite.backend.academics.service.*;
+import java.util.List;
 
-import com.schoolwebsite.backend.common.dto.ApiResponse;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.schoolwebsite.backend.academics.entity.*;
+import com.schoolwebsite.backend.academics.service.*;
+import com.schoolwebsite.backend.common.dto.ApiResponse;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class AcademicProgramController {
-
     private final AcademicProgramService service;
 
     @GetMapping("/sites/{tenantId}/programs")
@@ -25,11 +25,10 @@ public class AcademicProgramController {
     }
 
     @PostMapping("/admin/sites/{tenantId}/programs")
-    public ResponseEntity<ApiResponse<AcademicProgram>> createProgram(
-            @PathVariable Long tenantId,
+    public ResponseEntity<ApiResponse<AcademicProgram>> createProgram(@PathVariable Long tenantId,
             @Valid @RequestBody AcademicProgram program) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.ok("Academic program created successfully", service.createProgram(tenantId, program)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                ApiResponse.ok("Academic program created successfully", service.createProgram(tenantId, program)));
     }
 
     @DeleteMapping("/admin/programs/{id}")

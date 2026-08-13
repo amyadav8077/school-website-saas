@@ -1,7 +1,9 @@
 package com.schoolwebsite.backend.common.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -30,10 +32,6 @@ public class ApiResponse<T> {
     }
 
     public static <T> ApiResponse<T> error(String message, String errorCode) {
-        return ApiResponse.<T>builder()
-                .success(false)
-                .message(message)
-                .errorCode(errorCode)
-                .build();
+        return ApiResponse.<T>builder().success(false).message(message).errorCode(errorCode).build();
     }
 }

@@ -1,17 +1,18 @@
 package com.schoolwebsite.backend.tenantsubscription;
 
-import com.schoolwebsite.backend.common.exception.AppException;
-import com.schoolwebsite.backend.tenantsubscription.dto.TenantOnboardRequest;
-import com.schoolwebsite.backend.tenantsubscription.dto.TenantResponse;
-import com.schoolwebsite.backend.tenantsubscription.service.TenantService;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import com.schoolwebsite.backend.common.exception.AppException;
+import com.schoolwebsite.backend.tenantsubscription.dto.TenantOnboardRequest;
+import com.schoolwebsite.backend.tenantsubscription.dto.TenantResponse;
+import com.schoolwebsite.backend.tenantsubscription.service.TenantService;
 
 @SpringBootTest
 @Transactional
@@ -22,14 +23,8 @@ public class TenantControllerTest {
 
     @Test
     public void testOnboardTenantAndList() {
-        TenantOnboardRequest request = new TenantOnboardRequest(
-                "Stanford Academy",
-                "stanford-academy",
-                "#1e3a8a",
-                "#3b82f6",
-                "#f59e0b",
-                "Inter"
-        );
+        TenantOnboardRequest request = new TenantOnboardRequest("Stanford Academy", "stanford-academy", "#1e3a8a",
+                "#3b82f6", "#f59e0b", "Inter");
 
         // 1. Onboard Tenant
         TenantResponse response = tenantService.onboardTenant(request);
@@ -45,14 +40,8 @@ public class TenantControllerTest {
 
     @Test
     public void testDuplicateSubdomainValidation() {
-        TenantOnboardRequest request = new TenantOnboardRequest(
-                "Harvard Academy",
-                "harvard",
-                "#1e3a8a",
-                "#3b82f6",
-                "#f59e0b",
-                "Inter"
-        );
+        TenantOnboardRequest request = new TenantOnboardRequest("Harvard Academy", "harvard", "#1e3a8a", "#3b82f6",
+                "#f59e0b", "Inter");
 
         // First onboarding succeeds
         tenantService.onboardTenant(request);
@@ -65,14 +54,8 @@ public class TenantControllerTest {
 
     @Test
     public void testUpdateCustomDomain() {
-        TenantOnboardRequest request = new TenantOnboardRequest(
-                "Oxford Academy",
-                "oxford-academy",
-                "#1e3a8a",
-                "#3b82f6",
-                "#f59e0b",
-                "Inter"
-        );
+        TenantOnboardRequest request = new TenantOnboardRequest("Oxford Academy", "oxford-academy", "#1e3a8a",
+                "#3b82f6", "#f59e0b", "Inter");
         TenantResponse response = tenantService.onboardTenant(request);
         assertNull(response.getCustomDomain());
 
@@ -87,14 +70,8 @@ public class TenantControllerTest {
 
     @Test
     public void testCloneTenant() {
-        TenantOnboardRequest request = new TenantOnboardRequest(
-                "Source School",
-                "source-school",
-                "#1e3a8a",
-                "#3b82f6",
-                "#f59e0b",
-                "Inter"
-        );
+        TenantOnboardRequest request = new TenantOnboardRequest("Source School", "source-school", "#1e3a8a", "#3b82f6",
+                "#f59e0b", "Inter");
         TenantResponse source = tenantService.onboardTenant(request);
 
         TenantResponse cloned = tenantService.cloneTenant(source.getId(), "Cloned School", "cloned-school");
