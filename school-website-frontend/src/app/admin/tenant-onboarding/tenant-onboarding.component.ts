@@ -8,18 +8,18 @@ import { HttpClient } from '@angular/common/http';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div style="background: white; padding: 2rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
-      <h2 style="font-size: 1.5rem; color: #1e293b; margin-top: 0; margin-bottom: 1.5rem; font-weight: 700;">Onboard New School (Tenant)</h2>
+    <div class="ds-card ds-reveal" style="padding: 2rem; margin-bottom: 2rem;">
+      <h2 class="ds-heading" style="font-size: 1.5rem; margin-top: 0; margin-bottom: 1.5rem;">Onboard New School <span class="ds-heading-grad">(Tenant)</span></h2>
       
       @if (successMessage()) {
-        <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem; color: #047857;">
-          <strong>Success!</strong> {{ successMessage() }}
+        <div class="ds-alert ds-alert-success">
+          <span>✅</span> <span><strong>Success!</strong> {{ successMessage() }}</span>
         </div>
       }
       
       @if (errorMessage()) {
-        <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem; color: #b91c1c;">
-          <strong>Error:</strong> {{ errorMessage() }}
+        <div class="ds-alert ds-alert-error ds-shake">
+          <span>⚠️</span> <span><strong>Error:</strong> {{ errorMessage() }}</span>
         </div>
       }
 
@@ -92,10 +92,8 @@ import { HttpClient } from '@angular/common/http';
           </div>
         </div>
 
-        <button type="submit" [disabled]="!onboardForm.form.valid || isLoading()"
-          style="background-color: #1e3a8a; color: white; border: 0; padding: 0.85rem 1.5rem; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s;"
-          [style.opacity]="onboardForm.form.valid && !isLoading() ? '1' : '0.6'">
-          {{ isLoading() ? 'Onboarding...' : 'Onboard & Initialize Branding' }}
+        <button type="submit" [disabled]="!onboardForm.form.valid || isLoading()" class="ds-btn ds-btn-primary" style="padding: 0.85rem 1.5rem; font-size: 1rem;">
+          @if (isLoading()) { <span class="ds-spinner"></span> Onboarding... } @else { Onboard &amp; Initialize Branding }
         </button>
       </form>
     </div>

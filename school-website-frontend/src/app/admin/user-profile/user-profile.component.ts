@@ -8,8 +8,8 @@ import { HttpClient } from '@angular/common/http';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div style="background: white; padding: 2rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
-      <h2 style="font-size: 1.5rem; color: #1e293b; margin-top: 0; margin-bottom: 1.5rem; font-weight: 700;">👤 My Profile & Account Security</h2>
+    <div class="ds-card ds-reveal" style="padding: 2rem; margin-bottom: 2rem;">
+      <h2 class="ds-heading" style="font-size: 1.5rem; margin-top: 0; margin-bottom: 1.5rem;">👤 My Profile &amp; <span class="ds-heading-grad">Account Security</span></h2>
       
       <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; align-items: start;">
         
@@ -44,15 +44,11 @@ import { HttpClient } from '@angular/common/http';
           <h3 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem; color: #0f172a; font-weight: 700;">🔐 Change Account Password</h3>
 
           @if (successMessage()) {
-            <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 0.75rem 1rem; border-radius: 4px; margin-bottom: 1rem; color: #047857; font-size: 0.85rem; font-weight: 500;">
-              <strong>Success!</strong> {{ successMessage() }}
-            </div>
+            <div class="ds-alert ds-alert-success"><span>✅</span> <span><strong>Success!</strong> {{ successMessage() }}</span></div>
           }
 
           @if (errorMessage()) {
-            <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 0.75rem 1rem; border-radius: 4px; margin-bottom: 1rem; color: #b91c1c; font-size: 0.85rem; font-weight: 500;">
-              <strong>Error:</strong> {{ errorMessage() }}
-            </div>
+            <div class="ds-alert ds-alert-error ds-shake"><span>⚠️</span> <span><strong>Error:</strong> {{ errorMessage() }}</span></div>
           }
 
           <form (ngSubmit)="onChangePassword()" #pwdForm="ngForm" style="display: flex; flex-direction: column; gap: 1rem;">
@@ -74,10 +70,8 @@ import { HttpClient } from '@angular/common/http';
                 style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 0.9rem;" />
             </div>
 
-            <button type="submit" [disabled]="!pwdForm.form.valid || isLoading()"
-              style="background-color: #0f172a; color: white; border: 0; padding: 0.65rem 1.25rem; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s; font-size: 0.9rem;"
-              [style.opacity]="pwdForm.form.valid && !isLoading() ? '1' : '0.6'">
-              {{ isLoading() ? 'Saving...' : 'Update Password 🔒' }}
+            <button type="submit" [disabled]="!pwdForm.form.valid || isLoading()" class="ds-btn ds-btn-primary" style="padding: 0.65rem 1.25rem; font-size: 0.9rem;">
+              @if (isLoading()) { <span class="ds-spinner"></span> Saving... } @else { Update Password 🔒 }
             </button>
           </form>
         </div>
