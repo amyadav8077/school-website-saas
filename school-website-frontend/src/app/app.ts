@@ -28,6 +28,8 @@ import { TCManagerComponent } from './admin/tc-manager/tc-manager.component';
 import { TCLookupComponent } from './pages/tc-lookup/tc-lookup.component';
 import { LoginComponent } from './admin/login/login.component';
 import { UserProfileComponent } from './admin/user-profile/user-profile.component';
+import { ScrollRevealDirective } from './shared/directives/scroll-reveal.directive';
+import { HeroCarouselComponent } from './pages/hero-carousel/hero-carousel.component';
 
 @Component({
   selector: 'app-root',
@@ -59,6 +61,8 @@ import { UserProfileComponent } from './admin/user-profile/user-profile.componen
     TCManagerComponent,
     TCLookupComponent,
     UserProfileComponent,
+    ScrollRevealDirective,
+    HeroCarouselComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
@@ -117,6 +121,7 @@ export class App implements OnInit {
   // Dynamic public catalog directories
   protected readonly publicCourses = signal<any[]>([]);
   protected readonly publicFaculty = signal<any[]>([]);
+  protected readonly publicAchievers = signal<any[]>([]);
   protected readonly publicPrograms = signal<any[]>([]);
   protected readonly publicNews = signal<any[]>([]);
   protected readonly publicEvents = signal<any[]>([]);
@@ -349,6 +354,16 @@ export class App implements OnInit {
 
     this.http.get<any[]>(`http://localhost:8080/api/sites/${tenantId}/faculty`)
       .subscribe({ next: (data) => this.publicFaculty.set(data), error: (err) => console.error(err) });
+
+    this.http.get<any[]>(`http://localhost:8080/api/sites/${tenantId}/achievers`)
+      .subscribe({ next: (data) => this.publicAchievers.set(data), error: (err) => console.error(err) });
+  }
+
+  openAchievementsPage() {
+    const existing = this.schoolPages().find(p => p.slug === 'achievements');
+    this.activePreviewPage.set(existing ?? { slug: 'achievements', title: 'Achievements', sections: [] });
+    this.isMobileMenuOpen.set(false);
+    this.showMoreDropdown.set(false);
   }
 
   loadTenantNotifications(tenantId: number) {

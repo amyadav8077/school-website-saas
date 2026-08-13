@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
 
 export interface EnrichmentActivity {
   id: number;
@@ -14,10 +15,10 @@ export interface EnrichmentActivity {
 @Component({
   selector: 'app-campus-enrichment',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ScrollRevealDirective],
   template: `
     @if (activities().length > 0) {
-      <div class="ds-card ds-reveal" style="padding: 2.5rem; max-width: 1200px; margin: 3rem auto;">
+      <div [dsScrollReveal]="0" class="ds-card" style="padding: 2.5rem; max-width: 1200px; margin: 3rem auto;">
         
         <div style="text-align: center; margin-bottom: 2rem;">
           <span [style.color]="accentColor" style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.5rem;">Co-Curriculars & Parity</span>
@@ -51,9 +52,9 @@ export interface EnrichmentActivity {
         </div>
 
         <!-- Showcase Detail Cards -->
-        <div>
+        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
           @for (act of filteredActivities(); track act.id) {
-            <div class="ds-card" style="background: #f8fafc; padding: 1.5rem; display: flex; gap: 1.5rem; align-items: start; flex-wrap: wrap;">
+            <div class="ds-card ds-lift" style="background: #f8fafc; padding: 1.5rem; display: flex; gap: 1.5rem; align-items: start; flex-wrap: wrap; animation: dsPop 0.4s var(--ds-ease);">
               <div [style.background-color]="primaryColor" style="width: 50px; height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; color: white; flex-shrink: 0;">
                 @if (act.type === 'SPORTS') { 🏀 }
                 @else if (act.type === 'UNIFORMS') { 👕 }

@@ -194,11 +194,112 @@ body {
 @keyframes dsShimmer { to { background-position: -200% 0; } }
 @keyframes dsSpin    { to { transform: rotate(360deg); } }
 
+/* ── Scroll reveal (IntersectionObserver-driven) ──────────────────────────── */
+.ds-sr {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s var(--ds-ease), transform 0.7s var(--ds-ease);
+  will-change: opacity, transform;
+}
+.ds-sr.ds-sr-in { opacity: 1; transform: translateY(0); }
+
+/* ── Public-site helpers ──────────────────────────────────────────────────── */
+/* Hover-lift for public site cards (faculty, events, facilities, founders…) */
+.ds-lift { transition: transform 0.28s var(--ds-ease), box-shadow 0.28s var(--ds-ease); }
+.ds-lift:hover { transform: translateY(-6px); box-shadow: var(--ds-shadow-lg); }
+
+/* Zoom the image inside a card on hover */
+.ds-zoom { overflow: hidden; }
+.ds-zoom img { transition: transform 0.5s var(--ds-ease); }
+.ds-zoom:hover img { transform: scale(1.07); }
+
+/* Animated hero gradient sheen */
+.ds-hero-anim { position: relative; background-size: 180% 180% !important; animation: dsGrad 14s ease infinite; }
+@keyframes dsGrad { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+/* Pulsing CTA emphasis */
+.ds-pulse { animation: dsPulse 2.4s ease-in-out infinite; }
+@keyframes dsPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
 @media (prefers-reduced-motion: reduce) {
-  .ds-reveal, .ds-stagger, .ds-pop, .ds-shake, .ds-float, .ds-shimmer {
+  .ds-reveal, .ds-stagger, .ds-pop, .ds-shake, .ds-float, .ds-shimmer, .ds-pulse, .ds-hero-anim {
     animation: none !important; opacity: 1 !important; transform: none !important;
   }
+  .ds-sr { opacity: 1 !important; transform: none !important; transition: none !important; }
   .ds-btn::after { display: none; }
+}
+
+/* ── Modern elevated glass header ─────────────────────────────────────────── */
+.site-nav {
+  position: relative;
+  z-index: 50;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.9));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 6px 22px -10px rgba(15, 23, 42, 0.22);
+}
+/* Subtle brand glow line beneath the header */
+.site-nav::after {
+  content: '';
+  position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.35), transparent);
+}
+
+/* Header CTA button */
+.nav-cta {
+  border: 0;
+  color: #fff;
+  font: inherit;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 0.6rem 1.15rem;
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 8px 18px -6px rgba(37, 99, 235, 0.5);
+  transition: transform 0.15s var(--ds-ease), box-shadow 0.2s, filter 0.2s;
+}
+.nav-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -6px rgba(37, 99, 235, 0.65); filter: brightness(1.05); }
+.nav-cta:active { transform: translateY(0); }
+
+@media (max-width: 900px) {
+  .nav-cta { display: none; }
+}
+
+/* ── Modern footer helpers ────────────────────────────────────────────────── */
+.foot-social {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 12px; text-decoration: none;
+  color: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.16);
+  transition: transform 0.2s var(--ds-ease), background 0.2s, color 0.2s;
+}
+.foot-social svg { display: block; }
+.foot-social:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.22); color: #fff; }
+
+.foot-link {
+  background: none; border: 0; padding: 0; cursor: pointer;
+  color: rgba(255, 255, 255, 0.72); font: inherit; font-size: 0.9rem;
+  position: relative; transition: color 0.2s, padding-left 0.2s;
+}
+.foot-link::before {
+  content: '›'; position: absolute; left: -2px; opacity: 0;
+  transition: opacity 0.2s, left 0.2s; color: #fff;
+}
+.foot-link:hover { color: #fff; padding-left: 14px; }
+.foot-link:hover::before { opacity: 1; left: 0; }
+
+.foot-ico {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 9px; font-size: 0.85rem; flex-shrink: 0;
+  filter: saturate(1.1);
+}
+
+@media (max-width: 900px) {
+  .footer-grid { grid-template-columns: 1fr 1fr !important; }
+}
+@media (max-width: 620px) {
+  .footer-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -240,20 +341,22 @@ body {
   font-family: system-ui, -apple-system, sans-serif;
   
   .logo-container {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     font-size: 1.5rem;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
+    box-shadow: 0 8px 18px -6px rgba(15, 23, 42, 0.35);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: hidden;
+    flex-shrink: 0;
 
     &:hover {
-      transform: scale(1.05) rotate(5deg);
+      transform: translateY(-2px) scale(1.04);
+      box-shadow: 0 12px 22px -6px rgba(15, 23, 42, 0.45);
     }
   }
 
@@ -465,17 +568,19 @@ img, video, iframe {
   }
 }
 
-// ─── School brand name (overflow on small screens) ────────────────────────────
+// ─── School brand name (full name, wraps instead of truncating) ───────────────
 .school-name {
-  font-size: clamp(0.85rem, 2.5vw, 1.35rem) !important;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 180px;
+  font-size: clamp(1rem, 2vw, 1.4rem) !important;
+  line-height: 1.2;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  max-width: none !important;
+  overflow-wrap: anywhere;
+  -webkit-line-clamp: none !important;
 
   @media (max-width: 639px) {
-    max-width: 130px;
-    font-size: 0.85rem !important;
+    font-size: 0.95rem !important;
   }
 }
 
@@ -627,7 +732,7 @@ img, video, iframe {
   }
 
   .school-name {
-    max-width: 200px !important;
+    max-width: none !important;
   }
 
   .sw-hero-section {
