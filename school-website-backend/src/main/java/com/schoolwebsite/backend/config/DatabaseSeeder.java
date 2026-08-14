@@ -2,8 +2,10 @@ package com.schoolwebsite.backend.config;
 
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.schoolwebsite.backend.academics.entity.AcademicCourse;
 import com.schoolwebsite.backend.academics.entity.AcademicProgram;
@@ -82,12 +84,32 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final SchoolNewsRepository newsRepository;
     private final SchoolEventRepository eventRepository;
 
+    /**
+     * When true, an existing "pioneer" tenant (and all its cascaded data) is
+     * deleted on startup so the seeder re-runs and inserts the latest full
+     * dataset. Set env var SEED_FORCE_REFRESH=true for a one-time refresh, then
+     * remove/set it back to false to avoid wiping data on every restart.
+     */
+    @Value("${seed.force-refresh:false}")
+    private boolean forceRefresh;
+
     @Override
+    @Transactional
     public void run(String... args) throws Exception {
         if (adminUserRepository.findByUsername("admin").isEmpty()) {
             adminUserRepository.save(AdminUser.builder().username("admin").password("admin123").role("SUPER_ADMIN")
                     .email("admin@schoolsaas.com").phoneNumber("+15550199000").build());
 
+        }
+
+        if (forceRefresh && tenantRepository.existsBySubdomain("pioneer")) {
+            Long oldId = tenantRepository.findBySubdomain("pioneer").map(Tenant::getId).orElse(null);
+            System.out.println("[DatabaseSeeder] SEED_FORCE_REFRESH is enabled — "
+                    + "deleting existing 'pioneer' tenant (id=" + oldId
+                    + ") and all cascaded data for a full reseed.");
+            tenantRepository.findBySubdomain("pioneer")
+                    .ifPresent(t -> tenantRepository.deleteById(t.getId()));
+            tenantRepository.flush();
         }
 
         if (!tenantRepository.existsBySubdomain("pioneer")) {

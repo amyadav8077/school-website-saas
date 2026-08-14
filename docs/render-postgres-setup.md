@@ -118,9 +118,20 @@ if (!tenantRepository.existsBySubdomain("pioneer")) { /* seed everything */ }
 
 ### If you later change the seed data
 Because the seeder skips when `pioneer` exists, new seed changes won't apply to an
-already-seeded Postgres DB. To re-seed from scratch, either:
-- Drop/recreate the Render PostgreSQL database, or
-- Manually delete the `pioneer` tenant rows, then redeploy.
+already-seeded database by default. To apply updated seed data, use the built-in
+force-refresh flag (no manual SQL needed):
+
+1. On the backend service → **Environment**, add `SEED_FORCE_REFRESH=true`.
+2. Save → the service redeploys/restarts. On boot the seeder **deletes the existing
+   `pioneer` tenant (cascading all its data) and re-seeds the full latest dataset**.
+3. **Important:** once done, set `SEED_FORCE_REFRESH` back to `false` (or remove it),
+   otherwise it wipes and re-seeds on **every** restart.
+
+The frontend resolves the tenant by subdomain, so a changed tenant id after refresh
+is handled automatically.
+
+Alternatively (manual): run `DELETE FROM tenants WHERE subdomain = 'pioneer';` in the
+Neon/Postgres SQL console, then restart.
 
 ---
 
