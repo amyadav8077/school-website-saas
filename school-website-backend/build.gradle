@@ -49,6 +49,34 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+// Auto-load a local .env file (gitignored) into bootRun's environment so that
+// secrets like SPRING_MAIL_USERNAME/PASSWORD don't need to be exported manually.
+// Lines are KEY=VALUE; blank lines and #comments are ignored. Real OS env vars
+// always take precedence over .env values.
+tasks.named('bootRun') {
+    doFirst {
+        def envFile = file("${projectDir}/.env")
+        if (envFile.exists()) {
+            envFile.readLines().each { line ->
+                def trimmed = line.trim()
+                if (trimmed && !trimmed.startsWith('#') && trimmed.contains('=')) {
+                    def idx = trimmed.indexOf('=')
+                    def key = trimmed.substring(0, idx).trim()
+                    def value = trimmed.substring(idx + 1).trim()
+                    if ((value.startsWith('"') && value.endsWith('"')) ||
+                        (value.startsWith("'") && value.endsWith("'"))) {
+                        value = value.substring(1, value.length() - 1)
+                    }
+                    if (System.getenv(key) == null) {
+                        environment key, value
+                    }
+                }
+            }
+            logger.lifecycle("Loaded environment variables from .env")
+        }
+    }
+}
+
 spotless {
     java {
         target 'src/**/*.java'
