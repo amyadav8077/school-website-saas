@@ -120,30 +120,34 @@ public class DatabaseSeeder implements CommandLineRunner {
             pageSectionRepository.save(PageSection.builder().pageId(home.getId()).type("CAROUSEL").positionOrder(2)
                     .config("{\"images\":["
                             + "{\"url\":\"https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1600&q=80\",\"caption\":\"Iconic Campus & Architecture\",\"subtitle\":\"A sprawling, green campus designed to inspire curiosity and calm.\"},"
-                            + "{\"url\":\"https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1600&q=80\",\"caption\":\"Collaborative Learning Spaces\",\"subtitle\":\"Bright, modern classrooms built for interactive, concept-driven learning.\"},"
+                            + "{\"url\":\"https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1600&q=80\",\"caption\":\"Collaborative Learning Spaces\",\"subtitle\":\"Bright, modern classrooms built for interactive, concept-driven learning.\"},"
                             + "{\"url\":\"https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1600&q=80\",\"caption\":\"High-Tech STEM Laboratories\",\"subtitle\":\"Industry-grade labs, robotics stations and 3D printing studios.\"},"
                             + "{\"url\":\"https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&w=1600&q=80\",\"caption\":\"Vibrant Library & Reading Halls\",\"subtitle\":\"Thousands of titles and quiet corners for deep focus.\"},"
                             + "{\"url\":\"https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=1600&q=80\",\"caption\":\"Championship Athletics\",\"subtitle\":\"Synthetic tracks, courts and certified coaches for every sport.\"},"
-                            + "{\"url\":\"https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1600&q=80\",\"caption\":\"A Culture of Reading & Research\",\"subtitle\":\"Nurturing lifelong learners through literature and inquiry.\"}"
+                            + "{\"url\":\"https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1600&q=80\",\"caption\":\"A Culture of Reading & Research\",\"subtitle\":\"Nurturing lifelong learners through literature and inquiry.\"},"
+                            + "{\"url\":\"https://images.unsplash.com/photo-1526129318478-62ed807ebdf9?auto=format&fit=crop&w=1600&q=80\",\"caption\":\"Robotics & Innovation Studios\",\"subtitle\":\"Where students design, build and program the future.\"},"
+                            + "{\"url\":\"https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1600&q=80\",\"caption\":\"Smart Digital Classrooms\",\"subtitle\":\"Interactive boards and immersive learning for every subject.\"},"
+                            + "{\"url\":\"https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80\",\"caption\":\"Vibrant Community & Events\",\"subtitle\":\"Festivals, competitions and celebrations that build character.\"},"
+                            + "{\"url\":\"https://images.unsplash.com/photo-1567168539593-59673ababaae?auto=format&fit=crop&w=1600&q=80\",\"caption\":\"Modern Science & Chemistry Labs\",\"subtitle\":\"Hands-on experimentation with industry-grade apparatus.\"}"
                             + "]}")
                     .build());
             pageSectionRepository.save(PageSection.builder().pageId(home.getId()).type("FEATURES").positionOrder(3)
                     .config("{\"f1_title\":\"STEM & Robotics Labs\",\"f1_desc\":\"Industry-grade hardware and 3D printing stations\",\"f2_title\":\"Championship Athletics\",\"f2_desc\":\"Synthetic tracks, courts and certified coaches\",\"f3_title\":\"Smart Classrooms\",\"f3_desc\":\"Interactive digital boards and climate-controlled halls\"}")
                     .build());
             pageSectionRepository.save(PageSection.builder().pageId(home.getId()).type("INTRO").positionOrder(4).config(
-                    "{\"title\":\"About Pioneer Academy\",\"body\":\"SaaS Pioneer Academy has been a trailblazer in holistic, concept-driven learning since its founding. We combine certified mentors, top board curricula, and a comprehensive student development system to create an unparalleled environment for tomorrow's achievers. Our campus features high-tech science & computer labs, virtual visual auditoriums, world-class athletic facilities, and dedicated IIT-JEE and NEET coaching wings.\",\"imgUrl\":\"https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=600&q=80\"}")
+                    "{\"title\":\"About Pioneer Academy\",\"body\":\"SaaS Pioneer Academy has been a trailblazer in holistic, concept-driven learning since its founding. We combine certified mentors, top board curricula, and a comprehensive student development system to create an unparalleled environment for tomorrow's achievers. Our campus features high-tech science & computer labs, virtual visual auditoriums, world-class athletic facilities, and dedicated IIT-JEE and NEET coaching wings.\",\"imgUrl\":\"https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80\"}")
                     .build());
             pageSectionRepository.save(PageSection.builder().pageId(home.getId()).type("FOUNDERS").positionOrder(5)
                     .config("{\"title\":\"Our Visionary Leadership\",\"founders\":[{\"name\":\"Dr. Arthur Pendragon\",\"role\":\"Founder & Managing Director\",\"bio\":\"25+ years in secondary pedagogy. Arthur's vision: concept clarity above rote memorization.\",\"photoUrl\":\"https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&q=80\"},{\"name\":\"Prof. Guinevere Vance\",\"role\":\"Co-Founder & Academic Dean\",\"bio\":\"Designs core logic curriculum and rank acceleration models across all sister branches.\",\"photoUrl\":\"https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80\"},{\"name\":\"Mr. Lancelot Sharma\",\"role\":\"Director of Sports & Athletics\",\"bio\":\"Former national-level athlete who built Pioneer's championship sports infrastructure from the ground up.\",\"photoUrl\":\"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80\"}]}")
                     .build());
             pageSectionRepository.save(PageSection.builder().pageId(home.getId()).type("FACILITIES").positionOrder(6)
-                    .config("{\"title\":\"World-Class Infrastructure\",\"facilities\":[{\"title\":\"STEM & Robotics Hub\",\"description\":\"High-tech microprocessors, 3D printing labs, and interactive programming kits for hands-on innovation.\",\"photoUrl\":\"https://images.unsplash.com/photo-1564069114354-d1a6e0e1cf2e?auto=format&fit=crop&w=500&q=80\"},{\"title\":\"Championship Athletics Arena\",\"description\":\"State-of-the-art synthetic tracks, multi-sport courts, and professional training coaches on-site.\",\"photoUrl\":\"https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=500&q=80\"},{\"title\":\"Smart Digitized Classrooms\",\"description\":\"Climate-controlled spaces with responsive touch-screens and high-fidelity sound systems.\",\"photoUrl\":\"https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=500&q=80\"},{\"title\":\"Science & Chemistry Labs\",\"description\":\"Fully equipped with modern apparatus, safety stations, and live demonstration setups.\",\"photoUrl\":\"https://images.unsplash.com/photo-1532094349884-543559c0c548?auto=format&fit=crop&w=500&q=80\"}]}")
+                    .config("{\"title\":\"World-Class Infrastructure\",\"facilities\":[{\"title\":\"STEM & Robotics Hub\",\"description\":\"High-tech microprocessors, 3D printing labs, and interactive programming kits for hands-on innovation.\",\"photoUrl\":\"https://images.unsplash.com/photo-1526129318478-62ed807ebdf9?auto=format&fit=crop&w=500&q=80\"},{\"title\":\"Championship Athletics Arena\",\"description\":\"State-of-the-art synthetic tracks, multi-sport courts, and professional training coaches on-site.\",\"photoUrl\":\"https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=500&q=80\"},{\"title\":\"Smart Digitized Classrooms\",\"description\":\"Climate-controlled spaces with responsive touch-screens and high-fidelity sound systems.\",\"photoUrl\":\"https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=500&q=80\"},{\"title\":\"Science & Chemistry Labs\",\"description\":\"Fully equipped with modern apparatus, safety stations, and live demonstration setups.\",\"photoUrl\":\"https://images.unsplash.com/photo-1567168539593-59673ababaae?auto=format&fit=crop&w=500&q=80\"}]}")
                     .build());
             pageSectionRepository.save(PageSection.builder().pageId(home.getId()).type("VIDEO").positionOrder(7).config(
                     "{\"title\":\"Pioneer Academy — Virtual Campus Tour\",\"video_url\":\"https://www.youtube.com/embed/dQw4w9WgXcQ\"}")
                     .build());
             pageSectionRepository.save(PageSection.builder().pageId(home.getId()).type("PHOTO_GRID").positionOrder(8)
-                    .config("{\"title\":\"Campus Life in Pictures\",\"photos\":[{\"url\":\"https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=400&q=80\",\"caption\":\"Science Fair Project Exhibition\",\"category\":\"ACADEMICS\"},{\"url\":\"https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=400&q=80\",\"caption\":\"Inter-Branch Football Finals\",\"category\":\"SPORTS\"},{\"url\":\"https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?auto=format&fit=crop&w=400&q=80\",\"caption\":\"Annual Day Orchestral Symphony\",\"category\":\"CULTURAL\"},{\"url\":\"https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=400&q=80\",\"caption\":\"Graduation Ceremony 2025\",\"category\":\"CAMPUS\"},{\"url\":\"https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=400&q=80\",\"caption\":\"NEET Topper Felicitation\",\"category\":\"ACADEMICS\"},{\"url\":\"https://images.unsplash.com/photo-1564069114354-d1a6e0e1cf2e?auto=format&fit=crop&w=400&q=80\",\"caption\":\"Robotics Club Innovation Expo\",\"category\":\"ACADEMICS\"}]}")
+                    .config("{\"title\":\"Campus Life in Pictures\",\"photos\":[{\"url\":\"https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=400&q=80\",\"caption\":\"Science Fair Project Exhibition\",\"category\":\"ACADEMICS\"},{\"url\":\"https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=400&q=80\",\"caption\":\"Inter-Branch Football Finals\",\"category\":\"SPORTS\"},{\"url\":\"https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?auto=format&fit=crop&w=400&q=80\",\"caption\":\"Annual Day Orchestral Symphony\",\"category\":\"CULTURAL\"},{\"url\":\"https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=400&q=80\",\"caption\":\"Graduation Ceremony 2025\",\"category\":\"CAMPUS\"},{\"url\":\"https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=400&q=80\",\"caption\":\"NEET Topper Felicitation\",\"category\":\"ACADEMICS\"},{\"url\":\"https://images.unsplash.com/photo-1526129318478-62ed807ebdf9?auto=format&fit=crop&w=400&q=80\",\"caption\":\"Robotics Club Innovation Expo\",\"category\":\"ACADEMICS\"}]}")
                     .build());
 
             // ADMISSIONS PAGE
@@ -276,6 +280,20 @@ public class DatabaseSeeder implements CommandLineRunner {
                     "{\"title\":\"TC Application Guidelines\",\"notices\":[{\"text\":\"TC requests take 5-7 working days to process\"},{\"text\":\"Original fee receipts must be cleared before TC issuance\"},{\"text\":\"Apply in person at the admin office with parent's ID proof\"},{\"text\":\"For urgent TC: contact admin@pioneer.edu\"}]}")
                     .build());
 
+            // ACHIEVEMENTS PAGE
+            Page achievements = pageRepository.save(
+                    Page.builder().tenantId(tid).title("Achievements").slug("achievements").status("PUBLISHED").build());
+            pageSectionRepository.save(PageSection.builder().pageId(achievements.getId()).type("HERO").positionOrder(1)
+                    .config("{\"title\":\"Our Proud Students' Achievements\",\"subtitle\":\"Celebrating excellence, dedication and the spirit to succeed.\"}")
+                    .build());
+            pageSectionRepository.save(PageSection.builder().pageId(achievements.getId()).type("CAROUSEL")
+                    .positionOrder(2)
+                    .config("{\"images\":[{\"url\":\"https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80\",\"caption\":\"Toppers & Rank Holders Felicitation\"},{\"url\":\"https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&w=800&q=80\",\"caption\":\"National Olympiad & Competition Winners\"}]}")
+                    .build());
+            pageSectionRepository.save(PageSection.builder().pageId(achievements.getId()).type("INTRO").positionOrder(3)
+                    .config("{\"title\":\"Hall of Fame\",\"body\":\"Our students consistently achieve outstanding results across academics, sports, and cultural arenas. Manage individual achiever profiles from the Achievers catalog in the Admin panel — they render automatically in the carousel and directory on this page.\",\"imgUrl\":\"https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80\"}")
+                    .build());
+
             // ── ACADEMIC COURSES (8) ──────────────────────────────────────
             courseRepository.save(AcademicCourse.builder().tenantId(tid).name("Honors Computer Science")
                     .gradeLevel("High School (G9-12)")
@@ -341,80 +359,150 @@ public class DatabaseSeeder implements CommandLineRunner {
                             "Coding bootcamps, startup incubation, global mentorship webinars, industrial internship placements, pitch competitions.")
                     .build());
 
-            // ── FACULTY (8) ───────────────────────────────────────────────
+            // ── FACULTY (12) ──────────────────────────────────────────────
             facultyRepository.save(FacultyMember.builder().tenantId(tid).name("Dr. Arthur Pendragon")
                     .designation("Head of Science Department").qualification("Ph.D. Theoretical Chemistry, IIT Bombay")
                     .bio("15+ years of academic research and classroom excellence. Known for making complex chemistry intuitive and engaging for all learners.")
+                    .imageUrl("https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&q=80")
                     .build());
             facultyRepository.save(FacultyMember.builder().tenantId(tid).name("Prof. Guinevere Vance")
                     .designation("Mathematics Lead Instructor")
                     .qualification("M.Sc. Applied Mathematics, IISc Bangalore")
                     .bio("Specializes in making advanced calculus, algebra, and statistics incredibly accessible. Trained 200+ IIT-JEE rank achievers.")
+                    .imageUrl("https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80")
                     .build());
             facultyRepository.save(FacultyMember.builder().tenantId(tid).name("Mr. Lancelot Sharma")
                     .designation("Physics Senior Lecturer").qualification("M.Sc. Physics, Delhi University")
                     .bio("Expert in classical mechanics, optics and electromagnetism. Consistently produces top NEET and JEE Physics scorers.")
+                    .imageUrl("https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80")
                     .build());
             facultyRepository.save(FacultyMember.builder().tenantId(tid).name("Ms. Hermione Patel")
                     .designation("English & Literature Faculty")
                     .qualification("M.A. English Literature, Hyderabad University")
                     .bio("Passionate about building confident communicators. Leads the school debate club and annual drama productions.")
+                    .imageUrl("https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80")
                     .build());
             facultyRepository.save(FacultyMember.builder().tenantId(tid).name("Dr. Vikram Rajan")
                     .designation("Biology & Life Sciences HOD").qualification("Ph.D. Biotechnology, AIIMS Delhi")
                     .bio("Former AIIMS researcher bringing real-world medical science into the classroom. Mentors NEET top-500 aspirants directly.")
+                    .imageUrl("https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=300&q=80")
                     .build());
             facultyRepository.save(FacultyMember.builder().tenantId(tid).name("Ms. Priya Nair")
                     .designation("Computer Science & Robotics Faculty")
                     .qualification("B.Tech Computer Science, NIT Trichy")
                     .bio("Full-stack developer turned educator. Runs the school's Robotics Club and annual Hackathon. Taught Python to 500+ students.")
+                    .imageUrl("https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80")
                     .build());
             facultyRepository.save(FacultyMember.builder().tenantId(tid).name("Mr. Rajesh Iyer")
                     .designation("Social Studies & History Faculty").qualification("M.A. History, Pune University")
                     .bio("Brings history alive through storytelling, debate, and immersive classroom activities. Students consistently score 90%+ under his guidance.")
+                    .imageUrl("https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=300&q=80")
                     .build());
             facultyRepository.save(FacultyMember.builder().tenantId(tid).name("Ms. Sunita Menon")
                     .designation("Primary School Coordinator").qualification("B.Ed., M.Ed. — Child Development")
                     .bio("Dedicated to nurturing foundational learning in grades 1-5 through play-based pedagogy and emotional intelligence development.")
+                    .imageUrl("https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=300&q=80")
+                    .build());
+            facultyRepository.save(FacultyMember.builder().tenantId(tid).name("Dr. Ananya Deshpande")
+                    .designation("Economics & Commerce HOD").qualification("Ph.D. Economics, Delhi School of Economics")
+                    .bio("Blends real-world market case studies with board curriculum. Her commerce students consistently top CBSE district rankings.")
+                    .imageUrl("https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=300&q=80")
+                    .build());
+            facultyRepository.save(FacultyMember.builder().tenantId(tid).name("Mr. Faisal Khan")
+                    .designation("Physical Education & Sports Head").qualification("M.P.Ed., National Sports Coaching Diploma")
+                    .bio("Certified athletics coach who has trained state and national-level champions in track, football, and basketball.")
+                    .imageUrl("https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&w=300&q=80")
+                    .build());
+            facultyRepository.save(FacultyMember.builder().tenantId(tid).name("Ms. Kavya Reddy")
+                    .designation("Visual & Performing Arts Faculty").qualification("M.F.A. Fine Arts, JNAFAU Hyderabad")
+                    .bio("Leads the annual arts festival and mentors students in painting, classical dance, and theatre productions.")
+                    .imageUrl("https://images.unsplash.com/photo-1521252659862-eec69941b071?auto=format&fit=crop&w=300&q=80")
+                    .build());
+            facultyRepository.save(FacultyMember.builder().tenantId(tid).name("Dr. Samuel George")
+                    .designation("Counselling & Student Wellbeing Lead").qualification("Ph.D. Educational Psychology")
+                    .bio("Champions mental health and career counselling. Runs weekly wellbeing circles and one-on-one student mentorship sessions.")
+                    .imageUrl("https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=300&q=80")
                     .build());
 
-            // ── STUDENT ACHIEVERS (6) ─────────────────────────────────────
+            // ── STUDENT ACHIEVERS (12) ────────────────────────────────────
             achieverRepository.save(StudentAchiever.builder().tenantId(tid).name("Riddhi Sharma")
                     .score("CBSE Class 12 — 499/500").courseName("Commerce Stream")
                     .testimonialText(
                             "The structured curriculum and constant mentoring at Pioneer kept me laser-focused. Regular mock assessments and approachable teachers made accounting and economics mastery effortless.")
+                    .imageUrl("https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80")
                     .build());
             achieverRepository.save(StudentAchiever.builder().tenantId(tid).name("Somya Reddy")
                     .score("NEET UG — AIR 14").courseName("Pre-Medical Coaching")
                     .testimonialText(
                             "Securing AIR 14 is the pinnacle of my academic life. Pioneer's personalized mentorship, rank-boosting schedules, and detailed evaluations kept me sharp right until exam day.")
+                    .imageUrl("https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=500&q=80")
                     .build());
             achieverRepository.save(StudentAchiever.builder().tenantId(tid).name("B. Sanjana Krishnan")
                     .score("CBSE Class 12 — 498/500").courseName("Science (PCM) Stream")
                     .testimonialText(
                             "Pioneer provides an extraordinary learning environment with conceptual study modules. Weekly doubt-resolution sessions boosted my exam confidence immensely.")
+                    .imageUrl("https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?auto=format&fit=crop&w=500&q=80")
                     .build());
             achieverRepository.save(StudentAchiever.builder().tenantId(tid).name("Arjun Mehta")
                     .score("IIT-JEE Advanced — AIR 47").courseName("IIT-JEE Integrated Program")
                     .testimonialText(
                             "The IIT-JEE coaching wing at Pioneer is exceptional. Mock tests, peer learning groups, and dedicated mentor sessions made the difference between a good rank and a great one.")
+                    .imageUrl("https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80")
                     .build());
             achieverRepository.save(StudentAchiever.builder().tenantId(tid).name("Priya Nambiar")
                     .score("CBSE Class 10 — 500/500").courseName("Secondary School (Grade 10)")
                     .testimonialText(
                             "A perfect score felt impossible until Pioneer showed me how. The systematic revision schedules, practice papers, and encouraging faculty made 500/500 feel natural.")
+                    .imageUrl("https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=500&q=80")
                     .build());
             achieverRepository.save(StudentAchiever.builder().tenantId(tid).name("Karthik Suresh")
                     .score("National Science Olympiad — Gold").courseName("STEM & Olympiad Track")
                     .testimonialText(
                             "The Robotics Club and Science Olympiad preparation at Pioneer gave me the platform to shine nationally. Dr. Pendragon's mentorship was truly transformative.")
+                    .imageUrl("https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=500&q=80")
+                    .build());
+            achieverRepository.save(StudentAchiever.builder().tenantId(tid).name("Meera Iyer")
+                    .score("CBSE Class 12 — 497/500").courseName("Humanities Stream")
+                    .testimonialText(
+                            "Pioneer's humanities faculty encouraged critical thinking over memorization. Their essay workshops and mentorship helped me top the district in political science.")
+                    .imageUrl("https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?auto=format&fit=crop&w=500&q=80")
+                    .build());
+            achieverRepository.save(StudentAchiever.builder().tenantId(tid).name("Aditya Verma")
+                    .score("IIT-JEE Mains — AIR 122").courseName("IIT-JEE Integrated Program")
+                    .testimonialText(
+                            "The daily problem-solving drills and mentor check-ins kept me consistent for two years. Pioneer turned my JEE dream into an IIT reality.")
+                    .imageUrl("https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=500&q=80")
+                    .build());
+            achieverRepository.save(StudentAchiever.builder().tenantId(tid).name("Ishita Gupta")
+                    .score("NEET UG — AIR 208").courseName("Pre-Medical Coaching")
+                    .testimonialText(
+                            "The biology faculty's real-world approach and Dr. Rajan's AIIMS insights gave me an edge. The regular NEET mock series was a game-changer.")
+                    .imageUrl("https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=500&q=80")
+                    .build());
+            achieverRepository.save(StudentAchiever.builder().tenantId(tid).name("Rohan Malhotra")
+                    .score("International Math Olympiad — Silver").courseName("STEM & Olympiad Track")
+                    .testimonialText(
+                            "Representing India internationally was a dream. Prof. Vance's advanced problem sets and one-on-one coaching prepared me for the world stage.")
+                    .imageUrl("https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=500&q=80")
+                    .build());
+            achieverRepository.save(StudentAchiever.builder().tenantId(tid).name("Tanvi Joshi")
+                    .score("CBSE Class 10 — 499/500").courseName("Secondary School (Grade 10)")
+                    .testimonialText(
+                            "Balancing academics with the debate club felt effortless at Pioneer. The teachers genuinely cared about my growth beyond just marks.")
+                    .imageUrl("https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=500&q=80")
+                    .build());
+            achieverRepository.save(StudentAchiever.builder().tenantId(tid).name("Nikhil Rao")
+                    .score("National Robotics Championship — Winner").courseName("Robotics & Innovation Track")
+                    .testimonialText(
+                            "From building my first robot in the Robotics Club to winning nationals — Pioneer's innovation studio and mentors made it all possible.")
+                    .imageUrl("https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=500&q=80")
                     .build());
 
             // ── GALLERY (12 items) ────────────────────────────────────────
             galleryRepository.save(GalleryItem.builder().tenantId(tid).type("PHOTO")
                     .title("STEM & Robotics Innovation Fair 2025").category("Academic Expo")
                     .mediaUrl(
-                            "https://images.unsplash.com/photo-1564069114354-d1a6e0e1cf2e?auto=format&fit=crop&w=800&q=80")
+                            "https://images.unsplash.com/photo-1526129318478-62ed807ebdf9?auto=format&fit=crop&w=800&q=80")
                     .build());
             galleryRepository.save(GalleryItem.builder().tenantId(tid).type("PHOTO")
                     .title("Inter-Branch Soccer League Championship").category("Sports Day")
@@ -432,12 +520,12 @@ public class DatabaseSeeder implements CommandLineRunner {
             galleryRepository.save(GalleryItem.builder().tenantId(tid).type("PHOTO")
                     .title("Graduation Ceremony Class of 2025").category("Annual Day")
                     .mediaUrl(
-                            "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80")
+                            "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80")
                     .build());
             galleryRepository.save(GalleryItem.builder().tenantId(tid).type("PHOTO")
                     .title("Science Lab — Chemistry Practicals").category("Academic Expo")
                     .mediaUrl(
-                            "https://images.unsplash.com/photo-1532094349884-543559c0c548?auto=format&fit=crop&w=800&q=80")
+                            "https://images.unsplash.com/photo-1567168539593-59673ababaae?auto=format&fit=crop&w=800&q=80")
                     .build());
             galleryRepository.save(GalleryItem.builder().tenantId(tid).type("PHOTO")
                     .title("Basketball Inter-House Tournament").category("Sports Day")
@@ -753,7 +841,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                             "We are thrilled to announce the inauguration of our brand-new Robotics & AI Innovation Lab at the Madhapur campus. Equipped with Arduino kits, 3D printers, VR headsets, and Raspberry Pi stations, this lab will supercharge STEM learning for all students from Grade 5 onwards.")
                     .author("Principal Dr. Arthur Pendragon").publishedDate(LocalDateTime.now().minusDays(10)).build());
 
-            // ── SCHOOL EVENTS (5) ─────────────────────────────────────────
+            // ── SCHOOL EVENTS (10) ────────────────────────────────────────
             eventRepository.save(SchoolEvent.builder().tenantId(tid).title("Parent-Teacher Association Meet — Term 1")
                     .description(
                             "Comprehensive discussion on student performance, STEM lab expansion, and Term 1 assessment schedules. All parents must attend. Report cards will be distributed.")
@@ -775,6 +863,26 @@ public class DatabaseSeeder implements CommandLineRunner {
                             "Three-day cultural extravaganza featuring classical dance, instrumental music, drama, painting competitions, and student art exhibitions. Open to all parents and community members.")
                     .eventDate(LocalDateTime.now().plusDays(35)).location("Main Auditorium & Open-Air Amphitheatre")
                     .build());
+            eventRepository.save(SchoolEvent.builder().tenantId(tid).title("Career Guidance & University Fair 2026")
+                    .description(
+                            "Representatives from 40+ national and international universities, plus expert career counsellors, guide students on higher education pathways, scholarships, and entrance exams.")
+                    .eventDate(LocalDateTime.now().plusDays(28)).location("Sports Complex Hall, Madhapur Campus").build());
+            eventRepository.save(SchoolEvent.builder().tenantId(tid).title("Inter-School Debate & Model UN Championship")
+                    .description(
+                            "Pioneer hosts 20 schools for a two-day debate and Model United Nations tournament. Sharpen public speaking, diplomacy, and critical-thinking skills. Spectators welcome.")
+                    .eventDate(LocalDateTime.now().plusDays(42)).location("Main Auditorium, Madhapur Campus").build());
+            eventRepository.save(SchoolEvent.builder().tenantId(tid).title("Annual Day & Prize Distribution Ceremony")
+                    .description(
+                            "A grand celebration of the academic year with cultural performances, felicitation of toppers, and distribution of merit awards. Chief Guest to be announced. Formal attire required.")
+                    .eventDate(LocalDateTime.now().plusDays(60)).location("Open-Air Amphitheatre, Madhapur Campus").build());
+            eventRepository.save(SchoolEvent.builder().tenantId(tid).title("Health, Wellness & Yoga Awareness Camp")
+                    .description(
+                            "A day dedicated to student wellbeing featuring yoga sessions, nutrition workshops, free health check-ups, and mental-health counselling led by Dr. Samuel George. Parents encouraged to join.")
+                    .eventDate(LocalDateTime.now().plusDays(17)).location("Athletic Ground & Wellness Centre").build());
+            eventRepository.save(SchoolEvent.builder().tenantId(tid).title("Science Exhibition & Innovation Expo 2026")
+                    .description(
+                            "Students showcase working models, research projects, and robotics innovations across physics, chemistry, biology, and computer science. Judged by industry experts. Open house for all parents.")
+                    .eventDate(LocalDateTime.now().plusDays(45)).location("STEM Lab & Exhibition Hall, Madhapur Campus").build());
 
             // ── ADMISSION LEADS (5) ───────────────────────────────────────
             admissionRepository.save(AdmissionLead.builder().tenantId(tid).studentName("Robert Junior")

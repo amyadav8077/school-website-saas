@@ -16,23 +16,27 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class StudentAchieverController {
+public class StudentAchieverController
+{
     private final StudentAchieverService service;
 
     @GetMapping("/sites/{tenantId}/achievers")
-    public ResponseEntity<ApiResponse<List<StudentAchiever>>> getAchievers(@PathVariable Long tenantId) {
+    public ResponseEntity<ApiResponse<List<StudentAchiever>>> getAchievers(@PathVariable Long tenantId)
+    {
         return ResponseEntity.ok(ApiResponse.ok(service.getAchieversByTenant(tenantId)));
     }
 
     @PostMapping("/admin/sites/{tenantId}/achievers")
     public ResponseEntity<ApiResponse<StudentAchiever>> createAchiever(@PathVariable Long tenantId,
-            @Valid @RequestBody StudentAchiever achiever) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                ApiResponse.ok("Student achiever created successfully", service.createAchiever(tenantId, achiever)));
+            @Valid @RequestBody StudentAchiever achiever)
+    {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("Student achiever created successfully",
+                service.createAchiever(tenantId, achiever)));
     }
 
     @DeleteMapping("/admin/achievers/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteAchiever(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> deleteAchiever(@PathVariable Long id)
+    {
         service.deleteAchiever(id);
         return ResponseEntity.ok(ApiResponse.ok("Student achiever deleted successfully", null));
     }
