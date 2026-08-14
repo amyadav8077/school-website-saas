@@ -1,0 +1,83 @@
+name: Keep Backend Alive
+
+# Pings the Render-hosted Spring Boot health endpoint on a schedule so the
+# free-tier service does not spin down from inactivity.
+
+on:
+  # Runs on a schedule (UTC). GitHub cron granularity is 5 minutes minimum.
+  schedule:
+    - cron: "*/10 * * * *" # every 10 minutes
+  # Allows manual runs from the Actions tab for testing.
+  workflow_dispatch:
+
+# Avoid overlapping runs stacking up if a ping is slow (e.g. during a cold start).
+concurrency:
+  group: keep-backend-alive
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    name: Ping health endpoint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Resolve backend URL
+        id: config
+        env:
+          # Prefer a repository variable; fall back to a secret if you used one instead.
+          BACKEND_URL_VAR: ${{ vars.BACKEND_URL }}
+          BACKEND_URL_SECRET: ${{ secrets.BACKEND_URL }}
+        run: |
+          URL="${BACKEND_URL_VAR:-$BACKEND_URL_SECRET}"
+          if [ -z "$URL" ]; then
+            echo "::error::BACKEND_URL is not configured. Add it as a Repository Variable or Secret named BACKEND_URL (e.g. https://your-school-backend.onrender.com)."
+            exit 1
+          fi
+          # Strip any trailing slash so we can safely append the path.
+          URL="${URL%/}"
+          echo "base_url=$URL" >> "$GITHUB_OUTPUT"
+          echo "Backend base URL resolved (value hidden in logs)."
+
+      - name: Call health endpoint
+        env:
+          HEALTH_URL: ${{ steps.config.outputs.base_url }}/api/health
+        run: |
+          echo "=============================================="
+          echo " Keep-alive health check"
+          echo " Time (UTC): $(date -u '+%Y-%m-%d %H:%M:%S')"
+          echo " Endpoint:   ${HEALTH_URL}"
+          echo "=============================================="
+
+          # --max-time covers Render cold starts (can take ~30-60s on free tier).
+          # --retry handles transient 5xx / connection resets during wake-up.
+          HTTP_CODE=$(curl \
+            --silent \
+            --show-error \
+            --location \
+            --connect-timeout 15 \
+            --max-time 90 \
+            --retry 3 \
+            --retry-delay 10 \
+            --retry-all-errors \
+            --write-out "%{http_code}" \
+            --output response_body.txt \
+            "${HEALTH_URL}" ) || CURL_EXIT=$?
+
+          echo "----- Response body -----"
+          cat response_body.txt || true
+          echo ""
+          echo "-------------------------"
+          echo "HTTP status code: ${HTTP_CODE:-<none>}"
+
+          if [ -n "${CURL_EXIT:-}" ]; then
+            echo "::error::curl failed to reach the backend (exit code ${CURL_EXIT})."
+            exit 1
+          fi
+
+          # Treat only 2xx as success.
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+            echo "::notice::Backend is awake and healthy (HTTP ${HTTP_CODE})."
+          else
+            echo "::error::Health check failed with HTTP ${HTTP_CODE}."
+            exit 1
+          fi
