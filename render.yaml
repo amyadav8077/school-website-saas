@@ -1,0 +1,54 @@
+# Render Blueprint — provisions the backend web service + persistent PostgreSQL.
+# Docs: https://render.com/docs/blueprint-spec
+#
+# Usage: Render Dashboard → New + → Blueprint → point at this repo.
+# Render reads this file, creates the Postgres DB, and wires the DB_* env vars
+# into the backend automatically. See docs/render-postgres-setup.md for details.
+
+databases:
+  - name: school-saas-db
+    databaseName: school_saas_db
+    plan: free
+    # region must match the web service region below for the free internal network
+    region: oregon
+
+services:
+  - type: web
+    name: school-website-backend
+    runtime: docker
+    plan: free
+    region: oregon
+    rootDir: school-website-backend
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+
+      # Database connection — pulled from the managed Postgres instance above.
+      - key: DB_HOST
+        fromDatabase:
+          name: school-saas-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: school-saas-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: school-saas-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: school-saas-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: school-saas-db
+          property: password
+
+      # Mail credentials are secrets — set these in the Render dashboard, not here.
+      - key: SPRING_MAIL_USERNAME
+        sync: false
+      - key: SPRING_MAIL_PASSWORD
+        sync: false
