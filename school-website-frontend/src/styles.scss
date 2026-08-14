@@ -397,6 +397,11 @@ body {
     grid-template-columns: 1fr !important;
     gap: 1rem !important;
   }
+  /* Allow grid cells to shrink below their content's intrinsic width so that
+     wide children (e.g. selects with long option labels) stay inside the card. */
+  .mobile-grid-1 > * {
+    min-width: 0 !important;
+  }
 }
 
 /* Mobile responsive hamburger menu system */
@@ -752,6 +757,29 @@ img, video, iframe {
   // Exception: icon-only small buttons
   .btn-icon-sm {
     min-height: 32px;
+  }
+}
+
+// ─── Public-site mobile hardening (targets inline-styled template) ────────────
+// The public site (app.html) uses inline styles, so these rules override the
+// inline grid/padding/typography at small widths without needing extra classes.
+@media (max-width: 639px) {
+  html, body { overflow-x: hidden; }
+
+  // HERO headings scale down so they don't overflow.
+  [class*="ds-hero-anim"] h2 {
+    font-size: clamp(1.5rem, 6vw, 2.25rem) !important;
+  }
+  [class*="ds-hero-anim"] p {
+    font-size: 0.95rem !important;
+  }
+
+  // Reduce oversized section padding on phones.
+  [style*="padding: 4rem 2rem"],
+  [style*="padding: 3.5rem 2rem"],
+  [style*="padding: 3rem 2rem"],
+  [style*="padding: 3rem 1.5rem"] {
+    padding: 2rem 1rem !important;
   }
 }
 

@@ -30,6 +30,7 @@ import { LoginComponent } from './admin/login/login.component';
 import { UserProfileComponent } from './admin/user-profile/user-profile.component';
 import { ScrollRevealDirective } from './shared/directives/scroll-reveal.directive';
 import { HeroCarouselComponent } from './pages/hero-carousel/hero-carousel.component';
+import { ErrorPageComponent } from './pages/error-page/error-page.component';
 
 @Component({
   selector: 'app-root',
@@ -63,6 +64,7 @@ import { HeroCarouselComponent } from './pages/hero-carousel/hero-carousel.compo
     UserProfileComponent,
     ScrollRevealDirective,
     HeroCarouselComponent,
+    ErrorPageComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
@@ -78,6 +80,9 @@ export class App implements OnInit {
   // Track the active tenant being customized / previewed
   protected readonly activeTenant = signal<any>(null);
   protected readonly schoolPages = signal<any[]>([]);
+
+  // Error/offline state for the public site preview
+  protected readonly connectionLost = signal<boolean>(false);
   protected readonly activePreviewPage = signal<any>(null);
   protected readonly isMobileMenuOpen = signal<boolean>(false);
   protected readonly showMoreDropdown = signal<boolean>(false);
@@ -325,7 +330,8 @@ export class App implements OnInit {
           });
 
           this.schoolPages.set(data);
-          
+          this.connectionLost.set(false);
+
           // Select first page by default if none selected or if active preview no longer exists
           if (data.length > 0) {
             const currentActive = this.activePreviewPage();
@@ -341,8 +347,21 @@ export class App implements OnInit {
         },
         error: (err) => {
           console.error('Failed to load school pages', err);
+          this.connectionLost.set(true);
+          // Clear active page so no stale content renders beneath the error page
+          this.activePreviewPage.set(null);
         }
       });
+  }
+
+  /** Retry loading the active tenant's pages after a connection error. */
+  retryConnection() {
+    const tenant = this.activeTenant();
+    if (tenant?.id) {
+      this.connectionLost.set(false);
+      this.loadTenantPages(tenant.id);
+      this.loadTenantCatalogs(tenant.id);
+    }
   }
 
   loadTenantCatalogs(tenantId: number) {

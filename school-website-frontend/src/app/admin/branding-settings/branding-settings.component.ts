@@ -118,7 +118,7 @@ import { HttpClient } from '@angular/common/http';
             </select>
           </div>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div>
               <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">Contact Email</label>
               <input type="email" name="contactEmail" [(ngModel)]="form.contactEmail" placeholder="e.g. info@oakridge.edu"
@@ -216,10 +216,11 @@ import { HttpClient } from '@angular/common/http';
             class="ds-btn ds-btn-success">
             @if (isLoading()) { <span class="ds-spinner"></span> Updating... } @else { Save & Propagate Brand Theme }
           </button>
-        </form>
+         </form>
       }
     </div>
-  `
+  `,
+  styleUrl: './branding-settings.component.scss',
 })
 export class BrandingSettingsComponent implements OnChanges {
   @Input() tenantId!: number;

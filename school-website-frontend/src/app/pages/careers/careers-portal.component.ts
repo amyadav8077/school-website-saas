@@ -17,42 +17,42 @@ export interface JobPosting {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="ds-card ds-reveal" style="padding: 2.5rem; max-width: 1200px; margin: 2rem auto;">
+    <div class="ds-card ds-reveal cp-card-root">
       
-      <div style="text-align: center; margin-bottom: 2.5rem;">
-        <span [style.color]="accentColor" style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.5rem;">Join Our Faculty</span>
-        <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 2rem; font-weight: 800; margin: 0; letter-spacing: -0.025em; line-height: 1.2;">Work with India's Leading School Network</h3>
-        <p style="color: #64748b; font-size: 0.95rem; margin-top: 0.5rem; margin-bottom: 0;">Explore open administrative, teaching, and coaching vacancies. Help us shape the academic leaders of tomorrow.</p>
+      <div class="cp-header">
+        <span [style.color]="accentColor" class="cp-eyebrow">Join Our Faculty</span>
+        <h3 [style.color]="primaryColor" class="ds-heading cp-heading">Work with India's Leading School Network</h3>
+        <p class="cp-subtitle">Explore open administrative, teaching, and coaching vacancies. Help us shape the academic leaders of tomorrow.</p>
       </div>
 
       <!-- Vacancies List Grid -->
       @if (jobs().length === 0) {
-        <div class="ds-alert ds-alert-info" style="flex-direction: column; padding: 3rem; text-align: center;">
-          <span style="font-size: 2.5rem; display: block; margin-bottom: 0.5rem;">💼</span>
-          <p style="font-size: 1rem; margin: 0; font-weight: 600;">No active vacancies published currently.</p>
-          <p style="font-size: 0.85rem; margin-top: 0.25rem;">Check back soon or submit a general expression of interest at our campus office.</p>
+        <div class="ds-alert ds-alert-info cp-empty-alert">
+          <span class="cp-empty-icon">💼</span>
+          <p class="cp-empty-primary">No active vacancies published currently.</p>
+          <p class="cp-empty-secondary">Check back soon or submit a general expression of interest at our campus office.</p>
         </div>
       } @else {
-        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="cp-jobs-list">
           @for (job of jobs(); track job.id) {
-            <div class="ds-card ds-card-hover" style="padding: 1.5rem; display: flex; justify-content: space-between; align-items: start;">
-              <div style="flex: 1; padding-right: 1.5rem;">
-                <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
-                  <strong [style.color]="primaryColor" style="font-size: 1.2rem;">{{ job.title }}</strong>
-                  <span [style.background]="accentColor" style="color: #0f172a; font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 700; text-transform: uppercase;">
+            <div class="ds-card ds-card-hover cp-job-card">
+              <div class="cp-job-info">
+                <div class="cp-job-title-row">
+                  <strong [style.color]="primaryColor" class="cp-job-title">{{ job.title }}</strong>
+                  <span [style.background]="accentColor" class="cp-job-badge">
                     {{ job.department }}
                   </span>
                 </div>
                 
-                <div style="display: flex; gap: 1.25rem; font-size: 0.85rem; color: #64748b; margin-bottom: 0.75rem; font-weight: 600;">
-                  <span>🎓 Qualification: <strong style="color: #475569;">{{ job.qualification }}</strong></span>
-                  <span>⏳ Experience: <strong style="color: #475569;">{{ job.experience }}</strong></span>
+                <div class="cp-job-meta">
+                  <span>🎓 Qualification: <strong class="cp-job-meta-strong">{{ job.qualification }}</strong></span>
+                  <span>⏳ Experience: <strong class="cp-job-meta-strong">{{ job.experience }}</strong></span>
                 </div>
 
-                <p style="color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0;">{{ job.description }}</p>
+                <p class="cp-job-desc">{{ job.description }}</p>
               </div>
 
-              <button (click)="openApplyModal(job)" class="ds-btn" [style.background-color]="primaryColor" style="border: 0; color: white; padding: 0.65rem 1.25rem; border-radius: 6px; font-weight: 700; cursor: pointer; white-space: nowrap; margin-top: 0.25rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+              <button (click)="openApplyModal(job)" class="ds-btn cp-apply-btn" [style.background-color]="primaryColor">
                 Apply Now ➡️
               </button>
             </div>
@@ -62,53 +62,53 @@ export interface JobPosting {
 
       <!-- Interactive Apply Modal Overlay -->
       @if (showApplyModal()) {
-        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); display: flex; align-items: center; justify-content: center; z-index: 999999; backdrop-filter: blur(2px);">
-          <div style="background: white; padding: 2rem; border-radius: 12px; max-width: 480px; width: 100%; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); border: 1px solid #cbd5e1; box-sizing: border-box;">
+        <div class="cp-modal-overlay">
+          <div class="cp-modal-dialog">
             
             @if (successMessage()) {
-              <div style="text-align: center; padding: 1.5rem 0;">
-                <span style="font-size: 3rem;">🎉</span>
-                <h4 class="ds-heading" style="font-size: 1.4rem; font-weight: 800; color: #15803d; margin-top: 0.5rem; margin-bottom: 0.25rem;">Application Submitted!</h4>
-                <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 1.5rem;">{{ successMessage() }}</p>
-                <button (click)="closeApplyModal()" class="ds-btn" [style.background-color]="primaryColor" style="width: 100%; padding: 0.75rem; border: 0; color: white; border-radius: 6px; font-weight: 700; cursor: pointer;">
+              <div class="cp-success">
+                <span class="cp-success-icon">🎉</span>
+                <h4 class="ds-heading cp-success-heading">Application Submitted!</h4>
+                <p class="cp-success-text">{{ successMessage() }}</p>
+                <button (click)="closeApplyModal()" class="ds-btn cp-success-btn" [style.background-color]="primaryColor">
                   Close Portal
                 </button>
               </div>
             } @else {
               <div>
-                <div style="text-align: center; margin-bottom: 1.5rem;">
-                  <span style="font-size: 2rem;">💼</span>
-                  <h4 style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-top: 0.5rem; margin-bottom: 0.25rem;">Submit Job Application</h4>
-                  <p style="color: #64748b; font-size: 0.85rem; margin: 0;">Applying for: <strong style="color: #1e3a8a;">{{ selectedJob()?.title }}</strong></p>
+                <div class="cp-form-header">
+                  <span class="cp-form-header-icon">💼</span>
+                  <h4 class="cp-form-header-heading">Submit Job Application</h4>
+                  <p class="cp-form-header-text">Applying for: <strong class="cp-form-header-job">{{ selectedJob()?.title }}</strong></p>
                 </div>
 
                 @if (errorMessage()) {
-                  <div class="ds-alert ds-alert-error ds-shake" style="margin-bottom: 1.5rem;">
+                  <div class="ds-alert ds-alert-error ds-shake cp-form-error">
                     <strong>Error:</strong> {{ errorMessage() }}
                   </div>
                 }
 
-                <form (ngSubmit)="submitApplication()" #applyForm="ngForm" style="display: flex; flex-direction: column; gap: 1rem;">
+                <form (ngSubmit)="submitApplication()" #applyForm="ngForm" class="cp-form">
                   <div>
-                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Your Full Name</label>
-                    <input type="text" name="candidateName" [(ngModel)]="form.candidateName" required placeholder="e.g. Jean Grey" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+                    <label class="cp-label">Your Full Name</label>
+                    <input type="text" name="candidateName" [(ngModel)]="form.candidateName" required placeholder="e.g. Jean Grey" class="cp-input" />
                   </div>
-                  <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem;">
+                  <div class="cp-form-grid">
                     <div>
-                      <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Email Address</label>
-                      <input type="email" name="candidateEmail" [(ngModel)]="form.candidateEmail" required email placeholder="e.g. jean@mail.com" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+                      <label class="cp-label">Email Address</label>
+                      <input type="email" name="candidateEmail" [(ngModel)]="form.candidateEmail" required email placeholder="e.g. jean@mail.com" class="cp-input" />
                     </div>
                     <div>
-                      <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Phone Number</label>
-                      <input type="text" name="candidatePhone" [(ngModel)]="form.candidatePhone" required placeholder="e.g. +1 (555) 012-3456" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+                      <label class="cp-label">Phone Number</label>
+                      <input type="text" name="candidatePhone" [(ngModel)]="form.candidatePhone" required placeholder="e.g. +1 (555) 012-3456" class="cp-input" />
                     </div>
                   </div>
                   
-                  <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
-                    <button type="button" (click)="closeApplyModal()" class="ds-btn ds-btn-ghost" style="flex: 1; padding: 0.65rem;">
+                  <div class="cp-form-actions">
+                    <button type="button" (click)="closeApplyModal()" class="ds-btn ds-btn-ghost cp-btn-cancel">
                       Cancel
                     </button>
-                    <button type="submit" class="ds-btn" [disabled]="!applyForm.form.valid || isLoading()" [style.background-color]="primaryColor" style="flex: 1.5; padding: 0.65rem; border: 0; color: white; border-radius: 6px; font-weight: 700; cursor: pointer;">
+                    <button type="submit" class="ds-btn cp-btn-submit" [disabled]="!applyForm.form.valid || isLoading()" [style.background-color]="primaryColor">
                       {{ isLoading() ? 'Submitting...' : 'Submit Resume' }}
                     </button>
                   </div>
@@ -121,7 +121,8 @@ export interface JobPosting {
       }
 
     </div>
-  `
+  `,
+  styleUrl: './careers-portal.component.scss'
 })
 export class CareersPortalComponent implements OnChanges {
   @Input() tenantId!: number;

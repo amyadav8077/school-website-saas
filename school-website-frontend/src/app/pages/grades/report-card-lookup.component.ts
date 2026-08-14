@@ -22,19 +22,19 @@ export interface StudentGrade {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="ds-card ds-reveal" style="padding: 2rem; max-width: 850px; margin: 2rem auto;">
-      <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 1.5rem; font-weight: 800; margin-top: 0; margin-bottom: 0.5rem; text-align: center; transition: color 0.3s;">
+    <div class="ds-card ds-reveal rc-card">
+      <h3 [style.color]="primaryColor" class="ds-heading rc-heading">
         Parent Academic Report Card Lookup
       </h3>
-      <p style="color: #64748b; font-size: 0.9rem; text-align: center; margin-bottom: 1.5rem;">
+      <p class="rc-subtitle">
         Search for your child's student record to view issued term results, teacher evaluations, and gradebook charts.
       </p>
 
       <!-- Student Record Lookup Bar -->
-      <form (ngSubmit)="searchStudentGrades()" style="display: flex; gap: 0.75rem; margin-bottom: 2rem; flex-wrap: wrap; background: #f8fafc; padding: 1.5rem; border-radius: 8px; border: 1px solid #cbd5e1;">
-        <div style="flex: 1; min-width: 150px;">
-          <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 0.35rem;">Select Class</label>
-          <select name="searchClass" [(ngModel)]="searchClass" required style="width: 100%; padding: 0.7rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; background: white; font-weight: 600;">
+      <form (ngSubmit)="searchStudentGrades()" class="rc-search-form">
+        <div class="rc-field-class">
+          <label class="rc-label">Select Class</label>
+          <select name="searchClass" [(ngModel)]="searchClass" required class="rc-select">
             <option value="Pre-Nursery">Pre-Nursery</option>
             <option value="Nursery">Nursery</option>
             <option value="LKG">LKG</option>
@@ -53,9 +53,9 @@ export interface StudentGrade {
             <option value="12th">12th Grade</option>
           </select>
         </div>
-        <div style="flex: 1; min-width: 100px;">
-          <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 0.35rem;">Select Section</label>
-          <select name="searchSection" [(ngModel)]="searchSection" required style="width: 100%; padding: 0.7rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; background: white; font-weight: 600;">
+        <div class="rc-field-section">
+          <label class="rc-label">Select Section</label>
+          <select name="searchSection" [(ngModel)]="searchSection" required class="rc-select">
             <option value="A">A</option>
             <option value="B">B</option>
             <option value="C">C</option>
@@ -63,13 +63,13 @@ export interface StudentGrade {
             <option value="E">E</option>
           </select>
         </div>
-        <div style="flex: 2; min-width: 200px;">
-          <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 0.35rem;">Student Name (Optional)</label>
+        <div class="rc-field-name">
+          <label class="rc-label">Student Name (Optional)</label>
           <input type="text" name="studentSearchName" [(ngModel)]="searchName" placeholder="Enter name or leave empty to list all" 
-            style="width: 100%; padding: 0.7rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; box-sizing: border-box;" />
+            class="rc-input" />
         </div>
-        <div style="width: 100%; display: flex; align-items: flex-end; margin-top: 0.5rem;">
-          <button type="submit" class="ds-btn" [style.background-color]="primaryColor" style="width: 100%; border: 0; color: white; padding: 0.75rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: opacity 0.2s;">
+        <div class="rc-submit-wrapper">
+          <button type="submit" class="ds-btn rc-submit-btn" [style.background-color]="primaryColor">
             🔍 Find Report Cards (Class-wise)
           </button>
         </div>
@@ -77,52 +77,52 @@ export interface StudentGrade {
 
       <!-- Search Results -->
       @if (hasSearched()) {
-        <div style="display: flex; flex-direction: column; gap: 2rem; width: 100%;">
+        <div class="rc-results">
           @if (grades().length === 0) {
-            <div class="ds-alert ds-alert-info" style="flex-direction: column; padding: 2.5rem; text-align: center;">
-              <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">📊</span>
-              <p style="font-size: 0.95rem; margin: 0; font-weight: 600;">No grade entries found matching your search</p>
-              <p style="font-size: 0.85rem; margin-top: 0.25rem;">Verify details or generate some student scores in the Admin panel above!</p>
+            <div class="ds-alert ds-alert-info rc-empty-alert">
+              <span class="rc-empty-icon">📊</span>
+              <p class="rc-empty-title">No grade entries found matching your search</p>
+              <p class="rc-empty-hint">Verify details or generate some student scores in the Admin panel above!</p>
             </div>
           } @else {
             
             @for (student of getGroupedGrades(); track student.studentName) {
               <!-- Simulated Printable Report Card Ledger -->
-              <div style="border: 2px solid #cbd5e1; border-radius: 8px; padding: 2rem; background: #fafafa; font-family: Cambria, Georgia, serif; box-shadow: inset 0 0 10px rgba(0,0,0,0.02); box-sizing: border-box; width: 100%;">
+              <div class="rc-ledger">
                 
                 <!-- Report Card Header -->
-                <div style="text-align: center; border-bottom: 2px double #cbd5e1; padding-bottom: 1rem; margin-bottom: 1.5rem;">
-                  <h4 [style.color]="primaryColor" style="font-size: 1.4rem; font-weight: 800; margin: 0; text-transform: uppercase;">Official Academic Transcript</h4>
-                  <p style="font-size: 0.85rem; color: #475569; margin: 0.25rem 0 0 0; font-family: sans-serif; font-weight: 600;">Academic Year: 2026-27</p>
+                <div class="rc-ledger-header">
+                  <h4 [style.color]="primaryColor" class="rc-ledger-title">Official Academic Transcript</h4>
+                  <p class="rc-ledger-year">Academic Year: 2026-27</p>
                   
-                  <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; font-size: 0.9rem; font-family: sans-serif; text-align: left; margin-top: 1rem; gap: 0.5rem; padding: 0 0.5rem;">
-                    <div>Student Name: <strong style="color: #0f172a;">{{ student.studentName }}</strong></div>
-                    <div style="text-align: right;" class="mobile-text-left">Class & Section: <strong style="color: #0f172a;">{{ student.classLevel || '-' }} (Section {{ student.section || '-' }})</strong></div>
-                    <div>Admission No: <strong style="color: #0f172a;">{{ student.admissionNo || '-' }}</strong></div>
-                    <div style="text-align: right;" class="mobile-text-left">Father's Name: <strong style="color: #0f172a;">{{ student.fatherName || '-' }}</strong></div>
-                    <div>Aadhar Number: <strong style="color: #0f172a;">{{ student.aadharNo || '-' }}</strong></div>
-                    <div style="text-align: right;" class="mobile-text-left">Status: <strong style="color: #16a34a;">OFFICIAL RECORD</strong></div>
+                  <div class="mobile-grid-1 rc-info-grid">
+                    <div>Student Name: <strong class="rc-info-strong">{{ student.studentName }}</strong></div>
+                    <div class="mobile-text-left rc-info-right">Class & Section: <strong class="rc-info-strong">{{ student.classLevel || '-' }} (Section {{ student.section || '-' }})</strong></div>
+                    <div>Admission No: <strong class="rc-info-strong">{{ student.admissionNo || '-' }}</strong></div>
+                    <div class="mobile-text-left rc-info-right">Father's Name: <strong class="rc-info-strong">{{ student.fatherName || '-' }}</strong></div>
+                    <div>Aadhar Number: <strong class="rc-info-strong">{{ student.aadharNo || '-' }}</strong></div>
+                    <div class="mobile-text-left rc-info-right">Status: <strong class="rc-info-status">OFFICIAL RECORD</strong></div>
                   </div>
                 </div>
 
                 <!-- Grades Table -->
-                <div class="table-responsive-wrapper" style="border: none;">
-                  <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem; font-family: sans-serif; text-align: left; background: white; border: 1px solid #cbd5e1; margin-bottom: 0;">
+                <div class="table-responsive-wrapper rc-table-wrapper">
+                  <table class="rc-table">
                     <thead>
-                      <tr [style.background-color]="primaryColor" style="color: white;">
-                        <th style="padding: 0.75rem 1rem;">Subject</th>
-                        <th style="padding: 0.75rem 1rem;">Assessment Term</th>
-                        <th style="padding: 0.75rem 1rem; text-align: center;">Evaluation Score</th>
-                        <th style="padding: 0.75rem 1rem;">Teacher Feedback & Remarks</th>
+                      <tr [style.background-color]="primaryColor" class="rc-thead-row">
+                        <th class="rc-th">Subject</th>
+                        <th class="rc-th">Assessment Term</th>
+                        <th class="rc-th-center">Evaluation Score</th>
+                        <th class="rc-th">Teacher Feedback & Remarks</th>
                       </tr>
                     </thead>
                     <tbody>
                       @for (g of student.records; track g.id) {
-                        <tr style="border-bottom: 1px solid #cbd5e1;">
-                          <td style="padding: 0.75rem 1rem; font-weight: 700; color: #0f172a;">{{ g.subjectName }}</td>
-                          <td style="padding: 0.75rem 1rem; color: #475569;">{{ g.term }}</td>
-                          <td style="padding: 0.75rem 1rem; text-align: center; font-weight: 800;" [style.color]="primaryColor">{{ g.grade }}</td>
-                          <td style="padding: 0.75rem 1rem; color: #475569; font-size: 0.85rem; font-style: italic;">{{ g.remarks || 'No remarks recorded.' }}</td>
+                        <tr class="rc-body-row">
+                          <td class="rc-td-subject">{{ g.subjectName }}</td>
+                          <td class="rc-td-term">{{ g.term }}</td>
+                          <td class="rc-td-score" [style.color]="primaryColor">{{ g.grade }}</td>
+                          <td class="rc-td-remarks">{{ g.remarks || 'No remarks recorded.' }}</td>
                         </tr>
                       }
                     </tbody>
@@ -130,12 +130,12 @@ export interface StudentGrade {
                 </div>
 
                 <!-- Certificate Footer Stamp -->
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; font-family: sans-serif; font-size: 0.8rem; color: #64748b; margin-top: 2rem; flex-wrap: wrap; gap: 1rem;">
+                <div class="rc-footer">
                   <div>
-                    <span style="display: block; width: 120px; border-bottom: 1px solid #94a3b8; margin-bottom: 0.25rem;"></span>
+                    <span class="rc-signature-line"></span>
                     <span>Evaluated By (Class Teacher)</span>
                   </div>
-                  <div style="text-align: right; border: 2px dashed #bbf7d0; background: #f0fdf4; color: #16a34a; padding: 0.5rem; border-radius: 4px; font-weight: 700;">
+                  <div class="rc-verified-stamp">
                     🏫 VERIFIED BY PORTAL TRUST
                   </div>
                 </div>
@@ -147,7 +147,8 @@ export interface StudentGrade {
         </div>
       }
     </div>
-  `
+  `,
+  styleUrl: './report-card-lookup.component.scss'
 })
 export class ReportCardLookupComponent implements OnChanges {
   @Input() tenantId!: number;

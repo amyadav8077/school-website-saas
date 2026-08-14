@@ -1,2 +1,28 @@
 // Component-level styles for app root
 // Global responsive styles live in src/styles.scss
+
+// ── Public site footer (migrated from inline styles) ──────────────────────────
+// Dynamic tenant colors ([style.background]/[style.color]) remain inline in the template.
+.af-footer { margin-top: auto; flex-shrink: 0; color: #fff; position: relative; overflow: hidden; }
+.af-footer-glow { position: absolute; top: -80px; right: -60px; width: 260px; height: 260px; border-radius: 50%; filter: blur(90px); opacity: 0.25; pointer-events: none; }
+.af-footer-topline { position: absolute; top: 0; left: 0; width: 100%; height: 3px; opacity: 0.9; }
+.af-footer-inner { position: relative; max-width: 1200px; margin: 0 auto; padding: 3.25rem 2rem 1.5rem; display: grid; grid-template-columns: 1.6fr 1fr 1.2fr; gap: 2.5rem; }
+.af-footer-brandrow { display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.9rem; }
+.af-footer-logo-img { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; background: rgba(255,255,255,0.15); padding: 3px; }
+.af-footer-logo-emoji { font-size: 1.9rem; line-height: 1; }
+.af-footer-brandname { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.02em; }
+.af-footer-tagline { color: rgba(255,255,255,0.72); font-size: 0.9rem; line-height: 1.65; margin: 0 0 1.25rem; max-width: 38ch; }
+.af-footer-socials { display: flex; gap: 0.6rem; }
+.af-footer-coltitle { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; margin: 0 0 1.1rem; color: rgba(255,255,255,0.9); }
+.af-footer-linklist { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.65rem; }
+.af-footer-contactlist { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.85rem; }
+.af-footer-contactrow { display: flex; align-items: center; gap: 0.65rem; font-size: 0.9rem; color: rgba(255,255,255,0.82); }
+.af-footer-contactlink { color: inherit; text-decoration: none; }
+.af-footer-bottom { position: relative; border-top: 1px solid rgba(255,255,255,0.14); padding: 1.1rem 2rem; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+.af-footer-copy { font-size: 0.82rem; color: rgba(255,255,255,0.6); }
+.af-footer-powered { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
+.af-footer-powered strong { color: rgba(255,255,255,0.8); }
+
+// ── CBSE compliance bar (migrated from inline styles) ─────────────────────────
+.af-cbse-bar { background: #fffbeb; border-bottom: 1px solid #fef08a; padding: 0.5rem 1.5rem; display: flex; align-items: center; font-size: 0.8rem; font-weight: 700; color: #b45309; flex-wrap: wrap; gap: 0.5rem; justify-content: center; text-align: center; width: 100%; box-sizing: border-box; }
+.af-cbse-btn { background: #fbbf24; border: 1px solid #f59e0b; color: #0f172a; padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; }

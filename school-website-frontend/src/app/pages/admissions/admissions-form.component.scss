@@ -1,0 +1,108 @@
+.af-card {
+  padding: 2rem;
+  max-width: 750px;
+  margin: 2rem auto;
+}
+
+.af-heading {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  transition: color 0.3s;
+}
+
+.af-subtitle {
+  color: #64748b;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.af-success-alert {
+  flex-direction: column;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.af-success-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.af-success-title {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.af-success-text {
+  font-size: 0.9rem;
+}
+
+.af-error-alert {
+  margin-bottom: 1.5rem;
+}
+
+.af-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.af-grid-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 1rem;
+}
+
+.af-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 0.35rem;
+}
+
+.af-input {
+  width: 100%;
+  padding: 0.65rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 0.95rem;
+}
+
+.af-select {
+  width: 100%;
+  padding: 0.65rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background: white;
+}
+
+.af-textarea {
+  width: 100%;
+  padding: 0.65rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 0.95rem;
+  resize: vertical;
+}
+
+.af-submit-btn {
+  border: 0;
+  color: white;
+  padding: 0.85rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}

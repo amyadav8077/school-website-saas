@@ -1,0 +1,144 @@
+.cm-card {
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.cm-title {
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.cm-subtitle {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.cm-subtitle-strong {
+  color: #0f172a;
+}
+
+.cm-empty-state {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  padding: 3rem;
+  text-align: center;
+  border-radius: 8px;
+  color: #64748b;
+}
+
+.cm-empty-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.cm-empty-primary {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.cm-empty-secondary {
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.cm-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+}
+
+.cm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.cm-table-head-row {
+  background: #f1f5f9;
+  border-bottom: 1px solid #cbd5e1;
+  color: #475569;
+  font-weight: 600;
+}
+
+.cm-th {
+  padding: 1rem;
+}
+
+.cm-th-actions {
+  padding: 1rem;
+  text-align: right;
+}
+
+.cm-row {
+  border-bottom: 1px solid #e2e8f0;
+  // hover: background-color: #f8fafc; (invalid in original inline style, preserved as-is)
+}
+
+.cm-cell-id {
+  padding: 1rem;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.cm-cell {
+  padding: 1rem;
+}
+
+.cm-candidate-name {
+  display: block;
+  color: #0f172a;
+}
+
+.cm-candidate-contact {
+  font-size: 0.8rem;
+  color: #64748b;
+  display: block;
+}
+
+.cm-cell-vacancy {
+  padding: 1rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.cm-cell-actions {
+  padding: 1rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.cm-actions {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: flex-end;
+}
+
+.cm-chip-pending {
+  background: #ffedd5;
+  color: #b45309;
+}
+
+.cm-chip-reviewed {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.cm-chip-shortlisted {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.cm-chip-rejected {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.cm-btn-action {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.8rem;
+}

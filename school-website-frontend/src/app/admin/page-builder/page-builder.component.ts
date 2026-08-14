@@ -40,13 +40,13 @@ export interface Page {
       }
 
       <!-- Page Selection / Creation Row -->
-      <div style="display: grid; grid-template-columns: 1.2fr 1.5fr; gap: 2rem; margin-bottom: 2rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1.5rem;">
+      <div class="pb-page-row" style="display: grid; grid-template-columns: 1.2fr 1.5fr; gap: 2rem; margin-bottom: 2rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1.5rem;">
         
         <!-- Select Existing Page -->
         <div>
           <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">Select Page to Edit</label>
           <div style="display: flex; gap: 0.5rem;">
-            <select [(ngModel)]="selectedPageId" (change)="onPageSelected()" style="flex: 1; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem; background: white;">
+            <select [(ngModel)]="selectedPageId" (change)="onPageSelected()" style="flex: 1; min-width: 0; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem; background: white;">
               <option [value]="null" disabled selected>-- Choose a Page --</option>
               @for (page of pages(); track page.id) {
                 <option [value]="page.id">{{ page.title }} (/{{ page.slug }}) [{{ page.status }}]</option>
@@ -75,11 +75,16 @@ export interface Page {
             <option value="FEES">Parents Payment Portal Desk</option>
             <option value="GALLERY">School Photo & Video Gallery</option>
             <option value="NEWS">Circular News & Events Calendars</option>
+            <option value="ACHIEVEMENTS">Achievements (Pre-seeds Achievers Carousel & Hall of Fame)</option>
+            <option value="COURSES">Courses & Programs (Pre-seeds Academic Catalog)</option>
+            <option value="FACULTY">Faculty Directory (Pre-seeds Academic Leaders Showcase)</option>
+            <option value="EVENTS">Events Calendar (Pre-seeds Upcoming Academic Events)</option>
+            <option value="TC">Transfer Certificate Portal (Pre-seeds TC Verification Desk)</option>
           </select>
 
-          <form (ngSubmit)="createNewPage()" style="display: flex; gap: 0.5rem;">
-            <input type="text" name="newPageTitle" [(ngModel)]="newPageForm.title" placeholder="Page Title" required style="flex: 1; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem;" />
-            <input type="text" name="newPageSlug" [(ngModel)]="newPageForm.slug" placeholder="slug" required style="width: 80px; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem;" />
+          <form (ngSubmit)="createNewPage()" class="pb-create-form" style="display: flex; gap: 0.5rem;">
+            <input type="text" name="newPageTitle" [(ngModel)]="newPageForm.title" placeholder="Page Title" required style="flex: 1; min-width: 0; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem;" />
+            <input type="text" name="newPageSlug" [(ngModel)]="newPageForm.slug" placeholder="slug" required class="pb-slug-input" style="width: 80px; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem;" />
             <button type="submit" class="ds-btn ds-btn-primary" style="font-size: 0.9rem;">
               + Create
             </button>
@@ -125,7 +130,7 @@ export interface Page {
                   </div>
 
                   <!-- Dynamic Config Fields for Section -->
-                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                     @if (sec.type === 'HERO') {
                       <div>
                         <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Hero Main Title</label>
@@ -322,7 +327,7 @@ export interface Page {
                         </div>
                         @for (p of getPhotoGridList(idx); track $index; let pIdx = $index) {
                           <div style="background: white; border: 1px solid #cbd5e1; padding: 1rem; border-radius: 6px; display: flex; flex-direction: column; gap: 0.50rem; position: relative;">
-                            <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1rem;">
+                            <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1rem;">
                               <div>
                                 <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 0.15rem;">Photo Caption</label>
                                 <input type="text" [(ngModel)]="p.caption" style="width: 100%; padding: 0.35rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.8rem; box-sizing: border-box;" />
@@ -408,7 +413,8 @@ export interface Page {
         </div>
       }
     </div>
-  `
+  `,
+  styleUrl: './page-builder.component.scss',
 })
 export class PageBuilderComponent implements OnChanges {
   @Input() tenantId!: number;
@@ -517,6 +523,21 @@ export class PageBuilderComponent implements OnChanges {
     } else if (selected === 'NEWS') {
       this.newPageForm.title = 'News & Events';
       this.newPageForm.slug = 'news';
+    } else if (selected === 'ACHIEVEMENTS') {
+      this.newPageForm.title = 'Achievements';
+      this.newPageForm.slug = 'achievements';
+    } else if (selected === 'COURSES') {
+      this.newPageForm.title = 'Courses & Programs';
+      this.newPageForm.slug = 'courses';
+    } else if (selected === 'FACULTY') {
+      this.newPageForm.title = 'Faculty';
+      this.newPageForm.slug = 'faculty';
+    } else if (selected === 'EVENTS') {
+      this.newPageForm.title = 'Events';
+      this.newPageForm.slug = 'events';
+    } else if (selected === 'TC') {
+      this.newPageForm.title = 'Transfer Certificate';
+      this.newPageForm.slug = 'tc';
     } else {
       this.newPageForm.title = '';
       this.newPageForm.slug = '';
@@ -572,7 +593,7 @@ export class PageBuilderComponent implements OnChanges {
           config: JSON.stringify({
             images: [
               { url: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=800&q=80', caption: 'World-Class Campus Landscapes & Infrastructure' },
-              { url: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80', caption: 'High-Tech Interactive STEM Laboratories' }
+              { url: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80', caption: 'High-Tech Interactive STEM Laboratories' }
             ]
           })
         },
@@ -590,7 +611,7 @@ export class PageBuilderComponent implements OnChanges {
           config: JSON.stringify({
             title: 'About Our School',
             body: 'SaaS Pioneer Academy has been a leader in holistic, concept-driven learning. Combining certified mentors, top board curricula, and comprehensive development systems, we provide an unparalleled environment for prospective achievers to thrive and lead.',
-            imgUrl: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=600&q=80'
+            imgUrl: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80'
           })
         },
         {
@@ -610,7 +631,7 @@ export class PageBuilderComponent implements OnChanges {
           config: JSON.stringify({
             title: 'World-Class Infrastructure',
             facilities: [
-              { title: 'STEM & Robotics Hub', description: 'Featuring high-tech microprocessors, 3D printing labs, and interactive programming kits.', photoUrl: 'https://images.unsplash.com/photo-1564069114354-d1a6e0e1cf2e?auto=format&fit=crop&w=500&q=80' },
+              { title: 'STEM & Robotics Hub', description: 'Featuring high-tech microprocessors, 3D printing labs, and interactive programming kits.', photoUrl: 'https://images.unsplash.com/photo-1526129318478-62ed807ebdf9?auto=format&fit=crop&w=500&q=80' },
               { title: 'Championship Athletics Arena', description: 'State-of-the-art synthetic tracks, multi-sport courts, and professional training coaches.', photoUrl: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=500&q=80' },
               { title: 'Smart Digitized Classrooms', description: 'Fully climate-controlled spaces with responsive touch screens and high-fidelity sound.', photoUrl: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=500&q=80' }
             ]
@@ -625,7 +646,7 @@ export class PageBuilderComponent implements OnChanges {
               { url: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=400&q=80', caption: 'Science Fair Project Exhibition', category: 'ACADEMICS' },
               { url: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=400&q=80', caption: 'Inter-Branch Football Finals', category: 'SPORTS' },
               { url: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?auto=format&fit=crop&w=400&q=80', caption: 'Annual Day Instrumental Symphony', category: 'CULTURAL' },
-              { url: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=400&q=80', caption: 'Graduation Ceremony Group Portrait', category: 'CAMPUS' }
+              { url: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=400&q=80', caption: 'Graduation Ceremony Group Portrait', category: 'CAMPUS' }
             ]
           })
         }
@@ -646,6 +667,123 @@ export class PageBuilderComponent implements OnChanges {
           config: JSON.stringify({
             title: 'Syllabus Affiliations & Board Compliances',
             link1_text: 'Download Mandatory Affiliation certificate (PDF)'
+          })
+        }
+      ];
+    } else if (template === 'ACHIEVEMENTS') {
+      sections = [
+        {
+          type: 'HERO',
+          positionOrder: 1,
+          config: JSON.stringify({
+            title: "Our Proud Students' Achievements",
+            subtitle: 'Celebrating excellence, dedication and the spirit to succeed.'
+          })
+        },
+        {
+          type: 'CAROUSEL',
+          positionOrder: 2,
+          config: JSON.stringify({
+            images: [
+              { url: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80', caption: 'Toppers & Rank Holders Felicitation' },
+              { url: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&w=800&q=80', caption: 'National Olympiad & Competition Winners' }
+            ]
+          })
+        },
+        {
+          type: 'INTRO',
+          positionOrder: 3,
+          config: JSON.stringify({
+            title: 'Hall of Fame',
+            body: 'Our students consistently achieve outstanding results across academics, sports, and cultural arenas. Manage the individual achiever profiles from the Achievers catalog in the Admin panel — they render automatically in the carousel and directory on this page.',
+            imgUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80'
+          })
+        }
+      ];
+    } else if (template === 'COURSES') {
+      sections = [
+        {
+          type: 'HERO',
+          positionOrder: 1,
+          config: JSON.stringify({
+            title: 'Comprehensive Programs & Integrated Coaching',
+            subtitle: 'Inspiring young minds, building concept clarity, and empowering competitive success from Kindergarten to Grade 12.'
+          })
+        },
+        {
+          type: 'INTRO',
+          positionOrder: 2,
+          config: JSON.stringify({
+            title: 'Holistic Educational Network',
+            body: 'Browse our academic programs and individual course syllabus directories below. Add and manage Programs and Courses from the catalogs in the Admin panel — they render automatically on this page.',
+            imgUrl: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=600&q=80'
+          })
+        },
+        {
+          type: 'FEATURES',
+          positionOrder: 3,
+          config: JSON.stringify({
+            f1_title: 'Board-Aligned Curriculum',
+            f2_title: 'Integrated Competitive Coaching'
+          })
+        }
+      ];
+    } else if (template === 'FACULTY') {
+      sections = [
+        {
+          type: 'HERO',
+          positionOrder: 1,
+          config: JSON.stringify({
+            title: 'Meet Our Academic Leaders',
+            subtitle: 'A distinguished team of certified mentors dedicated to nurturing every learner.'
+          })
+        },
+        {
+          type: 'INTRO',
+          positionOrder: 2,
+          config: JSON.stringify({
+            title: 'Our Pedagogy Team',
+            body: 'Our faculty combine deep subject expertise with a passion for mentoring. Add and manage faculty profiles from the Faculty catalog in the Admin panel — they render automatically in the directory on this page.',
+            imgUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80'
+          })
+        }
+      ];
+    } else if (template === 'EVENTS') {
+      sections = [
+        {
+          type: 'HERO',
+          positionOrder: 1,
+          config: JSON.stringify({
+            title: 'Upcoming Academic Events',
+            subtitle: 'Stay updated with our calendar of academic, sporting, and cultural events.'
+          })
+        },
+        {
+          type: 'NOTICES',
+          positionOrder: 2,
+          config: JSON.stringify({
+            title: 'Event Calendar Highlights',
+            notice_body: 'Add and schedule events from the Events catalog in the Admin panel — they render automatically in the calendar on this page.'
+          })
+        }
+      ];
+    } else if (template === 'TC') {
+      sections = [
+        {
+          type: 'HERO',
+          positionOrder: 1,
+          config: JSON.stringify({
+            title: 'Transfer Certificate Verification',
+            subtitle: 'Securely verify and download official Transfer Certificates issued by the school.'
+          })
+        },
+        {
+          type: 'INTRO',
+          positionOrder: 2,
+          config: JSON.stringify({
+            title: 'TC Verification Desk',
+            body: 'Parents and institutions can verify the authenticity of a Transfer Certificate using the lookup portal below. Issue and manage Transfer Certificates from the TC office in the Admin panel.',
+            imgUrl: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&q=80'
           })
         }
       ];
@@ -729,7 +867,7 @@ export class PageBuilderComponent implements OnChanges {
       defaultConfig = JSON.stringify({
         images: [
           { url: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=800&q=80', caption: 'World-Class Campus Landscapes & Infrastructure' },
-          { url: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80', caption: 'High-Tech Interactive STEM Laboratories' }
+          { url: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80', caption: 'High-Tech Interactive STEM Laboratories' }
         ]
       });
     } else if (type === 'VIDEO') {
@@ -742,7 +880,7 @@ export class PageBuilderComponent implements OnChanges {
       defaultConfig = JSON.stringify({
         title: 'About Our School',
         body: 'SaaS Pioneer Academy has been a leader in holistic, concept-driven learning. Combining certified mentors, top board curricula, and comprehensive development systems, we provide an unparalleled environment for prospective achievers to thrive and lead.',
-        imgUrl: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=600&q=80'
+        imgUrl: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80'
       });
     } else if (type === 'FOUNDERS') {
       defaultConfig = JSON.stringify({
@@ -756,7 +894,7 @@ export class PageBuilderComponent implements OnChanges {
       defaultConfig = JSON.stringify({
         title: 'World-Class Infrastructure',
         facilities: [
-          { title: 'STEM & Robotics Hub', description: 'Featuring high-tech microprocessors, 3D printing labs, and interactive programming kits.', photoUrl: 'https://images.unsplash.com/photo-1564069114354-d1a6e0e1cf2e?auto=format&fit=crop&w=500&q=80' },
+          { title: 'STEM & Robotics Hub', description: 'Featuring high-tech microprocessors, 3D printing labs, and interactive programming kits.', photoUrl: 'https://images.unsplash.com/photo-1526129318478-62ed807ebdf9?auto=format&fit=crop&w=500&q=80' },
           { title: 'Championship Athletics Arena', description: 'State-of-the-art synthetic tracks, multi-sport courts, and professional training coaches.', photoUrl: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=500&q=80' },
           { title: 'Smart Digitized Classrooms', description: 'Fully climate-controlled spaces with responsive touch screens and high-fidelity sound.', photoUrl: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=500&q=80' }
         ]
@@ -768,7 +906,7 @@ export class PageBuilderComponent implements OnChanges {
           { url: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=400&q=80', caption: 'Science Fair Project Exhibition', category: 'ACADEMICS' },
           { url: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=400&q=80', caption: 'Inter-Branch Football Finals', category: 'SPORTS' },
           { url: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?auto=format&fit=crop&w=400&q=80', caption: 'Annual Day Instrumental Symphony', category: 'CULTURAL' },
-          { url: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=400&q=80', caption: 'Graduation Ceremony Group Portrait', category: 'CAMPUS' }
+          { url: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=400&q=80', caption: 'Graduation Ceremony Group Portrait', category: 'CAMPUS' }
         ]
       });
     }

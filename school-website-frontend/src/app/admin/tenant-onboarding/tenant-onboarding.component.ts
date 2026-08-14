@@ -8,8 +8,8 @@ import { HttpClient } from '@angular/common/http';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="ds-card ds-reveal" style="padding: 2rem; margin-bottom: 2rem;">
-      <h2 class="ds-heading" style="font-size: 1.5rem; margin-top: 0; margin-bottom: 1.5rem;">Onboard New School <span class="ds-heading-grad">(Tenant)</span></h2>
+    <div class="ds-card ds-reveal to-card">
+      <h2 class="ds-heading to-title">Onboard New School <span class="ds-heading-grad">(Tenant)</span></h2>
       
       @if (successMessage()) {
         <div class="ds-alert ds-alert-success">
@@ -23,51 +23,51 @@ import { HttpClient } from '@angular/common/http';
         </div>
       }
 
-      <form (ngSubmit)="onSubmit()" #onboardForm="ngForm" style="display: flex; flex-direction: column; gap: 1.25rem;">
+      <form (ngSubmit)="onSubmit()" #onboardForm="ngForm" class="to-form">
         <div>
-          <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">School / Institution Name</label>
+          <label class="to-label">School / Institution Name</label>
           <input type="text" name="name" [(ngModel)]="form.name" required placeholder="e.g. Oakridge International School"
-            style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 1rem;" />
+            class="to-input" />
         </div>
 
         <div>
-          <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">Desired Subdomain</label>
-          <div style="display: flex; align-items: center;">
+          <label class="to-label">Desired Subdomain</label>
+          <div class="to-subdomain-row">
             <input type="text" name="subdomain" [(ngModel)]="form.subdomain" required placeholder="e.g. oakridge"
-              style="flex: 1; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px 0 0 6px; box-sizing: border-box; font-size: 1rem;" />
-            <span style="background: #f1f5f9; padding: 0.75rem; border: 1px solid #cbd5e1; border-left: 0; border-radius: 0 6px 6px 0; color: #64748b; font-weight: 500;">.schoolsaas.com</span>
+              class="to-subdomain-input" />
+            <span class="to-subdomain-suffix">.schoolsaas.com</span>
           </div>
         </div>
 
-        <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+        <div class="mobile-grid-1 to-color-grid">
           <div>
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">Primary Color</label>
-            <div style="display: flex; gap: 0.5rem; align-items: center;">
-              <input type="color" name="primaryColor" [(ngModel)]="form.primaryColor" style="width: 40px; height: 40px; border: 0; padding: 0; cursor: pointer; border-radius: 4px;" />
-              <input type="text" name="primaryColorText" [(ngModel)]="form.primaryColor" style="flex: 1; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.9rem; width: 100%;" />
+            <label class="to-label-sm">Primary Color</label>
+            <div class="to-color-row">
+              <input type="color" name="primaryColor" [(ngModel)]="form.primaryColor" class="to-color-swatch" />
+              <input type="text" name="primaryColorText" [(ngModel)]="form.primaryColor" class="to-color-text" />
             </div>
           </div>
 
           <div>
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">Secondary Color</label>
-            <div style="display: flex; gap: 0.5rem; align-items: center;">
-              <input type="color" name="secondaryColor" [(ngModel)]="form.secondaryColor" style="width: 40px; height: 40px; border: 0; padding: 0; cursor: pointer; border-radius: 4px;" />
-              <input type="text" name="secondaryColorText" [(ngModel)]="form.secondaryColor" style="flex: 1; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.9rem; width: 100%;" />
+            <label class="to-label-sm">Secondary Color</label>
+            <div class="to-color-row">
+              <input type="color" name="secondaryColor" [(ngModel)]="form.secondaryColor" class="to-color-swatch" />
+              <input type="text" name="secondaryColorText" [(ngModel)]="form.secondaryColor" class="to-color-text" />
             </div>
           </div>
 
           <div>
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">Accent Color</label>
-            <div style="display: flex; gap: 0.5rem; align-items: center;">
-              <input type="color" name="accentColor" [(ngModel)]="form.accentColor" style="width: 40px; height: 40px; border: 0; padding: 0; cursor: pointer; border-radius: 4px;" />
-              <input type="text" name="accentColorText" [(ngModel)]="form.accentColor" style="flex: 1; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.9rem; width: 100%;" />
+            <label class="to-label-sm">Accent Color</label>
+            <div class="to-color-row">
+              <input type="color" name="accentColor" [(ngModel)]="form.accentColor" class="to-color-swatch" />
+              <input type="text" name="accentColorText" [(ngModel)]="form.accentColor" class="to-color-text" />
             </div>
           </div>
         </div>
 
         <div>
-          <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">Typography Font Family</label>
-          <select name="fontFamily" [(ngModel)]="form.fontFamily" style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 1rem; background: white;">
+          <label class="to-label">Typography Font Family</label>
+          <select name="fontFamily" [(ngModel)]="form.fontFamily" class="to-select">
             <option value="Segoe UI">Segoe UI (Default)</option>
             <option value="Inter">Inter (Modern Sans)</option>
             <option value="Georgia">Georgia (Elegant Serif)</option>
@@ -76,28 +76,29 @@ import { HttpClient } from '@angular/common/http';
         </div>
 
         <!-- Tenant Admin Credentials Provisioning Block -->
-        <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 1.25rem; border-radius: 8px; display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
-          <strong style="font-size: 0.9rem; color: #1e293b;">🔑 Provision Tenant Administrator Credentials</strong>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="to-admin-block">
+          <strong class="to-admin-title">🔑 Provision Tenant Administrator Credentials</strong>
+          <div class="to-admin-grid">
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Admin Username</label>
+              <label class="to-label-xs">Admin Username</label>
               <input type="text" name="adminUsername" [(ngModel)]="form.adminUsername" required placeholder="e.g. oakridge_admin"
-                style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 0.9rem;" />
+                class="to-admin-input" />
             </div>
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Admin Password</label>
+              <label class="to-label-xs">Admin Password</label>
               <input type="password" name="adminPassword" [(ngModel)]="form.adminPassword" required placeholder="e.g. oak123"
-                style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 0.9rem;" />
+                class="to-admin-input" />
             </div>
           </div>
         </div>
 
-        <button type="submit" [disabled]="!onboardForm.form.valid || isLoading()" class="ds-btn ds-btn-primary" style="padding: 0.85rem 1.5rem; font-size: 1rem;">
+        <button type="submit" [disabled]="!onboardForm.form.valid || isLoading()" class="ds-btn ds-btn-primary to-submit-btn">
           @if (isLoading()) { <span class="ds-spinner"></span> Onboarding... } @else { Onboard &amp; Initialize Branding }
         </button>
       </form>
     </div>
-  `
+  `,
+  styleUrl: './tenant-onboarding.component.scss'
 })
 export class TenantOnboardingComponent {
   @Output() tenantOnboarded = new EventEmitter<any>();

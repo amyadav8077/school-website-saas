@@ -31,20 +31,20 @@ export interface StudentInvoice {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="ds-card ds-reveal" style="padding: 2rem; margin-bottom: 2rem;">
-      <h2 class="ds-heading" style="font-size: 1.5rem; margin-top: 0; margin-bottom: 0.5rem;">Financial Fee & <span class="ds-heading-grad">Invoicing Office</span></h2>
-      <p style="color: #64748b; font-size: 0.9rem; margin-top: 0; margin-bottom: 1.5rem;">Configure fee models and assign invoices to students of: <strong style="color: #0f172a;">{{ tenantName }}</strong></p>
+    <div class="ds-card ds-reveal bm-card">
+      <h2 class="ds-heading bm-heading-main">Financial Fee & <span class="ds-heading-grad">Invoicing Office</span></h2>
+      <p class="bm-intro">Configure fee models and assign invoices to students of: <strong class="bm-intro-strong">{{ tenantName }}</strong></p>
 
       <!-- Tab Selectors: Single Invoice vs Bulk Importer -->
-      <div style="display: flex; gap: 0.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
+      <div class="bm-tab-bar">
         <button (click)="managerMode.set('SINGLE')" 
-          style="background: none; border: 0; padding: 0.4rem 0.8rem; font-weight: 700; cursor: pointer; border-bottom: 3px solid transparent; font-size: 0.9rem;"
+          class="bm-tab-btn"
           [style.border-bottom-color]="managerMode() === 'SINGLE' ? '#1e3a8a' : 'transparent'"
           [style.color]="managerMode() === 'SINGLE' ? '#1e3a8a' : '#64748b'">
           👤 Single Invoice Office
         </button>
         <button (click)="managerMode.set('BULK')" 
-          style="background: none; border: 0; padding: 0.4rem 0.8rem; font-weight: 700; cursor: pointer; border-bottom: 3px solid transparent; font-size: 0.9rem;"
+          class="bm-tab-btn"
           [style.border-bottom-color]="managerMode() === 'BULK' ? '#1e3a8a' : 'transparent'"
           [style.color]="managerMode() === 'BULK' ? '#1e3a8a' : '#64748b'">
           📋 Bulk Invoices Spreadsheet Importer
@@ -52,41 +52,41 @@ export interface StudentInvoice {
       </div>
 
       <!-- Invoicing Stats Summary Bar -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
-        <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 1rem; border-radius: 6px; text-align: center;">
-          <span style="font-size: 0.8rem; font-weight: 700; color: #64748b; text-transform: uppercase;">Total Billing Issued</span>
-          <strong style="display: block; font-size: 1.5rem; color: #0f172a; margin-top: 0.25rem;">\${{ totalBilled() }}</strong>
+      <div class="mobile-grid-1 bm-stats-grid">
+        <div class="bm-stat-card">
+          <span class="bm-stat-label">Total Billing Issued</span>
+          <strong class="bm-stat-value">\${{ totalBilled() }}</strong>
         </div>
-        <div style="background: #ecfdf5; border: 1px solid #bbf7d0; padding: 1rem; border-radius: 6px; text-align: center;">
-          <span style="font-size: 0.8rem; font-weight: 700; color: #15803d; text-transform: uppercase;">Total Fees Collected</span>
-          <strong style="display: block; font-size: 1.5rem; color: #15803d; margin-top: 0.25rem;">\${{ totalPaid() }}</strong>
+        <div class="bm-stat-card-green">
+          <span class="bm-stat-label-green">Total Fees Collected</span>
+          <strong class="bm-stat-value-green">\${{ totalPaid() }}</strong>
         </div>
-        <div style="background: #fff7ed; border: 1px solid #ffedd5; padding: 1rem; border-radius: 6px; text-align: center;">
-          <span style="font-size: 0.8rem; font-weight: 700; color: #b45309; text-transform: uppercase;">Total Outstanding</span>
-          <strong style="display: block; font-size: 1.5rem; color: #b45309; margin-top: 0.25rem;">\${{ totalPending() }}</strong>
+        <div class="bm-stat-card-orange">
+          <span class="bm-stat-label-orange">Total Outstanding</span>
+          <strong class="bm-stat-value-orange">\${{ totalPending() }}</strong>
         </div>
       </div>
 
       @if (managerMode() === 'SINGLE') {
         <!-- Action Forms Row -->
-        <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1.2fr 1.5fr; gap: 2rem; margin-bottom: 2rem;">
+        <div class="mobile-grid-1 bm-forms-row">
           
           <!-- Create Fee Item Category -->
-          <div style="background: #f8fafc; padding: 1.25rem; border-radius: 6px; border: 1px solid #e2e8f0; align-self: start;">
-            <h3 class="ds-heading" style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem;">1. Add Fee Category</h3>
-            <form (ngSubmit)="addFeeItem()" #feeForm="ngForm" style="display: flex; flex-direction: column; gap: 0.85rem;">
+          <div class="bm-panel-start">
+            <h3 class="ds-heading bm-panel-heading">1. Add Fee Category</h3>
+            <form (ngSubmit)="addFeeItem()" #feeForm="ngForm" class="bm-form-col">
               <div>
-                <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Fee Name</label>
-                <input type="text" name="name" [(ngModel)]="newFeeItem.name" required placeholder="e.g. Annual Tuition Fee" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+                <label class="bm-field-label">Fee Name</label>
+                <input type="text" name="name" [(ngModel)]="newFeeItem.name" required placeholder="e.g. Annual Tuition Fee" class="bm-input" />
               </div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+              <div class="bm-grid-2">
                 <div>
-                  <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Amount ($)</label>
-                  <input type="number" name="amount" [(ngModel)]="newFeeItem.amount" required placeholder="500" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+                  <label class="bm-field-label">Amount ($)</label>
+                  <input type="number" name="amount" [(ngModel)]="newFeeItem.amount" required placeholder="500" class="bm-input" />
                 </div>
                 <div>
-                  <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Grade Level</label>
-                  <select name="gradeLevel" [(ngModel)]="newFeeItem.gradeLevel" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
+                  <label class="bm-field-label">Grade Level</label>
+                  <select name="gradeLevel" [(ngModel)]="newFeeItem.gradeLevel" class="bm-select">
                     <option value="All Grades">All Grades</option>
                     <option value="Primary School (G1-5)">Primary School (G1-5)</option>
                     <option value="Middle School (G6-8)">Middle School (G6-8)</option>
@@ -94,43 +94,43 @@ export interface StudentInvoice {
                   </select>
                 </div>
               </div>
-              <button type="submit" [disabled]="!feeForm.form.valid" class="ds-btn ds-btn-primary" style="font-size: 0.85rem; margin-top: 0.25rem;">
+              <button type="submit" [disabled]="!feeForm.form.valid" class="ds-btn ds-btn-primary bm-submit-btn">
                 Create Fee Category
               </button>
             </form>
           </div>
 
           <!-- Generate Student Invoice -->
-          <div style="background: #f8fafc; padding: 1.25rem; border-radius: 6px; border: 1px solid #e2e8f0;">
-            <h3 class="ds-heading" style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem;">2. Generate Student Invoice</h3>
-            <form (ngSubmit)="generateInvoice()" #invoiceForm="ngForm" style="display: flex; flex-direction: column; gap: 0.85rem;">
+          <div class="bm-panel">
+            <h3 class="ds-heading bm-panel-heading">2. Generate Student Invoice</h3>
+            <form (ngSubmit)="generateInvoice()" #invoiceForm="ngForm" class="bm-form-col">
               
-              <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 0.5rem;">
+              <div class="mobile-grid-1 bm-grid-2-wide">
                 <div>
-                  <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Student Name</label>
-                  <input type="text" name="studentName" [(ngModel)]="newInvoice.studentName" required placeholder="e.g. John Doe" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+                  <label class="bm-field-label">Student Name</label>
+                  <input type="text" name="studentName" [(ngModel)]="newInvoice.studentName" required placeholder="e.g. John Doe" class="bm-input" />
                 </div>
                 <div>
-                  <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Admission Number</label>
-                  <input type="text" name="admissionNo" [(ngModel)]="newInvoice.admissionNo" required placeholder="e.g. ADM-101" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
-                </div>
-              </div>
-
-              <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 0.5rem;">
-                <div>
-                  <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Father's Name</label>
-                  <input type="text" name="fatherName" [(ngModel)]="newInvoice.fatherName" required placeholder="e.g. Richard Doe" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
-                </div>
-                <div>
-                  <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Aadhar Card Number</label>
-                  <input type="text" name="aadharNo" [(ngModel)]="newInvoice.aadharNo" required placeholder="e.g. 1234-5678-9012" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+                  <label class="bm-field-label">Admission Number</label>
+                  <input type="text" name="admissionNo" [(ngModel)]="newInvoice.admissionNo" required placeholder="e.g. ADM-101" class="bm-input" />
                 </div>
               </div>
 
-              <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 0.5rem;">
+              <div class="mobile-grid-1 bm-grid-2-wide">
                 <div>
-                  <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Class Level</label>
-                  <select name="gradeLevel" [(ngModel)]="newInvoice.gradeLevel" required style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
+                  <label class="bm-field-label">Father's Name</label>
+                  <input type="text" name="fatherName" [(ngModel)]="newInvoice.fatherName" required placeholder="e.g. Richard Doe" class="bm-input" />
+                </div>
+                <div>
+                  <label class="bm-field-label">Aadhar Card Number</label>
+                  <input type="text" name="aadharNo" [(ngModel)]="newInvoice.aadharNo" required placeholder="e.g. 1234-5678-9012" class="bm-input" />
+                </div>
+              </div>
+
+              <div class="mobile-grid-1 bm-grid-3">
+                <div>
+                  <label class="bm-field-label">Class Level</label>
+                  <select name="gradeLevel" [(ngModel)]="newInvoice.gradeLevel" required class="bm-select">
                     <option value="Pre-Nursery">Pre-Nursery</option>
                     <option value="Nursery">Nursery</option>
                     <option value="LKG">LKG</option>
@@ -150,8 +150,8 @@ export interface StudentInvoice {
                   </select>
                 </div>
                 <div>
-                  <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Section</label>
-                  <select name="section" [(ngModel)]="newInvoice.section" required style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
+                  <label class="bm-field-label">Section</label>
+                  <select name="section" [(ngModel)]="newInvoice.section" required class="bm-select">
                     <option value="A">A</option>
                     <option value="B">B</option>
                     <option value="C">C</option>
@@ -160,8 +160,8 @@ export interface StudentInvoice {
                   </select>
                 </div>
                 <div>
-                  <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Select Fee Category</label>
-                  <select name="feeItem" (change)="onFeeSelected($event)" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
+                  <label class="bm-field-label">Select Fee Category</label>
+                  <select name="feeItem" (change)="onFeeSelected($event)" class="bm-select">
                     <option [value]="null" disabled selected>-- Select Fee --</option>
                     @for (item of feeItems(); track item.id) {
                       <option [value]="item.id">{{ item.name }} (\${{ item.amount }})</option>
@@ -170,7 +170,7 @@ export interface StudentInvoice {
                 </div>
               </div>
 
-              <button type="submit" [disabled]="!invoiceForm.form.valid || !selectedFeeId" class="ds-btn ds-btn-success" style="font-size: 0.85rem; margin-top: 0.25rem;">
+              <button type="submit" [disabled]="!invoiceForm.form.valid || !selectedFeeId" class="ds-btn ds-btn-success bm-submit-btn">
                 Generate Invoice
               </button>
             </form>
@@ -181,31 +181,31 @@ export interface StudentInvoice {
 
       <!-- Mode 2: Bulk Excel / Spreadsheet Importer -->
       @if (managerMode() === 'BULK') {
-        <div style="background: #f8fafc; padding: 1.5rem; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
-          <h3 class="ds-heading" style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.15rem;">Excel / Spreadsheet Copy-Paste Importer</h3>
+        <div class="bm-bulk-panel">
+          <h3 class="ds-heading bm-bulk-heading">Excel / Spreadsheet Copy-Paste Importer</h3>
           
           <!-- Bulk Mode Switcher -->
-          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+          <div class="bm-bulk-switcher">
             <button (click)="bulkUploadMode.set('CLASS'); parseSpreadsheet()" 
               [style.background]="bulkUploadMode() === 'CLASS' ? '#1e3a8a' : 'white'"
               [style.color]="bulkUploadMode() === 'CLASS' ? 'white' : '#475569'"
-              style="border: 1px solid #cbd5e1; padding: 0.4rem 0.8rem; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 0.8rem;">
+              class="bm-bulk-switch-btn">
               🏫 Class-wise Excel Upload
             </button>
             <button (click)="bulkUploadMode.set('SCHOOL'); parseSpreadsheet()" 
               [style.background]="bulkUploadMode() === 'SCHOOL' ? '#1e3a8a' : 'white'"
               [style.color]="bulkUploadMode() === 'SCHOOL' ? 'white' : '#475569'"
-              style="border: 1px solid #cbd5e1; padding: 0.4rem 0.8rem; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 0.8rem;">
+              class="bm-bulk-switch-btn">
               🌐 School-wide Master Excel Upload
             </button>
           </div>
 
           @if (bulkUploadMode() === 'CLASS') {
             <!-- Class Selection dropdowns for bulk -->
-            <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; background: white; padding: 1rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+            <div class="mobile-grid-1 bm-bulk-class-grid">
               <div>
-                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Select Target Class</label>
-                <select name="bulkClass" [(ngModel)]="bulkClass" (change)="parseSpreadsheet()" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white; font-weight: 600;">
+                <label class="bm-field-label-sm">Select Target Class</label>
+                <select name="bulkClass" [(ngModel)]="bulkClass" (change)="parseSpreadsheet()" class="bm-select-bold">
                   <option value="Pre-Nursery">Pre-Nursery</option>
                   <option value="Nursery">Nursery</option>
                   <option value="LKG">LKG</option>
@@ -225,8 +225,8 @@ export interface StudentInvoice {
                 </select>
               </div>
               <div>
-                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Select Target Section</label>
-                <select name="bulkSection" [(ngModel)]="bulkSection" (change)="parseSpreadsheet()" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white; font-weight: 600;">
+                <label class="bm-field-label-sm">Select Target Section</label>
+                <select name="bulkSection" [(ngModel)]="bulkSection" (change)="parseSpreadsheet()" class="bm-select-bold">
                   <option value="A">A</option>
                   <option value="B">B</option>
                   <option value="C">C</option>
@@ -236,12 +236,12 @@ export interface StudentInvoice {
               </div>
             </div>
 
-            <p style="color: #64748b; font-size: 0.8rem; margin-top: 0; margin-bottom: 1rem;">
+            <p class="bm-format-note">
               <strong>Class-wise Format columns (Tab-separated Excel copy):</strong><br />
               <code>Student Name [Tab] Admission No [Tab] Father Name [Tab] Aadhar No [Tab] Fee Item Description [Tab] Amount</code>
             </p>
           } @else {
-            <p style="color: #64748b; font-size: 0.8rem; margin-top: 0; margin-bottom: 1rem;">
+            <p class="bm-format-note">
               <strong>School-wide Format columns (Tab-separated Excel copy):</strong><br />
               <code>Student Name [Tab] Admission No [Tab] Father Name [Tab] Aadhar No [Tab] Class [Tab] Section [Tab] Fee Item Description [Tab] Amount</code>
             </p>
@@ -251,46 +251,46 @@ export interface StudentInvoice {
             [placeholder]="bulkUploadMode() === 'CLASS' 
               ? 'John Doe\tADM-101\tRichard Doe\t1234-5678-9012\tTerm Tuition Fees\t250\nJane Smith\tADM-102\tRobert Smith\t9876-5432-1098\tTerm Bus Fees\t100'
               : 'John Doe\tADM-101\tRichard Doe\t1234-5678-9012\t1st\tA\tTerm Tuition Fees\t250\nJane Smith\tADM-102\tRobert Smith\t9876-5432-1098\t2nd\tB\tTerm Bus Fees\t100'"
-            style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-size: 0.85rem; box-sizing: border-box; resize: vertical; margin-bottom: 1rem;">
+            class="bm-textarea">
           </textarea>
 
           <!-- Parsed Invoice Preview Grid -->
           @if (parsedRows().length > 0) {
-            <div style="margin-top: 1.5rem; border-top: 1px solid #cbd5e1; padding-top: 1rem;">
-              <h4 style="margin-top: 0; margin-bottom: 0.75rem; font-size: 0.95rem; color: #0f172a; font-weight: 700;">📋 Parsed Verification Grid ({{ parsedRows().length }} rows)</h4>
+            <div class="bm-preview-block">
+              <h4 class="bm-preview-heading">📋 Parsed Verification Grid ({{ parsedRows().length }} rows)</h4>
               
-              <div class="table-responsive-wrapper" style="background: white; margin-bottom: 1.25rem;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left;">
+              <div class="table-responsive-wrapper bm-preview-table-wrap">
+                <table class="bm-preview-table">
                   <thead>
-                    <tr style="background: #f1f5f9; border-bottom: 1px solid #cbd5e1; color: #475569; font-weight: 700;">
-                      <th style="padding: 0.5rem 0.75rem;">Student Name</th>
-                      <th style="padding: 0.5rem 0.75rem;">Admission No</th>
-                      <th style="padding: 0.5rem 0.75rem;">Father\'s Name</th>
-                      <th style="padding: 0.5rem 0.75rem;">Class (Section)</th>
-                      <th style="padding: 0.5rem 0.75rem;">Fee Description</th>
-                      <th style="padding: 0.5rem 0.75rem;">Amount</th>
+                    <tr class="bm-preview-thead-row">
+                      <th class="bm-preview-th">Student Name</th>
+                      <th class="bm-preview-th">Admission No</th>
+                      <th class="bm-preview-th">Father\'s Name</th>
+                      <th class="bm-preview-th">Class (Section)</th>
+                      <th class="bm-preview-th">Fee Description</th>
+                      <th class="bm-preview-th">Amount</th>
                     </tr>
                   </thead>
                   <tbody>
                     @for (row of parsedRows(); track $index) {
-                      <tr style="border-bottom: 1px solid #e2e8f0;">
-                        <td style="padding: 0.5rem 0.75rem; font-weight: 700;">{{ row.studentName }}</td>
-                        <td style="padding: 0.5rem 0.75rem;">{{ row.admissionNo }}</td>
-                        <td style="padding: 0.5rem 0.75rem;">{{ row.fatherName }}</td>
-                        <td style="padding: 0.5rem 0.75rem; color: #64748b;">{{ row.gradeLevel }} (Section {{ row.section }})</td>
-                        <td style="padding: 0.5rem 0.75rem;">{{ row.feeItemName }}</td>
-                        <td style="padding: 0.5rem 0.75rem; font-weight: 700; color: #1e3a8a;">\${{ row.amount }}</td>
+                      <tr class="bm-preview-body-row">
+                        <td class="bm-preview-td-bold">{{ row.studentName }}</td>
+                        <td class="bm-preview-td">{{ row.admissionNo }}</td>
+                        <td class="bm-preview-td">{{ row.fatherName }}</td>
+                        <td class="bm-preview-td-muted">{{ row.gradeLevel }} (Section {{ row.section }})</td>
+                        <td class="bm-preview-td">{{ row.feeItemName }}</td>
+                        <td class="bm-preview-td-amount">\${{ row.amount }}</td>
                       </tr>
                     }
                   </tbody>
                 </table>
               </div>
 
-              <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-                <button (click)="clearParsed()" class="ds-btn ds-btn-ghost" style="font-size: 0.85rem;">
+              <div class="bm-preview-actions">
+                <button (click)="clearParsed()" class="ds-btn ds-btn-ghost bm-action-btn">
                   Clear All
                 </button>
-                <button (click)="importParsedRows()" [disabled]="isImporting()" class="ds-btn ds-btn-success" style="font-size: 0.85rem;">
+                <button (click)="importParsedRows()" [disabled]="isImporting()" class="ds-btn ds-btn-success bm-action-btn">
                   @if (isImporting()) { <span class="ds-spinner"></span> Importing ledger... } @else { Confirm Bulk Import to Database }
                 </button>
               </div>
@@ -300,44 +300,44 @@ export interface StudentInvoice {
       }
 
       <!-- Invoices Pipeline List -->
-      <h3 class="ds-heading" style="margin-bottom: 0.75rem; font-size: 1.2rem;">All Student Invoices</h3>
+      <h3 class="ds-heading bm-list-heading">All Student Invoices</h3>
       @if (invoices().length === 0) {
-        <p style="color: #64748b; font-style: italic;">No student invoices have been generated yet. Use the panel above to issue fee bills.</p>
+        <p class="bm-empty-note">No student invoices have been generated yet. Use the panel above to issue fee bills.</p>
       } @else {
-        <div style="overflow-x: auto; border: 1px solid #cbd5e1; border-radius: 6px;">
-          <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left;">
+        <div class="bm-list-table-wrap">
+          <table class="bm-list-table">
             <thead>
-              <tr style="background: #f1f5f9; border-bottom: 1px solid #cbd5e1; color: #475569; font-weight: 600;">
-                <th style="padding: 0.75rem 1rem;">Invoice Ref</th>
-                <th style="padding: 0.75rem 1rem;">Student Details</th>
-                <th style="padding: 0.75rem 1rem;">Fee Description</th>
-                <th style="padding: 0.75rem 1rem;">Amount</th>
-                <th style="padding: 0.75rem 1rem;">Status</th>
-                <th style="padding: 0.75rem 1rem;">Payment Date</th>
+              <tr class="bm-list-thead-row">
+                <th class="bm-list-th">Invoice Ref</th>
+                <th class="bm-list-th">Student Details</th>
+                <th class="bm-list-th">Fee Description</th>
+                <th class="bm-list-th">Amount</th>
+                <th class="bm-list-th">Status</th>
+                <th class="bm-list-th">Payment Date</th>
               </tr>
             </thead>
             <tbody>
               @for (inq of invoices(); track inq.id) {
-                <tr style="border-bottom: 1px solid #e2e8f0; hover: background-color: #f8fafc;">
-                  <td style="padding: 0.75rem 1rem; font-weight: 700; color: #1e3a8a;">INV-400{{ inq.id }}</td>
-                  <td style="padding: 0.75rem 1rem;">
-                    <strong style="color: #0f172a; display: block;">{{ inq.studentName }}</strong>
+                <tr class="bm-list-body-row">
+                  <td class="bm-list-td-ref">INV-400{{ inq.id }}</td>
+                  <td class="bm-list-td">
+                    <strong class="bm-list-student-name">{{ inq.studentName }}</strong>
                     @if (inq.gradeLevel || inq.section || inq.admissionNo) {
-                      <span style="font-size: 0.75rem; color: #64748b; display: block; margin-top: 0.15rem;">
+                      <span class="bm-list-student-meta">
                         {{ inq.gradeLevel || '-' }} (Section {{ inq.section || '-' }}) • Adm No: {{ inq.admissionNo || '-' }}
                       </span>
                     }
                   </td>
-                  <td style="padding: 0.75rem 1rem; color: #475569;">{{ inq.feeItemName }}</td>
-                  <td style="padding: 0.75rem 1rem; font-weight: 700; color: #0f172a;">\${{ inq.amount }}</td>
-                  <td style="padding: 0.75rem 1rem;">
+                  <td class="bm-list-td-desc">{{ inq.feeItemName }}</td>
+                  <td class="bm-list-td-amount">\${{ inq.amount }}</td>
+                  <td class="bm-list-td">
                     @if (inq.status === 'PENDING') {
-                      <span class="ds-chip" style="background: #ffedd5; color: #b45309;">PENDING</span>
+                      <span class="ds-chip bm-chip-pending">PENDING</span>
                     } @else if (inq.status === 'PAID') {
-                      <span class="ds-chip" style="background: #dcfce7; color: #15803d;">PAID</span>
+                      <span class="ds-chip bm-chip-paid">PAID</span>
                     }
                   </td>
-                  <td style="padding: 0.75rem 1rem; color: #64748b;">
+                  <td class="bm-list-td-muted">
                     {{ inq.paymentDate ? (inq.paymentDate | date:'mediumDate') : 'Unpaid' }}
                   </td>
                 </tr>
@@ -347,7 +347,8 @@ export interface StudentInvoice {
         </div>
       }
     </div>
-  `
+  `,
+  styleUrl: './billing-manager.component.scss'
 })
 export class BillingManagerComponent implements OnChanges {
   @Input() tenantId!: number;

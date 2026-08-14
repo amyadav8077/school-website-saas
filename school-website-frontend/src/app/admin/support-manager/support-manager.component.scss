@@ -1,0 +1,26 @@
+.sm-card { padding: 2rem; margin-bottom: 2rem; }
+.sm-title { font-size: 1.5rem; margin-top: 0; margin-bottom: 0.5rem; }
+.sm-subtitle { color: #64748b; font-size: 0.9rem; margin-top: 0; margin-bottom: 1.5rem; }
+.sm-tenant { color: #0f172a; }
+
+.sm-empty { background: #f8fafc; border: 1px dashed #cbd5e1; padding: 3rem; text-align: center; border-radius: 8px; color: #64748b; }
+.sm-empty-icon { font-size: 2.5rem; display: block; margin-bottom: 1rem; }
+.sm-empty-title { font-size: 1rem; margin: 0; }
+.sm-empty-hint { font-size: 0.85rem; margin-top: 0.25rem; }
+
+.sm-list { display: flex; flex-direction: column; gap: 1rem; }
+.sm-item { padding: 1.25rem; }
+.sm-item-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; }
+.sm-item-subject { font-size: 1.1rem; color: #0f172a; display: block; }
+.sm-item-from { font-size: 0.8rem; color: #64748b; }
+
+.sm-chip-pending { background: #fee2e2; color: #b91c1c; }
+.sm-chip-resolved { background: #dcfce7; color: #15803d; }
+
+.sm-item-message { color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0 0 1rem 0; }
+
+.sm-resolve-row { display: flex; gap: 0.5rem; background: white; padding: 0.75rem; border-radius: 6px; border: 1px solid #e2e8f0; align-items: center; }
+.sm-resolve-input { flex: 1; min-width: 0; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem; }
+.sm-resolve-btn { padding: 0.5rem 1rem; font-size: 0.85rem; }
+
+.sm-resolved-note { background: #ecfdf5; border: 1px solid #cbd5e1; padding: 0.75rem; border-radius: 6px; font-size: 0.85rem; color: #047857; }

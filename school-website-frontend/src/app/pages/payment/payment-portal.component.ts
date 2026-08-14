@@ -19,19 +19,19 @@ export interface StudentInvoice {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="ds-card ds-reveal" style="padding: 2rem; max-width: 950px; margin: 2rem auto;">
-      <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 1.5rem; font-weight: 800; margin-top: 0; margin-bottom: 0.5rem; text-align: center; transition: color 0.3s;">
+    <div class="ds-card ds-reveal pp-card">
+      <h3 [style.color]="primaryColor" class="ds-heading pp-heading">
         Parent & Student Fee Payment Portal
       </h3>
-      <p style="color: #64748b; font-size: 0.9rem; text-align: center; margin-bottom: 1.5rem;">
+      <p class="pp-subtitle">
         Search for your child's student record to view issued fee invoices and complete secure online payments.
       </p>
 
       <!-- Student Record Lookup Bar -->
-      <form (ngSubmit)="searchStudentInvoices()" style="display: flex; gap: 0.75rem; margin-bottom: 2rem; flex-wrap: wrap; background: #f8fafc; padding: 1.5rem; border-radius: 8px; border: 1px solid #cbd5e1;">
-        <div style="flex: 1; min-width: 150px;">
-          <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 0.35rem;">Select Class</label>
-          <select name="searchClass" [(ngModel)]="searchClass" required style="width: 100%; padding: 0.7rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; background: white; font-weight: 600;">
+      <form (ngSubmit)="searchStudentInvoices()" class="pp-search-form">
+        <div class="pp-field-flex1">
+          <label class="pp-label">Select Class</label>
+          <select name="searchClass" [(ngModel)]="searchClass" required class="pp-select">
             <option value="Pre-Nursery">Pre-Nursery</option>
             <option value="Nursery">Nursery</option>
             <option value="LKG">LKG</option>
@@ -50,9 +50,9 @@ export interface StudentInvoice {
             <option value="12th">12th Grade</option>
           </select>
         </div>
-        <div style="flex: 1; min-width: 100px;">
-          <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 0.35rem;">Select Section</label>
-          <select name="searchSection" [(ngModel)]="searchSection" required style="width: 100%; padding: 0.7rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; background: white; font-weight: 600;">
+        <div class="pp-field-flex1-100">
+          <label class="pp-label">Select Section</label>
+          <select name="searchSection" [(ngModel)]="searchSection" required class="pp-select">
             <option value="A">A</option>
             <option value="B">B</option>
             <option value="C">C</option>
@@ -60,13 +60,13 @@ export interface StudentInvoice {
             <option value="E">E</option>
           </select>
         </div>
-        <div style="flex: 2; min-width: 200px;">
-          <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 0.35rem;">Student Name (Optional)</label>
+        <div class="pp-field-flex2">
+          <label class="pp-label">Student Name (Optional)</label>
           <input type="text" name="studentSearchName" [(ngModel)]="searchName" placeholder="Enter name or leave empty to list all" 
-            style="width: 100%; padding: 0.7rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; box-sizing: border-box;" />
+            class="pp-input-text" />
         </div>
-        <div style="width: 100%; display: flex; align-items: flex-end; margin-top: 0.5rem;">
-          <button type="submit" class="ds-btn" [style.background-color]="primaryColor" style="width: 100%; border: 0; color: white; padding: 0.75rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: opacity 0.2s;">
+        <div class="pp-search-btn-wrap">
+          <button type="submit" class="ds-btn pp-search-btn" [style.background-color]="primaryColor">
             🔍 Find Issued Bills (Class-wise)
           </button>
         </div>
@@ -76,39 +76,39 @@ export interface StudentInvoice {
       @if (hasSearched()) {
         <div>
           @if (invoices().length === 0) {
-            <div style="background: #f8fafc; border: 1px dashed #cbd5e1; padding: 2.5rem; text-align: center; border-radius: 8px; color: #64748b;">
-              <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">🔍</span>
-              <p style="font-size: 0.95rem; margin: 0; font-weight: 600;">No invoices found for student: "{{ searchName }}"</p>
-              <p style="font-size: 0.85rem; margin-top: 0.25rem;">Verify spelling or generate a student invoice in the Admin panel above!</p>
+            <div class="pp-empty">
+              <span class="pp-empty-icon">🔍</span>
+              <p class="pp-empty-title">No invoices found for student: "{{ searchName }}"</p>
+              <p class="pp-empty-hint">Verify spelling or generate a student invoice in the Admin panel above!</p>
             </div>
           } @else {
-            <h4 style="color: #1e293b; font-size: 1rem; font-weight: 700; margin-bottom: 1rem;">
+            <h4 class="pp-results-heading">
               Issued Bills found matching search criteria:
             </h4>
             
-            <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div class="pp-results-list">
               @for (inv of invoices(); track inv.id) {
-                <div class="ds-card ds-card-hover" style="padding: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+                <div class="ds-card ds-card-hover pp-invoice-card">
                   <div>
-                    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.25rem; flex-wrap: wrap;">
+                    <div class="pp-invoice-title-row">
                       <span class="ds-chip">INV-400{{ inv.id }}</span>
-                      <strong style="font-size: 1.05rem; color: #0f172a;">{{ inv.feeItemName }}</strong>
+                      <strong class="pp-invoice-fee-name">{{ inv.feeItemName }}</strong>
                     </div>
-                    <span style="font-size: 0.8rem; color: #64748b; display: block;">Due Date: {{ inv.dueDate | date:'mediumDate' }}</span>
+                    <span class="pp-invoice-due">Due Date: {{ inv.dueDate | date:'mediumDate' }}</span>
                     @if (inv.status === 'PAID') {
-                      <span style="font-size: 0.8rem; color: #15803d; font-weight: 600; display: block; margin-top: 0.25rem;">Paid on: {{ inv.paymentDate | date:'medium' }}</span>
+                      <span class="pp-invoice-paid">Paid on: {{ inv.paymentDate | date:'medium' }}</span>
                     }
                   </div>
                   
-                  <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; min-width: 120px; flex-grow: 1;">
-                    <span style="font-size: 1.25rem; font-weight: 800; color: #0f172a;">\${{ inv.amount }}</span>
+                  <div class="pp-invoice-right">
+                    <span class="pp-invoice-amount">\${{ inv.amount }}</span>
                     
                     @if (inv.status === 'PENDING') {
-                      <button (click)="openCheckoutModal(inv)" class="ds-btn" [style.background-color]="accentColor" style="border: 0; color: #0f172a; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.85rem; box-shadow: 0 2px 4px rgba(0,0,0,0.15);">
+                      <button (click)="openCheckoutModal(inv)" class="ds-btn pp-pay-btn" [style.background-color]="accentColor">
                         💳 Pay Fees Now
                       </button>
                     } @else {
-                      <span class="ds-chip" style="background: #dcfce7; color: #15803d;">🟢 PAID</span>
+                      <span class="ds-chip pp-chip-paid">🟢 PAID</span>
                     }
                   </div>
                 </div>
@@ -120,50 +120,50 @@ export interface StudentInvoice {
 
       <!-- Simulated Stripe Checkout Modal -->
       @if (showCheckoutModal()) {
-        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); display: flex; align-items: center; justify-content: center; z-index: 99999; backdrop-filter: blur(2px);">
-          <div style="background: white; padding: 2rem; border-radius: 12px; max-width: 450px; width: 100%; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); border: 1px solid #cbd5e1; box-sizing: border-box;">
+        <div class="pp-modal-overlay">
+          <div class="pp-modal">
             
             @if (checkoutState() === 'FORM') {
               <div>
-                <div style="text-align: center; margin-bottom: 1.5rem;">
-                  <span style="font-size: 2rem;">🔒</span>
-                  <h4 class="ds-heading" style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-top: 0.5rem; margin-bottom: 0.25rem;">Secure Student Payment Gateway</h4>
-                  <p style="color: #64748b; font-size: 0.85rem; margin: 0;">Checkout Sandbox with simulated processing</p>
+                <div class="pp-modal-head">
+                  <span class="pp-modal-icon">🔒</span>
+                  <h4 class="ds-heading pp-modal-title">Secure Student Payment Gateway</h4>
+                  <p class="pp-modal-subtitle">Checkout Sandbox with simulated processing</p>
                 </div>
 
-                <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem;">
-                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.25rem;">
-                    <span style="color: #475569;">Student Name:</span>
-                    <strong style="color: #0f172a;">{{ selectedInvoice()?.studentName }}</strong>
+                <div class="pp-summary">
+                  <div class="pp-summary-row">
+                    <span class="pp-summary-label">Student Name:</span>
+                    <strong class="pp-summary-value">{{ selectedInvoice()?.studentName }}</strong>
                   </div>
-                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.25rem;">
-                    <span style="color: #475569;">Billing Item:</span>
-                    <strong style="color: #0f172a;">{{ selectedInvoice()?.feeItemName }}</strong>
+                  <div class="pp-summary-row">
+                    <span class="pp-summary-label">Billing Item:</span>
+                    <strong class="pp-summary-value">{{ selectedInvoice()?.feeItemName }}</strong>
                   </div>
-                  <div style="display: flex; justify-content: space-between; font-size: 1rem; border-top: 1px solid #cbd5e1; padding-top: 0.5rem; margin-top: 0.5rem;">
-                    <span style="font-weight: 700; color: #0f172a;">Total Amount:</span>
-                    <strong style="color: #1e3a8a; font-size: 1.15rem;">\${{ selectedInvoice()?.amount }}</strong>
+                  <div class="pp-summary-total">
+                    <span class="pp-summary-total-label">Total Amount:</span>
+                    <strong class="pp-summary-total-value">\${{ selectedInvoice()?.amount }}</strong>
                   </div>
                 </div>
 
-                <form (ngSubmit)="processCheckout()" style="display: flex; flex-direction: column; gap: 1rem;">
+                <form (ngSubmit)="processCheckout()" class="pp-checkout-form">
                   <div>
-                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Cardholder Name</label>
-                    <input type="text" required placeholder="Robert Doe" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px;" />
+                    <label class="pp-form-label">Cardholder Name</label>
+                    <input type="text" required placeholder="Robert Doe" class="pp-input-card-name" />
                   </div>
                   <div>
-                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Debit / Credit Card Details</label>
-                    <div style="display: flex; border: 1px solid #cbd5e1; border-radius: 4px; padding: 0.55rem; background: white; align-items: center; justify-content: space-between;">
-                      <input type="text" required placeholder="4242 4242 4242 4242" style="border: 0; outline: none; width: 65%; font-family: monospace; font-size: 0.9rem;" />
-                      <input type="text" required placeholder="MM/YY" style="border: 0; outline: none; width: 18%; font-family: monospace; font-size: 0.9rem; text-align: center;" />
-                      <input type="password" required placeholder="CVC" style="border: 0; outline: none; width: 12%; font-family: monospace; font-size: 0.9rem; text-align: right;" />
+                    <label class="pp-form-label">Debit / Credit Card Details</label>
+                    <div class="pp-card-details">
+                      <input type="text" required placeholder="4242 4242 4242 4242" class="pp-input-card-number" />
+                      <input type="text" required placeholder="MM/YY" class="pp-input-card-exp" />
+                      <input type="password" required placeholder="CVC" class="pp-input-card-cvc" />
                     </div>
                   </div>
-                  <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
-                    <button type="button" (click)="showCheckoutModal.set(false)" class="ds-btn ds-btn-ghost" style="flex: 1; padding: 0.65rem;">
+                  <div class="pp-checkout-actions">
+                    <button type="button" (click)="showCheckoutModal.set(false)" class="ds-btn ds-btn-ghost pp-cancel-btn">
                       Cancel
                     </button>
-                    <button type="submit" class="ds-btn" [style.background-color]="primaryColor" style="flex: 1.5; padding: 0.65rem; border: 0; color: white; border-radius: 6px; font-weight: 700; cursor: pointer;">
+                    <button type="submit" class="ds-btn pp-authorize-btn" [style.background-color]="primaryColor">
                       Authorize Pay
                     </button>
                   </div>
@@ -172,26 +172,26 @@ export interface StudentInvoice {
             }
 
             @if (checkoutState() === 'PROCESSING') {
-              <div style="text-align: center; padding: 2rem 0;">
-                <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid #cbd5e1; border-top-color: #1e3a8a; border-radius: 50%; animate: spin 1s infinite;"></div>
-                <h4 style="font-size: 1.15rem; font-weight: 700; color: #0f172a; margin-top: 1.5rem; margin-bottom: 0.25rem;">{{ checkoutStatusMessage() }}</h4>
-                <p style="color: #64748b; font-size: 0.8rem; margin: 0;">Securing communication with bank trust...</p>
+              <div class="pp-processing">
+                <div class="pp-spinner"></div>
+                <h4 class="pp-processing-title">{{ checkoutStatusMessage() }}</h4>
+                <p class="pp-processing-sub">Securing communication with bank trust...</p>
               </div>
             }
 
             @if (checkoutState() === 'SUCCESS') {
-              <div style="text-align: center; padding: 1rem 0;">
-                <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎉</div>
-                <h4 class="ds-heading" style="font-size: 1.4rem; font-weight: 800; color: #15803d; margin-top: 0.5rem; margin-bottom: 0.25rem;">Payment Successful!</h4>
-                <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 1.5rem;">Transaction authorized. Receipt generated.</p>
+              <div class="pp-success">
+                <div class="pp-success-emoji">🎉</div>
+                <h4 class="ds-heading pp-success-title">Payment Successful!</h4>
+                <p class="pp-success-sub">Transaction authorized. Receipt generated.</p>
 
-                <div class="ds-alert ds-alert-success" style="flex-direction: column; align-items: stretch; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.85rem; text-align: left;">
-                  <div>Receipt: <strong style="color: #0f172a;">RCP-902{{ selectedInvoice()?.id }}</strong></div>
-                  <div>Cleared: <strong style="color: #0f172a;">\${{ selectedInvoice()?.amount }}</strong></div>
-                  <div>Account: <strong style="color: #0f172a;">Visa ending in 4242</strong></div>
+                <div class="ds-alert ds-alert-success pp-receipt">
+                  <div>Receipt: <strong class="pp-receipt-value">RCP-902{{ selectedInvoice()?.id }}</strong></div>
+                  <div>Cleared: <strong class="pp-receipt-value">\${{ selectedInvoice()?.amount }}</strong></div>
+                  <div>Account: <strong class="pp-receipt-value">Visa ending in 4242</strong></div>
                 </div>
 
-                <button (click)="closeSuccess()" class="ds-btn" [style.background-color]="primaryColor" style="width: 100%; padding: 0.75rem; border: 0; color: white; border-radius: 6px; font-weight: 700; cursor: pointer;">
+                <button (click)="closeSuccess()" class="ds-btn pp-success-btn" [style.background-color]="primaryColor">
                   Print Receipt & Close Portal
                 </button>
               </div>
@@ -202,7 +202,8 @@ export interface StudentInvoice {
       }
 
     </div>
-  `
+  `,
+  styleUrl: './payment-portal.component.scss'
 })
 export class PaymentPortalComponent {
   @Input() tenantId!: number;

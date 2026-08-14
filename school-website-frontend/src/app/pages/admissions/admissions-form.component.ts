@@ -8,37 +8,37 @@ import { HttpClient } from '@angular/common/http';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="ds-card ds-reveal" style="padding: 2rem; max-width: 750px; margin: 2rem auto;">
-      <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 1.5rem; font-weight: 800; margin-top: 0; margin-bottom: 0.5rem; text-align: center; transition: color 0.3s;">
+    <div class="ds-card ds-reveal af-card">
+      <h3 [style.color]="primaryColor" class="ds-heading af-heading">
         Submit Admissions Inquiry
       </h3>
-      <p style="color: #64748b; font-size: 0.9rem; text-align: center; margin-bottom: 1.5rem;">
+      <p class="af-subtitle">
         Fill out this form to express your interest. Our admissions counselor will contact you shortly.
       </p>
 
       @if (successMessage()) {
-        <div class="ds-alert ds-alert-success" style="flex-direction: column; padding: 1.25rem; margin-bottom: 1.5rem; text-align: center;">
-          <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎉</div>
-          <strong style="display: block; font-size: 1.1rem; margin-bottom: 0.25rem;">Inquiry Submitted Successfully!</strong>
-          <span style="font-size: 0.9rem;">{{ successMessage() }}</span>
+        <div class="ds-alert ds-alert-success af-success-alert">
+          <div class="af-success-icon">🎉</div>
+          <strong class="af-success-title">Inquiry Submitted Successfully!</strong>
+          <span class="af-success-text">{{ successMessage() }}</span>
         </div>
       } @else {
         @if (errorMessage()) {
-          <div class="ds-alert ds-alert-error ds-shake" style="margin-bottom: 1.5rem;">
+          <div class="ds-alert ds-alert-error ds-shake af-error-alert">
             <strong>Error:</strong> {{ errorMessage() }}
           </div>
         }
 
-        <form (ngSubmit)="onSubmit()" #inquiryForm="ngForm" style="display: flex; flex-direction: column; gap: 1.25rem;">
-          <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem;">
+        <form (ngSubmit)="onSubmit()" #inquiryForm="ngForm" class="af-form">
+          <div class="af-grid-row">
             <div>
-              <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Student Full Name</label>
+              <label class="af-label">Student Full Name</label>
               <input type="text" name="studentName" [(ngModel)]="form.studentName" required placeholder="e.g. John Doe"
-                style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 0.95rem;" />
+                class="af-input" />
             </div>
             <div>
-              <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Grade Level</label>
-              <select name="gradeLevel" [(ngModel)]="form.gradeLevel" required style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; background: white;">
+              <label class="af-label">Grade Level</label>
+              <select name="gradeLevel" [(ngModel)]="form.gradeLevel" required class="af-select">
                 <option value="" disabled selected>-- Select Grade --</option>
                 <option value="Kindergarten">Kindergarten</option>
                 <option value="Primary School (G1-5)">Primary School (G1-5)</option>
@@ -49,40 +49,40 @@ import { HttpClient } from '@angular/common/http';
           </div>
 
           <div>
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Parent / Guardian Name</label>
+            <label class="af-label">Parent / Guardian Name</label>
             <input type="text" name="parentName" [(ngModel)]="form.parentName" required placeholder="e.g. Robert Doe"
-              style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 0.95rem;" />
+              class="af-input" />
           </div>
 
-          <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem;">
+          <div class="af-grid-row">
             <div>
-              <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Email Address</label>
+              <label class="af-label">Email Address</label>
               <input type="email" name="parentEmail" [(ngModel)]="form.parentEmail" required email placeholder="e.g. parent@email.com"
-                style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 0.95rem;" />
+                class="af-input" />
             </div>
             <div>
-              <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Phone Number</label>
+              <label class="af-label">Phone Number</label>
               <input type="text" name="parentPhone" [(ngModel)]="form.parentPhone" required placeholder="e.g. +1 (555) 123-4567"
-                style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 0.95rem;" />
+                class="af-input" />
             </div>
           </div>
 
           <div>
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Additional Notes / Questions (Optional)</label>
+            <label class="af-label">Additional Notes / Questions (Optional)</label>
             <textarea name="message" [(ngModel)]="form.message" rows="3" placeholder="Tell us about student interests, transfer needs..."
-              style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 0.95rem; resize: vertical;"></textarea>
+              class="af-textarea"></textarea>
           </div>
 
-          <button type="submit" class="ds-btn" [disabled]="!inquiryForm.form.valid || isLoading()"
+          <button type="submit" class="ds-btn af-submit-btn" [disabled]="!inquiryForm.form.valid || isLoading()"
             [style.background-color]="primaryColor"
-            style="border: 0; color: white; padding: 0.85rem 1.5rem; border-radius: 6px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05);"
             [style.opacity]="inquiryForm.form.valid && !isLoading() ? '1' : '0.6'">
             {{ isLoading() ? 'Submitting Inquiry...' : 'Submit Inquiry Form' }}
           </button>
         </form>
       }
     </div>
-  `
+  `,
+  styleUrl: './admissions-form.component.scss'
 })
 export class AdmissionsFormComponent {
   @Input() tenantId!: number;

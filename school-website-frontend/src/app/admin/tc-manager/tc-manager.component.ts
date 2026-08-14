@@ -20,21 +20,22 @@ export interface TransferCertificate {
   selector: 'app-tc-manager',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  styleUrl: './tc-manager.component.scss',
   template: `
-    <div class="ds-card ds-reveal" style="padding: 2rem; margin-bottom: 2rem;">
-      <h2 class="ds-heading" style="font-size: 1.5rem; margin-top: 0; margin-bottom: 0.5rem;">Transfer Certificates <span class="ds-heading-grad">Registry Office</span></h2>
-      <p style="color: #64748b; font-size: 0.9rem; margin-top: 0; margin-bottom: 1.5rem;">Issue and verify legal Transfer Certificates (TC) for students of: <strong style="color: #0f172a;">{{ tenantName }}</strong></p>
+    <div class="ds-card ds-reveal tm-card">
+      <h2 class="ds-heading tm-heading">Transfer Certificates <span class="ds-heading-grad">Registry Office</span></h2>
+      <p class="tm-subtitle">Issue and verify legal Transfer Certificates (TC) for students of: <strong class="tm-tenant-name">{{ tenantName }}</strong></p>
 
       <!-- Tab Selectors: Single Entry vs Bulk Excel Import -->
-      <div style="display: flex; gap: 0.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
+      <div class="tm-tabs">
         <button (click)="managerMode.set('SINGLE')" 
-          style="background: none; border: 0; padding: 0.4rem 0.8rem; font-weight: 700; cursor: pointer; border-bottom: 3px solid transparent; font-size: 0.9rem;"
+          class="tm-tab-btn"
           [style.border-bottom-color]="managerMode() === 'SINGLE' ? '#1e3a8a' : 'transparent'"
           [style.color]="managerMode() === 'SINGLE' ? '#1e3a8a' : '#64748b'">
           👤 Single Entry Form
         </button>
         <button (click)="managerMode.set('BULK')" 
-          style="background: none; border: 0; padding: 0.4rem 0.8rem; font-weight: 700; cursor: pointer; border-bottom: 3px solid transparent; font-size: 0.9rem;"
+          class="tm-tab-btn"
           [style.border-bottom-color]="managerMode() === 'BULK' ? '#1e3a8a' : 'transparent'"
           [style.color]="managerMode() === 'BULK' ? '#1e3a8a' : '#64748b'">
           📋 Bulk Excel / Spreadsheet Importer
@@ -43,35 +44,35 @@ export interface TransferCertificate {
 
       <!-- Issue New TC Form -->
       @if (managerMode() === 'SINGLE') {
-        <form (ngSubmit)="issueTC()" #tcForm="ngForm" style="background: #f8fafc; padding: 1.25rem; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
-          <h3 class="ds-heading" style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1rem;">Issue Official Transfer Certificate</h3>
+        <form (ngSubmit)="issueTC()" #tcForm="ngForm" class="tm-form">
+          <h3 class="ds-heading tm-form-heading">Issue Official Transfer Certificate</h3>
           
-          <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem;">
+          <div class="mobile-grid-1 tm-grid-2">
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Student Full Name</label>
-              <input type="text" name="studentName" [(ngModel)]="newTC.studentName" required placeholder="e.g. Harry Potter" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+              <label class="tm-label">Student Full Name</label>
+              <input type="text" name="studentName" [(ngModel)]="newTC.studentName" required placeholder="e.g. Harry Potter" class="tm-input" />
             </div>
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Admission Number</label>
-              <input type="text" name="admissionNo" [(ngModel)]="newTC.admissionNo" required placeholder="e.g. ADM-901" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
-            </div>
-          </div>
-
-          <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem;">
-            <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Father's Name</label>
-              <input type="text" name="fatherName" [(ngModel)]="newTC.fatherName" required placeholder="e.g. James Potter" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
-            </div>
-            <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Aadhar Card Number</label>
-              <input type="text" name="aadharNo" [(ngModel)]="newTC.aadharNo" required placeholder="e.g. 1234-5678-9012" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+              <label class="tm-label">Admission Number</label>
+              <input type="text" name="admissionNo" [(ngModel)]="newTC.admissionNo" required placeholder="e.g. ADM-901" class="tm-input" />
             </div>
           </div>
 
-          <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+          <div class="mobile-grid-1 tm-grid-2">
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Class Level</label>
-              <select name="classLevel" [(ngModel)]="newTC.classLevel" required style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
+              <label class="tm-label">Father's Name</label>
+              <input type="text" name="fatherName" [(ngModel)]="newTC.fatherName" required placeholder="e.g. James Potter" class="tm-input" />
+            </div>
+            <div>
+              <label class="tm-label">Aadhar Card Number</label>
+              <input type="text" name="aadharNo" [(ngModel)]="newTC.aadharNo" required placeholder="e.g. 1234-5678-9012" class="tm-input" />
+            </div>
+          </div>
+
+          <div class="mobile-grid-1 tm-grid-3">
+            <div>
+              <label class="tm-label">Class Level</label>
+              <select name="classLevel" [(ngModel)]="newTC.classLevel" required class="tm-select">
                 <option value="Pre-Nursery">Pre-Nursery</option>
                 <option value="Nursery">Nursery</option>
                 <option value="LKG">LKG</option>
@@ -91,8 +92,8 @@ export interface TransferCertificate {
               </select>
             </div>
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Section</label>
-              <select name="section" [(ngModel)]="newTC.section" required style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
+              <label class="tm-label">Section</label>
+              <select name="section" [(ngModel)]="newTC.section" required class="tm-select">
                 <option value="A">A</option>
                 <option value="B">B</option>
                 <option value="C">C</option>
@@ -101,13 +102,13 @@ export interface TransferCertificate {
               </select>
             </div>
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">TC Certificate No.</label>
-              <input type="text" name="tcNumber" [(ngModel)]="newTC.tcNumber" required placeholder="e.g. TC-2026-001" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+              <label class="tm-label">TC Certificate No.</label>
+              <input type="text" name="tcNumber" [(ngModel)]="newTC.tcNumber" required placeholder="e.g. TC-2026-001" class="tm-input" />
             </div>
           </div>
 
-          <div style="text-align: right;">
-            <button type="submit" [disabled]="!tcForm.form.valid" class="ds-btn ds-btn-primary" style="font-size: 0.85rem;">
+          <div class="tm-form-actions">
+            <button type="submit" [disabled]="!tcForm.form.valid" class="ds-btn ds-btn-primary tm-submit-btn">
               Issue & Publish Certificate
             </button>
           </div>
@@ -116,31 +117,31 @@ export interface TransferCertificate {
 
       <!-- Mode 2: Bulk Excel / Spreadsheet Importer -->
       @if (managerMode() === 'BULK') {
-        <div style="background: #f8fafc; padding: 1.5rem; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
-          <h3 class="ds-heading" style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.15rem;">Excel / Spreadsheet Copy-Paste Importer</h3>
+        <div class="tm-bulk-panel">
+          <h3 class="ds-heading tm-bulk-heading">Excel / Spreadsheet Copy-Paste Importer</h3>
           
           <!-- Bulk Mode Switcher -->
-          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+          <div class="tm-bulk-switcher">
             <button (click)="bulkUploadMode.set('CLASS'); parseSpreadsheet()" 
               [style.background]="bulkUploadMode() === 'CLASS' ? '#1e3a8a' : 'white'"
               [style.color]="bulkUploadMode() === 'CLASS' ? 'white' : '#475569'"
-              style="border: 1px solid #cbd5e1; padding: 0.4rem 0.8rem; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 0.8rem;">
+              class="tm-bulk-mode-btn">
               🏫 Class-wise Excel Upload
             </button>
             <button (click)="bulkUploadMode.set('SCHOOL'); parseSpreadsheet()" 
               [style.background]="bulkUploadMode() === 'SCHOOL' ? '#1e3a8a' : 'white'"
               [style.color]="bulkUploadMode() === 'SCHOOL' ? 'white' : '#475569'"
-              style="border: 1px solid #cbd5e1; padding: 0.4rem 0.8rem; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 0.8rem;">
+              class="tm-bulk-mode-btn">
               🌐 School-wide Master Excel Upload
             </button>
           </div>
 
           @if (bulkUploadMode() === 'CLASS') {
             <!-- Class Selection dropdowns for bulk -->
-            <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; background: white; padding: 1rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+            <div class="mobile-grid-1 tm-bulk-select-grid">
               <div>
-                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Select Target Class</label>
-                <select name="bulkClass" [(ngModel)]="bulkClass" (change)="parseSpreadsheet()" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white; font-weight: 600;">
+                <label class="tm-label">Select Target Class</label>
+                <select name="bulkClass" [(ngModel)]="bulkClass" (change)="parseSpreadsheet()" class="tm-bulk-select">
                   <option value="Pre-Nursery">Pre-Nursery</option>
                   <option value="Nursery">Nursery</option>
                   <option value="LKG">LKG</option>
@@ -160,8 +161,8 @@ export interface TransferCertificate {
                 </select>
               </div>
               <div>
-                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Select Target Section</label>
-                <select name="bulkSection" [(ngModel)]="bulkSection" (change)="parseSpreadsheet()" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white; font-weight: 600;">
+                <label class="tm-label">Select Target Section</label>
+                <select name="bulkSection" [(ngModel)]="bulkSection" (change)="parseSpreadsheet()" class="tm-bulk-select">
                   <option value="A">A</option>
                   <option value="B">B</option>
                   <option value="C">C</option>
@@ -171,12 +172,12 @@ export interface TransferCertificate {
               </div>
             </div>
 
-            <p style="color: #64748b; font-size: 0.8rem; margin-top: 0; margin-bottom: 1rem;">
+            <p class="tm-format-note">
               <strong>Class-wise Format columns (Tab-separated Excel copy):</strong><br />
               <code>Student Name [Tab] Admission No [Tab] Father Name [Tab] Aadhar No [Tab] TC Number [Tab] Issue Date</code>
             </p>
           } @else {
-            <p style="color: #64748b; font-size: 0.8rem; margin-top: 0; margin-bottom: 1rem;">
+            <p class="tm-format-note">
               <strong>School-wide Format columns (Tab-separated Excel copy):</strong><br />
               <code>Student Name [Tab] Admission No [Tab] Father Name [Tab] Aadhar No [Tab] Class [Tab] Section [Tab] TC Number [Tab] Issue Date</code>
             </p>
@@ -186,46 +187,46 @@ export interface TransferCertificate {
             [placeholder]="bulkUploadMode() === 'CLASS' 
               ? 'Harry Potter\tADM-101\tJames Potter\t1234-5678-9012\tTC-2026-001\t2026-07-20T10:00\nHermione Granger\tADM-102\tMr. Granger\t9876-5432-1098\tTC-2026-002\t2026-07-20T10:00'
               : 'Harry Potter\tADM-101\tJames Potter\t1234-5678-9012\t1st\tA\tTC-2026-001\t2026-07-20T10:00\nHermione Granger\tADM-102\tMr. Granger\t9876-5432-1098\t2nd\tB\tTC-2026-002\t2026-07-20T10:00'"
-            style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-size: 0.85rem; box-sizing: border-box; resize: vertical; margin-bottom: 1rem;">
+            class="tm-textarea">
           </textarea>
 
           <!-- Parsed TC Preview Grid -->
           @if (parsedRows().length > 0) {
-            <div style="margin-top: 1.5rem; border-top: 1px solid #cbd5e1; padding-top: 1rem;">
-              <h4 style="margin-top: 0; margin-bottom: 0.75rem; font-size: 0.95rem; color: #0f172a; font-weight: 700;">📋 Parsed Verification Grid ({{ parsedRows().length }} rows)</h4>
+            <div class="tm-preview-section">
+              <h4 class="tm-preview-heading">📋 Parsed Verification Grid ({{ parsedRows().length }} rows)</h4>
               
-              <div class="table-responsive-wrapper" style="background: white; margin-bottom: 1.25rem;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left;">
+              <div class="table-responsive-wrapper tm-preview-table-wrapper">
+                <table class="tm-preview-table">
                   <thead>
-                    <tr style="background: #f1f5f9; border-bottom: 1px solid #cbd5e1; color: #475569; font-weight: 700;">
-                      <th style="padding: 0.5rem 0.75rem;">Student Name</th>
-                      <th style="padding: 0.5rem 0.75rem;">Admission No</th>
-                      <th style="padding: 0.5rem 0.75rem;">Father\'s Name</th>
-                      <th style="padding: 0.5rem 0.75rem;">Class (Section)</th>
-                      <th style="padding: 0.5rem 0.75rem;">TC No</th>
-                      <th style="padding: 0.5rem 0.75rem;">Issue Date</th>
+                    <tr class="tm-preview-thead-row">
+                      <th class="tm-preview-th">Student Name</th>
+                      <th class="tm-preview-th">Admission No</th>
+                      <th class="tm-preview-th">Father\'s Name</th>
+                      <th class="tm-preview-th">Class (Section)</th>
+                      <th class="tm-preview-th">TC No</th>
+                      <th class="tm-preview-th">Issue Date</th>
                     </tr>
                   </thead>
                   <tbody>
                     @for (row of parsedRows(); track $index) {
-                      <tr style="border-bottom: 1px solid #e2e8f0;">
-                        <td style="padding: 0.5rem 0.75rem; font-weight: 700;">{{ row.studentName }}</td>
-                        <td style="padding: 0.5rem 0.75rem;">{{ row.admissionNo }}</td>
-                        <td style="padding: 0.5rem 0.75rem;">{{ row.fatherName }}</td>
-                        <td style="padding: 0.5rem 0.75rem; color: #64748b;">{{ row.classLevel }} (Section {{ row.section }})</td>
-                        <td style="padding: 0.5rem 0.75rem; font-weight: 700; color: #1e3a8a;">{{ row.tcNumber }}</td>
-                        <td style="padding: 0.5rem 0.75rem;">{{ row.issueDate | date:\'mediumDate\' }}</td>
+                      <tr class="tm-preview-body-row">
+                        <td class="tm-preview-td-bold">{{ row.studentName }}</td>
+                        <td class="tm-preview-td">{{ row.admissionNo }}</td>
+                        <td class="tm-preview-td">{{ row.fatherName }}</td>
+                        <td class="tm-preview-td-muted">{{ row.classLevel }} (Section {{ row.section }})</td>
+                        <td class="tm-preview-td-tc">{{ row.tcNumber }}</td>
+                        <td class="tm-preview-td">{{ row.issueDate | date:\'mediumDate\' }}</td>
                       </tr>
                     }
                   </tbody>
                 </table>
               </div>
 
-              <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-                <button (click)="clearParsed()" class="ds-btn ds-btn-ghost" style="font-size: 0.85rem;">
+              <div class="tm-preview-actions">
+                <button (click)="clearParsed()" class="ds-btn ds-btn-ghost tm-btn-sm">
                   Clear All
                 </button>
-                <button (click)="importParsedRows()" [disabled]="isImporting()" class="ds-btn ds-btn-success" style="font-size: 0.85rem;">
+                <button (click)="importParsedRows()" [disabled]="isImporting()" class="ds-btn ds-btn-success tm-btn-sm">
                   @if (isImporting()) { <span class="ds-spinner"></span> Importing ledger... } @else { Confirm Bulk Import to Database }
                 </button>
               </div>
@@ -235,36 +236,36 @@ export interface TransferCertificate {
       }
 
       <!-- Issued TCs list -->
-      <h3 class="ds-heading" style="margin-bottom: 0.75rem; font-size: 1.2rem;">Issued Transfer Certificates</h3>
+      <h3 class="ds-heading tm-list-heading">Issued Transfer Certificates</h3>
       @if (certificates().length === 0) {
-        <p style="color: #64748b; font-style: italic;">No Transfer Certificates issued currently.</p>
+        <p class="tm-empty-note">No Transfer Certificates issued currently.</p>
       } @else {
-        <div style="overflow-x: auto; border: 1px solid #cbd5e1; border-radius: 6px;">
-          <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left;">
+        <div class="tm-list-scroll">
+          <table class="tm-list-table">
             <thead>
-              <tr style="background: #f1f5f9; border-bottom: 1px solid #cbd5e1; color: #475569; font-weight: 600;">
-                <th style="padding: 0.75rem 1rem;">TC Ref ID</th>
-                <th style="padding: 0.75rem 1rem;">Student Details</th>
-                <th style="padding: 0.75rem 1rem;">Parents / Aadhar</th>
-                <th style="padding: 0.75rem 1rem;">Issue Date</th>
-                <th style="padding: 0.75rem 1rem; text-align: right;">Actions</th>
+              <tr class="tm-list-thead-row">
+                <th class="tm-list-th">TC Ref ID</th>
+                <th class="tm-list-th">Student Details</th>
+                <th class="tm-list-th">Parents / Aadhar</th>
+                <th class="tm-list-th">Issue Date</th>
+                <th class="tm-list-th-right">Actions</th>
               </tr>
             </thead>
             <tbody>
               @for (tc of certificates(); track tc.id) {
-                <tr style="border-bottom: 1px solid #e2e8f0; hover: background-color: #f8fafc;">
-                  <td style="padding: 0.75rem 1rem; font-weight: 700; color: #1e3a8a;">{{ tc.tcNumber }}</td>
-                  <td style="padding: 0.75rem 1rem;">
-                    <strong style="color: #0f172a; display: block;">{{ tc.studentName }}</strong>
-                    <span style="font-size: 0.75rem; color: #64748b;">Adm No: {{ tc.admissionNo }} • {{ tc.classLevel }} [{{ tc.section }}]</span>
+                <tr class="tm-list-body-row">
+                  <td class="tm-list-td-tc">{{ tc.tcNumber }}</td>
+                  <td class="tm-list-td">
+                    <strong class="tm-student-name">{{ tc.studentName }}</strong>
+                    <span class="tm-student-sub">Adm No: {{ tc.admissionNo }} • {{ tc.classLevel }} [{{ tc.section }}]</span>
                   </td>
-                  <td style="padding: 0.75rem 1rem; color: #475569;">
-                    <span style="display: block;">Father: <strong>{{ tc.fatherName }}</strong></span>
-                    <span style="font-size: 0.75rem; color: #64748b;">Aadhar: {{ tc.aadharNo }}</span>
+                  <td class="tm-list-td-parents">
+                    <span class="tm-parent-line">Father: <strong>{{ tc.fatherName }}</strong></span>
+                    <span class="tm-aadhar-sub">Aadhar: {{ tc.aadharNo }}</span>
                   </td>
-                  <td style="padding: 0.75rem 1rem; color: #64748b;">{{ tc.issueDate | date:'mediumDate' }}</td>
-                  <td style="padding: 0.75rem 1rem; text-align: right;">
-                    <button (click)="deleteTC(tc.id!)" class="ds-btn ds-btn-danger" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">
+                  <td class="tm-list-td-muted">{{ tc.issueDate | date:'mediumDate' }}</td>
+                  <td class="tm-list-td-actions">
+                    <button (click)="deleteTC(tc.id!)" class="ds-btn ds-btn-danger tm-delete-btn">
                       🗑️ Delete
                     </button>
                   </td>

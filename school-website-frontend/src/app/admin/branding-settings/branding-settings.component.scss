@@ -1,0 +1,6 @@
+    :host { display: block; max-width: 100%; }
+    :host ::ng-deep select,
+    :host ::ng-deep input,
+    :host ::ng-deep textarea { max-width: 100%; min-width: 0; box-sizing: border-box; }
+    /* Long option labels must not make a select exceed its cell */
+    :host ::ng-deep select { width: 100%; text-overflow: ellipsis; }

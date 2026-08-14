@@ -1,0 +1,24 @@
+    :host { display: block; max-width: 100%; }
+    :host ::ng-deep select,
+    :host ::ng-deep input,
+    :host ::ng-deep textarea { max-width: 100%; min-width: 0; box-sizing: border-box; }
+    /* Long option labels must not force a select wider than its container */
+    :host ::ng-deep select { width: 100%; text-overflow: ellipsis; }
+
+    @media (max-width: 820px) {
+      .pb-page-row {
+        grid-template-columns: 1fr !important;
+        gap: 1.25rem !important;
+      }
+      .pb-create-form {
+        flex-wrap: wrap;
+      }
+      .pb-create-form input,
+      .pb-create-form button {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+      }
+      .pb-slug-input {
+        flex: 1 1 100% !important;
+      }
+    }

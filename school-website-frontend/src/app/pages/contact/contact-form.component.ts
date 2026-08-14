@@ -8,63 +8,63 @@ import { HttpClient } from '@angular/common/http';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="ds-card ds-reveal" style="padding: 2rem; max-width: 750px; margin: 2rem auto;">
-      <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 1.5rem; font-weight: 800; margin-top: 0; margin-bottom: 0.5rem; text-align: center; transition: color 0.3s;">
+    <div class="ds-card ds-reveal cf-card">
+      <h3 [style.color]="primaryColor" class="ds-heading cf-heading">
         Send Message to School Office
       </h3>
-      <p style="color: #64748b; font-size: 0.9rem; text-align: center; margin-bottom: 1.5rem;">
+      <p class="cf-subtitle">
         Have questions about courses, term dates, or transport services? Drop us a line.
       </p>
 
       @if (successMessage()) {
-        <div class="ds-alert ds-alert-success" style="flex-direction: column; padding: 1.25rem; margin-bottom: 1.5rem; text-align: center;">
-          <div style="font-size: 2rem; margin-bottom: 0.5rem;">✉️</div>
-          <strong style="display: block; font-size: 1.1rem; margin-bottom: 0.25rem;">Message Sent!</strong>
-          <span style="font-size: 0.9rem;">{{ successMessage() }}</span>
+        <div class="ds-alert ds-alert-success cf-alert-success">
+          <div class="cf-success-icon">✉️</div>
+          <strong class="cf-success-title">Message Sent!</strong>
+          <span class="cf-success-text">{{ successMessage() }}</span>
         </div>
       } @else {
         @if (errorMessage()) {
-          <div class="ds-alert ds-alert-error ds-shake" style="margin-bottom: 1.5rem;">
+          <div class="ds-alert ds-alert-error ds-shake cf-alert-error">
             <strong>Error:</strong> {{ errorMessage() }}
           </div>
         }
 
-        <form (ngSubmit)="onSubmit()" #contactForm="ngForm" style="display: flex; flex-direction: column; gap: 1.25rem;">
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <form (ngSubmit)="onSubmit()" #contactForm="ngForm" class="cf-form">
+          <div class="cf-grid">
             <div>
-              <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Your Full Name</label>
+              <label class="cf-label">Your Full Name</label>
               <input type="text" name="senderName" [(ngModel)]="form.senderName" required placeholder="e.g. Mary Jane"
-                style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 0.95rem;" />
+                class="cf-input" />
             </div>
             <div>
-              <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Your Email Address</label>
+              <label class="cf-label">Your Email Address</label>
               <input type="email" name="senderEmail" [(ngModel)]="form.senderEmail" required email placeholder="e.g. mary@mail.com"
-                style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 0.95rem;" />
+                class="cf-input" />
             </div>
           </div>
 
           <div>
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Subject</label>
+            <label class="cf-label">Subject</label>
             <input type="text" name="subject" [(ngModel)]="form.subject" required placeholder="e.g. Transfer certificate inquiry"
-              style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 0.95rem;" />
+              class="cf-input" />
           </div>
 
           <div>
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Message Detail</label>
+            <label class="cf-label">Message Detail</label>
             <textarea name="message" [(ngModel)]="form.message" rows="4" required placeholder="Type your query in detail..."
-              style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 0.95rem; resize: vertical;"></textarea>
+              class="cf-textarea"></textarea>
           </div>
 
-          <button type="submit" class="ds-btn" [disabled]="!contactForm.form.valid || isLoading()"
+          <button type="submit" class="ds-btn cf-submit" [disabled]="!contactForm.form.valid || isLoading()"
             [style.background-color]="primaryColor"
-            style="border: 0; color: white; padding: 0.85rem 1.5rem; border-radius: 6px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05);"
             [style.opacity]="contactForm.form.valid && !isLoading() ? '1' : '0.6'">
             {{ isLoading() ? 'Sending message...' : 'Send Inquiry Message' }}
           </button>
         </form>
       }
     </div>
-  `
+  `,
+  styleUrl: './contact-form.component.scss'
 })
 export class ContactFormComponent {
   @Input() tenantId!: number;

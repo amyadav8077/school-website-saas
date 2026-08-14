@@ -22,20 +22,20 @@ export interface StudentGrade {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="ds-card ds-reveal" style="padding: 2rem; margin-bottom: 2rem;">
-      <h2 class="ds-heading" style="font-size: 1.5rem; margin-top: 0; margin-bottom: 0.5rem;">Academic Gradebook & <span class="ds-heading-grad">Marks Manager</span></h2>
-      <p style="color: #64748b; font-size: 0.9rem; margin-top: 0; margin-bottom: 1.5rem;">Input assessment scores and teacher remarks for students of: <strong style="color: #0f172a;">{{ tenantName }}</strong></p>
+    <div class="ds-card ds-reveal gm-card">
+      <h2 class="ds-heading gm-heading">Academic Gradebook & <span class="ds-heading-grad">Marks Manager</span></h2>
+      <p class="gm-intro-text">Input assessment scores and teacher remarks for students of: <strong class="gm-strong-dark">{{ tenantName }}</strong></p>
 
       <!-- Tab Selectors: Single Entry vs Bulk Excel Import -->
-      <div style="display: flex; gap: 0.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
+      <div class="gm-tab-bar">
         <button (click)="managerMode.set('SINGLE')" 
-          style="background: none; border: 0; padding: 0.4rem 0.8rem; font-weight: 700; cursor: pointer; border-bottom: 3px solid transparent; font-size: 0.9rem;"
+          class="gm-tab-btn"
           [style.border-bottom-color]="managerMode() === 'SINGLE' ? '#1e3a8a' : 'transparent'"
           [style.color]="managerMode() === 'SINGLE' ? '#1e3a8a' : '#64748b'">
           👤 Single Entry Form
         </button>
         <button (click)="managerMode.set('BULK')" 
-          style="background: none; border: 0; padding: 0.4rem 0.8rem; font-weight: 700; cursor: pointer; border-bottom: 3px solid transparent; font-size: 0.9rem;"
+          class="gm-tab-btn"
           [style.border-bottom-color]="managerMode() === 'BULK' ? '#1e3a8a' : 'transparent'"
           [style.color]="managerMode() === 'BULK' ? '#1e3a8a' : '#64748b'">
           📋 Bulk Excel / Spreadsheet Importer
@@ -44,34 +44,34 @@ export interface StudentGrade {
 
       <!-- Mode 1: Single Score Entry Form -->
       @if (managerMode() === 'SINGLE') {
-        <form (ngSubmit)="addGradeRecord()" #gradeForm="ngForm" style="background: #f8fafc; padding: 1.25rem; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
+        <form (ngSubmit)="addGradeRecord()" #gradeForm="ngForm" class="gm-form">
           
-          <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem;">
+          <div class="mobile-grid-1 gm-grid-2col">
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Student Name</label>
-              <input type="text" name="studentName" [(ngModel)]="newGrade.studentName" required placeholder="e.g. John Doe" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+              <label class="gm-label">Student Name</label>
+              <input type="text" name="studentName" [(ngModel)]="newGrade.studentName" required placeholder="e.g. John Doe" class="gm-input" />
             </div>
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Admission Number</label>
-              <input type="text" name="admissionNo" [(ngModel)]="newGrade.admissionNo" required placeholder="e.g. ADM-101" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
-            </div>
-          </div>
-
-          <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem;">
-            <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Father's Name</label>
-              <input type="text" name="fatherName" [(ngModel)]="newGrade.fatherName" required placeholder="e.g. Richard Doe" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
-            </div>
-            <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Aadhar Card Number</label>
-              <input type="text" name="aadharNo" [(ngModel)]="newGrade.aadharNo" required placeholder="e.g. 1234-5678-9012" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+              <label class="gm-label">Admission Number</label>
+              <input type="text" name="admissionNo" [(ngModel)]="newGrade.admissionNo" required placeholder="e.g. ADM-101" class="gm-input" />
             </div>
           </div>
 
-          <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 1rem;">
+          <div class="mobile-grid-1 gm-grid-2col">
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Class Level</label>
-              <select name="classLevel" [(ngModel)]="newGrade.classLevel" required style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
+              <label class="gm-label">Father's Name</label>
+              <input type="text" name="fatherName" [(ngModel)]="newGrade.fatherName" required placeholder="e.g. Richard Doe" class="gm-input" />
+            </div>
+            <div>
+              <label class="gm-label">Aadhar Card Number</label>
+              <input type="text" name="aadharNo" [(ngModel)]="newGrade.aadharNo" required placeholder="e.g. 1234-5678-9012" class="gm-input" />
+            </div>
+          </div>
+
+          <div class="mobile-grid-1 gm-grid-3col">
+            <div>
+              <label class="gm-label">Class Level</label>
+              <select name="classLevel" [(ngModel)]="newGrade.classLevel" required class="gm-select">
                 <option value="Pre-Nursery">Pre-Nursery</option>
                 <option value="Nursery">Nursery</option>
                 <option value="LKG">LKG</option>
@@ -91,8 +91,8 @@ export interface StudentGrade {
               </select>
             </div>
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Section</label>
-              <select name="section" [(ngModel)]="newGrade.section" required style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
+              <label class="gm-label">Section</label>
+              <select name="section" [(ngModel)]="newGrade.section" required class="gm-select">
                 <option value="A">A</option>
                 <option value="B">B</option>
                 <option value="C">C</option>
@@ -101,8 +101,8 @@ export interface StudentGrade {
               </select>
             </div>
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Subject</label>
-              <select name="subjectName" [(ngModel)]="newGrade.subjectName" required style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
+              <label class="gm-label">Subject</label>
+              <select name="subjectName" [(ngModel)]="newGrade.subjectName" required class="gm-select">
                 <option value="Mathematics">Mathematics</option>
                 <option value="Science & Physics">Science & Physics</option>
                 <option value="English Literature">English Literature</option>
@@ -112,28 +112,28 @@ export interface StudentGrade {
             </div>
           </div>
 
-          <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="mobile-grid-1 gm-grid-2eq">
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Academic Term</label>
-              <select name="term" [(ngModel)]="newGrade.term" required style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
+              <label class="gm-label">Academic Term</label>
+              <select name="term" [(ngModel)]="newGrade.term" required class="gm-select">
                 <option value="Term 1 Midterm">Term 1 Midterm</option>
                 <option value="Term 1 End-Term">Term 1 End-Term</option>
                 <option value="Annual Term End">Annual Term End</option>
               </select>
             </div>
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Score / Grade (e.g. A+, 95%)</label>
-              <input type="text" name="grade" [(ngModel)]="newGrade.grade" required placeholder="e.g. 95% or A" style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+              <label class="gm-label">Score / Grade (e.g. A+, 95%)</label>
+              <input type="text" name="grade" [(ngModel)]="newGrade.grade" required placeholder="e.g. 95% or A" class="gm-input" />
             </div>
           </div>
 
           <div>
-            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.35rem;">Teacher Remarks</label>
-            <input type="text" name="remarks" [(ngModel)]="newGrade.remarks" placeholder="e.g. Shows exceptional logical clarity in projects." style="width: 100%; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" />
+            <label class="gm-label">Teacher Remarks</label>
+            <input type="text" name="remarks" [(ngModel)]="newGrade.remarks" placeholder="e.g. Shows exceptional logical clarity in projects." class="gm-input" />
           </div>
 
-          <div style="text-align: right;">
-            <button type="submit" [disabled]="!gradeForm.form.valid" class="ds-btn ds-btn-primary" style="font-size: 0.85rem;">
+          <div class="gm-form-actions">
+            <button type="submit" [disabled]="!gradeForm.form.valid" class="ds-btn ds-btn-primary gm-btn-sm">
               Record Score Entry
             </button>
           </div>
@@ -142,31 +142,31 @@ export interface StudentGrade {
 
       <!-- Mode 2: Bulk Excel / Spreadsheet Importer -->
       @if (managerMode() === 'BULK') {
-        <div style="background: #f8fafc; padding: 1.5rem; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
-          <h3 class="ds-heading" style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.15rem;">Excel / Spreadsheet Copy-Paste Importer</h3>
+        <div class="gm-bulk-panel">
+          <h3 class="ds-heading gm-bulk-heading">Excel / Spreadsheet Copy-Paste Importer</h3>
           
           <!-- Bulk Mode Switcher -->
-          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+          <div class="gm-bulk-mode-switcher">
             <button (click)="bulkUploadMode.set('CLASS'); parseSpreadsheet()" 
               [style.background]="bulkUploadMode() === 'CLASS' ? '#1e3a8a' : 'white'"
               [style.color]="bulkUploadMode() === 'CLASS' ? 'white' : '#475569'"
-              style="border: 1px solid #cbd5e1; padding: 0.4rem 0.8rem; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 0.8rem;">
+              class="gm-bulk-mode-btn">
               🏫 Class-wise Excel Upload
             </button>
             <button (click)="bulkUploadMode.set('SCHOOL'); parseSpreadsheet()" 
               [style.background]="bulkUploadMode() === 'SCHOOL' ? '#1e3a8a' : 'white'"
               [style.color]="bulkUploadMode() === 'SCHOOL' ? 'white' : '#475569'"
-              style="border: 1px solid #cbd5e1; padding: 0.4rem 0.8rem; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 0.8rem;">
+              class="gm-bulk-mode-btn">
               🌐 School-wide Master Excel Upload
             </button>
           </div>
 
           @if (bulkUploadMode() === 'CLASS') {
             <!-- Class Selection dropdowns for bulk -->
-            <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; background: white; padding: 1rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+            <div class="mobile-grid-1 gm-bulk-select-grid">
               <div>
-                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Select Target Class</label>
-                <select name="bulkClass" [(ngModel)]="bulkClass" (change)="parseSpreadsheet()" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white; font-weight: 600;">
+                <label class="gm-bulk-label">Select Target Class</label>
+                <select name="bulkClass" [(ngModel)]="bulkClass" (change)="parseSpreadsheet()" class="gm-bulk-select">
                   <option value="Pre-Nursery">Pre-Nursery</option>
                   <option value="Nursery">Nursery</option>
                   <option value="LKG">LKG</option>
@@ -186,8 +186,8 @@ export interface StudentGrade {
                 </select>
               </div>
               <div>
-                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">Select Target Section</label>
-                <select name="bulkSection" [(ngModel)]="bulkSection" (change)="parseSpreadsheet()" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white; font-weight: 600;">
+                <label class="gm-bulk-label">Select Target Section</label>
+                <select name="bulkSection" [(ngModel)]="bulkSection" (change)="parseSpreadsheet()" class="gm-bulk-select">
                   <option value="A">A</option>
                   <option value="B">B</option>
                   <option value="C">C</option>
@@ -197,12 +197,12 @@ export interface StudentGrade {
               </div>
             </div>
 
-            <p style="color: #64748b; font-size: 0.8rem; margin-top: 0; margin-bottom: 1rem;">
+            <p class="gm-format-note">
               <strong>Class-wise Format columns (Tab-separated Excel copy):</strong><br />
               <code>Student Name [Tab] Admission No [Tab] Father Name [Tab] Aadhar No [Tab] Subject [Tab] Term [Tab] Grade [Tab] Remarks</code>
             </p>
           } @else {
-            <p style="color: #64748b; font-size: 0.8rem; margin-top: 0; margin-bottom: 1rem;">
+            <p class="gm-format-note">
               <strong>School-wide Format columns (Tab-separated Excel copy):</strong><br />
               <code>Student Name [Tab] Admission No [Tab] Father Name [Tab] Aadhar No [Tab] Class [Tab] Section [Tab] Subject [Tab] Term [Tab] Grade [Tab] Remarks</code>
             </p>
@@ -212,50 +212,50 @@ export interface StudentGrade {
             [placeholder]="bulkUploadMode() === 'CLASS' 
               ? 'John Doe&#9;ADM-101&#9;Richard Doe&#9;1234-5678-9012&#9;Mathematics&#9;Term 1 Midterm&#9;95%&#9;Excellent problem-solving&#10;Jane Smith&#9;ADM-102&#9;Robert Smith&#9;9876-5432-1098&#9;Science & Physics&#9;Term 1 Midterm&#9;88%&#9;Very attentive'
               : 'John Doe&#9;ADM-101&#9;Richard Doe&#9;1234-5678-9012&#9;1st&#9;A&#9;Mathematics&#9;Term 1 Midterm&#9;95%&#9;Excellent problem-solving&#10;Jane Smith&#9;ADM-102&#9;Robert Smith&#9;9876-5432-1098&#9;2nd&#9;B&#9;Science & Physics&#9;Term 1 Midterm&#9;88%&#9;Very attentive'"
-            style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-size: 0.85rem; box-sizing: border-box; resize: vertical; margin-bottom: 1rem;">
+            class="gm-textarea">
           </textarea>
 
-          <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-            <button (click)="parseSpreadsheet()" [disabled]="!pasteAreaText.trim()" class="ds-btn ds-btn-primary" style="font-size: 0.85rem;">
+          <div class="gm-actions-end">
+            <button (click)="parseSpreadsheet()" [disabled]="!pasteAreaText.trim()" class="ds-btn ds-btn-primary gm-btn-sm">
               Parse & Preview Rows
             </button>
           </div>
 
           <!-- Parsed Preview Grid -->
           @if (parsedRows().length > 0) {
-            <div style="margin-top: 1.5rem; border-top: 1px solid #cbd5e1; padding-top: 1rem;">
-              <h4 style="margin-top: 0; margin-bottom: 0.75rem; font-size: 0.95rem; color: #0f172a; font-weight: 700;">📋 Parsed Verification Grid ({{ parsedRows().length }} rows)</h4>
+            <div class="gm-preview-wrap">
+              <h4 class="gm-preview-title">📋 Parsed Verification Grid ({{ parsedRows().length }} rows)</h4>
               
-              <div style="overflow-x: auto; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 1.25rem; background: white;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left;">
+              <div class="gm-table-scroll">
+                <table class="gm-preview-table">
                   <thead>
-                    <tr style="background: #f1f5f9; border-bottom: 1px solid #cbd5e1; color: #475569; font-weight: 700;">
-                      <th style="padding: 0.5rem 0.75rem;">Student Name</th>
-                      <th style="padding: 0.5rem 0.75rem;">Subject</th>
-                      <th style="padding: 0.5rem 0.75rem;">Term</th>
-                      <th style="padding: 0.5rem 0.75rem;">Grade</th>
-                      <th style="padding: 0.5rem 0.75rem;">Remarks</th>
+                    <tr class="gm-preview-thead-row">
+                      <th class="gm-th-sm">Student Name</th>
+                      <th class="gm-th-sm">Subject</th>
+                      <th class="gm-th-sm">Term</th>
+                      <th class="gm-th-sm">Grade</th>
+                      <th class="gm-th-sm">Remarks</th>
                     </tr>
                   </thead>
                   <tbody>
                     @for (row of parsedRows(); track $index) {
-                      <tr style="border-bottom: 1px solid #e2e8f0;">
-                        <td style="padding: 0.5rem 0.75rem; font-weight: 700;">{{ row.studentName }}</td>
-                        <td style="padding: 0.5rem 0.75rem;">{{ row.subjectName }}</td>
-                        <td style="padding: 0.5rem 0.75rem; color: #64748b;">{{ row.term }}</td>
-                        <td style="padding: 0.5rem 0.75rem; font-weight: 700; color: #1e3a8a;">{{ row.grade }}</td>
-                        <td style="padding: 0.5rem 0.75rem; color: #475569; font-style: italic;">{{ row.remarks }}</td>
+                      <tr class="gm-tr-divider">
+                        <td class="gm-td-sm-bold">{{ row.studentName }}</td>
+                        <td class="gm-td-sm">{{ row.subjectName }}</td>
+                        <td class="gm-td-sm-muted">{{ row.term }}</td>
+                        <td class="gm-td-sm-grade">{{ row.grade }}</td>
+                        <td class="gm-td-sm-remarks">{{ row.remarks }}</td>
                       </tr>
                     }
                   </tbody>
                 </table>
               </div>
 
-              <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-                <button (click)="clearParsed()" class="ds-btn ds-btn-ghost" style="font-size: 0.85rem;">
+              <div class="gm-actions-end">
+                <button (click)="clearParsed()" class="ds-btn ds-btn-ghost gm-btn-sm">
                   Clear All
                 </button>
-                <button (click)="importParsedRows()" [disabled]="isImporting()" class="ds-btn ds-btn-success" style="font-size: 0.85rem;">
+                <button (click)="importParsedRows()" [disabled]="isImporting()" class="ds-btn ds-btn-success gm-btn-sm">
                   @if (isImporting()) { <span class="ds-spinner"></span> Importing ledger... } @else { Confirm Bulk Import to Database }
                 </button>
               </div>
@@ -265,39 +265,39 @@ export interface StudentGrade {
       }
 
       <!-- Grade Records List -->
-      <h3 class="ds-heading" style="margin-bottom: 0.75rem; font-size: 1.2rem;">All Logged Grades</h3>
+      <h3 class="ds-heading gm-list-heading">All Logged Grades</h3>
       @if (grades().length === 0) {
-        <p style="color: #64748b; font-style: italic;">No gradebook entries recorded yet.</p>
+        <p class="gm-empty-note">No gradebook entries recorded yet.</p>
       } @else {
-        <div style="overflow-x: auto; border: 1px solid #cbd5e1; border-radius: 6px;">
-          <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left;">
+        <div class="gm-list-scroll">
+          <table class="gm-list-table">
             <thead>
-              <tr style="background: #f1f5f9; border-bottom: 1px solid #cbd5e1; color: #475569; font-weight: 600;">
-                <th style="padding: 0.75rem 1rem;">Student Details</th>
-                <th style="padding: 0.75rem 1rem;">Subject</th>
-                <th style="padding: 0.75rem 1rem;">Term</th>
-                <th style="padding: 0.75rem 1rem;">Score / Grade</th>
-                <th style="padding: 0.75rem 1rem;">Teacher Remarks</th>
-                <th style="padding: 0.75rem 1rem; text-align: right;">Actions</th>
+              <tr class="gm-list-thead-row">
+                <th class="gm-th-lg">Student Details</th>
+                <th class="gm-th-lg">Subject</th>
+                <th class="gm-th-lg">Term</th>
+                <th class="gm-th-lg">Score / Grade</th>
+                <th class="gm-th-lg">Teacher Remarks</th>
+                <th class="gm-th-lg-right">Actions</th>
               </tr>
             </thead>
             <tbody>
               @for (g of grades(); track g.id) {
-                <tr style="border-bottom: 1px solid #e2e8f0; hover: background-color: #f8fafc;">
-                  <td style="padding: 0.75rem 1rem; color: #0f172a;">
-                    <strong style="display: block; font-weight: 700;">{{ g.studentName }}</strong>
+                <tr class="gm-list-tr">
+                  <td class="gm-td-lg-dark">
+                    <strong class="gm-student-name">{{ g.studentName }}</strong>
                     @if (g.classLevel || g.section || g.admissionNo) {
-                      <span style="font-size: 0.75rem; color: #64748b; display: block; margin-top: 0.15rem;">
+                      <span class="gm-student-meta">
                         {{ g.classLevel || '-' }} (Section {{ g.section || '-' }}) • Adm No: {{ g.admissionNo || '-' }}
                       </span>
                     }
                   </td>
-                  <td style="padding: 0.75rem 1rem; color: #475569;">{{ g.subjectName }}</td>
-                  <td style="padding: 0.75rem 1rem; color: #64748b;">{{ g.term }}</td>
-                  <td style="padding: 0.75rem 1rem; font-weight: 700; color: #1e3a8a;">{{ g.grade }}</td>
-                  <td style="padding: 0.75rem 1rem; color: #475569; max-width: 200px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">{{ g.remarks || 'No remarks recorded.' }}</td>
-                  <td style="padding: 0.75rem 1rem; text-align: right;">
-                    <button (click)="deleteGradeRecord(g.id!)" class="ds-btn ds-btn-danger" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">
+                  <td class="gm-td-lg-subject">{{ g.subjectName }}</td>
+                  <td class="gm-td-lg-term">{{ g.term }}</td>
+                  <td class="gm-td-lg-grade">{{ g.grade }}</td>
+                  <td class="gm-td-lg-remarks">{{ g.remarks || 'No remarks recorded.' }}</td>
+                  <td class="gm-td-lg-actions">
+                    <button (click)="deleteGradeRecord(g.id!)" class="ds-btn ds-btn-danger gm-delete-btn">
                       🗑️ Delete
                     </button>
                   </td>
@@ -308,7 +308,8 @@ export interface StudentGrade {
         </div>
       }
     </div>
-  `
+  `,
+  styleUrl: './gradebook-manager.component.scss'
 })
 export class GradebookManagerComponent implements OnChanges {
   @Input() tenantId!: number;

@@ -1,0 +1,157 @@
+.am-card {
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.am-title {
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.am-subtitle {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.am-tenant-name {
+  color: #0f172a;
+}
+
+.am-empty-state {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  padding: 3rem;
+  text-align: center;
+  border-radius: 8px;
+  color: #64748b;
+}
+
+.am-empty-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.am-empty-primary {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.am-empty-secondary {
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.am-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+}
+
+.am-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.am-table-head-row {
+  background: #f1f5f9;
+  border-bottom: 1px solid #cbd5e1;
+  color: #475569;
+  font-weight: 600;
+}
+
+.am-th {
+  padding: 1rem;
+}
+
+.am-th-actions {
+  padding: 1rem;
+  text-align: right;
+}
+
+.am-body-row {
+  border-bottom: 1px solid #e2e8f0;
+  /* original inline (invalid, browser-ignored): hover: background-color: #f8fafc; */
+}
+
+.am-td {
+  padding: 1rem;
+}
+
+.am-td-ref {
+  padding: 1rem;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.am-student-name {
+  display: block;
+  color: #0f172a;
+}
+
+.am-student-grade {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.am-parent-name {
+  display: block;
+  color: #0f172a;
+  font-weight: 500;
+}
+
+.am-parent-contact {
+  font-size: 0.8rem;
+  color: #64748b;
+  display: block;
+}
+
+.am-td-notes {
+  padding: 1rem;
+  max-width: 150px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.am-td-actions {
+  padding: 1rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.am-actions-group {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: flex-end;
+}
+
+.am-chip-pending {
+  background: #ffedd5;
+  color: #b45309;
+}
+
+.am-chip-reviewed {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.am-chip-approved {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.am-chip-rejected {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.am-action-btn {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.8rem;
+}

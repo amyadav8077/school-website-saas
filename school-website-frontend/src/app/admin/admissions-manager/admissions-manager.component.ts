@@ -19,64 +19,64 @@ export interface AdmissionInquiry {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="ds-card ds-reveal" style="padding: 2rem; margin-bottom: 2rem;">
-      <h2 class="ds-heading" style="font-size: 1.5rem; margin-top: 0; margin-bottom: 0.5rem;">Admissions Inquiries <span class="ds-heading-grad">Pipeline</span></h2>
-      <p style="color: #64748b; font-size: 0.9rem; margin-top: 0; margin-bottom: 1.5rem;">Review and process candidate registrations for: <strong style="color: #0f172a;">{{ tenantName }}</strong></p>
+    <div class="ds-card ds-reveal am-card">
+      <h2 class="ds-heading am-title">Admissions Inquiries <span class="ds-heading-grad">Pipeline</span></h2>
+      <p class="am-subtitle">Review and process candidate registrations for: <strong class="am-tenant-name">{{ tenantName }}</strong></p>
 
       @if (inquiries().length === 0) {
-        <div style="background: #f8fafc; border: 1px dashed #cbd5e1; padding: 3rem; text-align: center; border-radius: 8px; color: #64748b;">
-          <span style="font-size: 2.5rem; display: block; margin-bottom: 1rem;">📬</span>
-          <p style="font-size: 1rem; margin: 0;">No admissions inquiries received yet.</p>
-          <p style="font-size: 0.85rem; margin-top: 0.25rem;">Use the simulated portal below to submit a public inquiry. It will show up here instantly!</p>
+        <div class="am-empty-state">
+          <span class="am-empty-icon">📬</span>
+          <p class="am-empty-primary">No admissions inquiries received yet.</p>
+          <p class="am-empty-secondary">Use the simulated portal below to submit a public inquiry. It will show up here instantly!</p>
         </div>
       } @else {
-        <div style="overflow-x: auto; border: 1px solid #cbd5e1; border-radius: 6px;">
-          <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left;">
+        <div class="am-table-wrapper">
+          <table class="am-table">
             <thead>
-              <tr style="background: #f1f5f9; border-bottom: 1px solid #cbd5e1; color: #475569; font-weight: 600;">
-                <th style="padding: 1rem;">Ref ID</th>
-                <th style="padding: 1rem;">Student Details</th>
-                <th style="padding: 1rem;">Parent Details</th>
-                <th style="padding: 1rem;">Notes</th>
-                <th style="padding: 1rem;">Pipeline Status</th>
-                <th style="padding: 1rem; text-align: right;">Actions</th>
+              <tr class="am-table-head-row">
+                <th class="am-th">Ref ID</th>
+                <th class="am-th">Student Details</th>
+                <th class="am-th">Parent Details</th>
+                <th class="am-th">Notes</th>
+                <th class="am-th">Pipeline Status</th>
+                <th class="am-th-actions">Actions</th>
               </tr>
             </thead>
             <tbody>
               @for (inq of inquiries(); track inq.id) {
-                <tr style="border-bottom: 1px solid #e2e8f0; hover: background-color: #f8fafc;">
-                  <td style="padding: 1rem; font-weight: 700; color: #1e3a8a;">ADM-00{{ inq.id }}</td>
-                  <td style="padding: 1rem;">
-                    <strong style="display: block; color: #0f172a;">{{ inq.studentName }}</strong>
-                    <span style="font-size: 0.8rem; color: #64748b;">Grade: {{ inq.gradeLevel }}</span>
+                <tr class="am-body-row">
+                  <td class="am-td-ref">ADM-00{{ inq.id }}</td>
+                  <td class="am-td">
+                    <strong class="am-student-name">{{ inq.studentName }}</strong>
+                    <span class="am-student-grade">Grade: {{ inq.gradeLevel }}</span>
                   </td>
-                  <td style="padding: 1rem;">
-                    <span style="display: block; color: #0f172a; font-weight: 500;">{{ inq.parentName }}</span>
-                    <span style="font-size: 0.8rem; color: #64748b; display: block;">✉️ {{ inq.parentEmail }}</span>
-                    <span style="font-size: 0.8rem; color: #64748b; display: block;">📞 {{ inq.parentPhone }}</span>
+                  <td class="am-td">
+                    <span class="am-parent-name">{{ inq.parentName }}</span>
+                    <span class="am-parent-contact">✉️ {{ inq.parentEmail }}</span>
+                    <span class="am-parent-contact">📞 {{ inq.parentPhone }}</span>
                   </td>
-                  <td style="padding: 1rem; max-width: 150px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" [title]="inq.message || ''">
+                  <td class="am-td-notes" [title]="inq.message || ''">
                     {{ inq.message || 'No remarks.' }}
                   </td>
-                  <td style="padding: 1rem;">
+                  <td class="am-td">
                     @if (inq.status === 'PENDING') {
-                      <span class="ds-chip" style="background: #ffedd5; color: #b45309;">PENDING</span>
+                      <span class="ds-chip am-chip-pending">PENDING</span>
                     } @else if (inq.status === 'REVIEWED') {
-                      <span class="ds-chip" style="background: #e0f2fe; color: #0369a1;">REVIEWED</span>
+                      <span class="ds-chip am-chip-reviewed">REVIEWED</span>
                     } @else if (inq.status === 'APPROVED') {
-                      <span class="ds-chip" style="background: #dcfce7; color: #15803d;">APPROVED</span>
+                      <span class="ds-chip am-chip-approved">APPROVED</span>
                     } @else if (inq.status === 'REJECTED') {
-                      <span class="ds-chip" style="background: #fee2e2; color: #b91c1c;">REJECTED</span>
+                      <span class="ds-chip am-chip-rejected">REJECTED</span>
                     }
                   </td>
-                  <td style="padding: 1rem; text-align: right; white-space: nowrap;">
-                    <div style="display: flex; gap: 0.25rem; justify-content: flex-end;">
+                  <td class="am-td-actions">
+                    <div class="am-actions-group">
                       @if (inq.status === 'PENDING') {
-                        <button (click)="updateStatus(inq.id, 'REVIEWED')" class="ds-btn ds-btn-ghost" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">Reviewed</button>
+                        <button (click)="updateStatus(inq.id, 'REVIEWED')" class="ds-btn ds-btn-ghost am-action-btn">Reviewed</button>
                       }
                       @if (inq.status !== 'APPROVED' && inq.status !== 'REJECTED') {
-                        <button (click)="updateStatus(inq.id, 'APPROVED')" class="ds-btn ds-btn-success" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">Approve</button>
-                        <button (click)="updateStatus(inq.id, 'REJECTED')" class="ds-btn ds-btn-danger" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">Reject</button>
+                        <button (click)="updateStatus(inq.id, 'APPROVED')" class="ds-btn ds-btn-success am-action-btn">Approve</button>
+                        <button (click)="updateStatus(inq.id, 'REJECTED')" class="ds-btn ds-btn-danger am-action-btn">Reject</button>
                       }
                     </div>
                   </td>
@@ -87,7 +87,8 @@ export interface AdmissionInquiry {
         </div>
       }
     </div>
-  `
+  `,
+  styleUrl: './admissions-manager.component.scss'
 })
 export class AdmissionsManagerComponent implements OnChanges {
   @Input() tenantId!: number;

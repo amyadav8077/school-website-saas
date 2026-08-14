@@ -521,20 +521,47 @@
           </div>
 
           <!-- Website Page Body (Pushes the footer to the bottom of the page) -->
-          <div style="flex: 1 0 auto; display: flex; flex-direction: column; width: 100%;">
+          <div style="flex: 1 0 auto; flex-shrink: 0; display: flex; flex-direction: column; width: 100%;">
 
           <!-- Prominent CBSE Compliance Header Bar (CBSE Cir No. 09/2021 Appendix IX prominent link requirement) -->
           @if (activeTenant()) {
-            <div style="background: #fffbeb; border-bottom: 1px solid #fef08a; padding: 0.5rem 1.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 700; color: #b45309; flex-wrap: wrap; gap: 0.5rem; justify-content: center; text-align: center; width: 100%; box-sizing: border-box;">
+            <div class="af-cbse-bar">
               <span>⚠️ CBSE Appendix IX Compliance Desk Active</span>
-              <button (click)="selectPreviewPageBySlug('disclosures')" style="background: #fbbf24; border: 1px solid #f59e0b; color: #0f172a; padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem;">
+              <button (click)="selectPreviewPageBySlug('disclosures')" class="af-cbse-btn">
                 📜 VIEW MANDATORY PUBLIC DISCLOSURE (CBSE)
               </button>
-            </div>
-          }
+             </div>
+           }
 
-          <!-- Public Site Sections (Loop dynamically through sections of activePreviewPage) -->
-          @if (activePreviewPage() && activePreviewPage().sections && activePreviewPage().sections.length > 0) {
+           <!-- Connection Lost / Offline State -->
+           @if (connectionLost()) {
+             <app-error-page
+               mode="connection"
+               [schoolName]="activeTenant()?.name || 'Our School'"
+               [logo]="logoUrl() || '🎓'"
+               [primaryColor]="primaryColor()"
+               [accentColor]="accentColor()"
+               (retry)="retryConnection()"
+               (goHome)="selectPreviewPageBySlug('home')"
+               (explore)="selectPreviewPageBySlug('home')">
+             </app-error-page>
+           }
+
+           <!-- 404 - Unknown / Missing Page (tenant loaded but no active page) -->
+           @else if (!activePreviewPage() && schoolPages().length > 0) {
+             <app-error-page
+               mode="404"
+               [schoolName]="activeTenant()?.name || 'Our School'"
+               [logo]="logoUrl() || '🎓'"
+               [primaryColor]="primaryColor()"
+               [accentColor]="accentColor()"
+               (goHome)="selectPreviewPageBySlug('home')"
+               (explore)="selectPreviewPageBySlug('home')">
+             </app-error-page>
+           }
+
+           <!-- Public Site Sections (Loop dynamically through sections of activePreviewPage) -->
+           @else if (activePreviewPage() && activePreviewPage().sections && activePreviewPage().sections.length > 0) {
             
             @for (sec of activePreviewPage().sections; track sec.id) {
               
@@ -677,7 +704,7 @@
                     </div>
                     <div style="position: relative;">
                       <div [style.border-color]="accentColor()" style="position: absolute; top: -10px; left: -10px; width: 100%; height: 100%; border: 3px solid; border-radius: 8px; z-index: 1;"></div>
-                      <img [src]="parsedSectionConfig(sec.config).imgUrl || 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=600&q=80'" alt="Campus Welcome" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: block; position: relative; z-index: 2;" />
+                      <img [src]="parsedSectionConfig(sec.config).imgUrl || 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80'" alt="Campus Welcome" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: block; position: relative; z-index: 2;" />
                     </div>
                   </div>
                 </div>
@@ -692,7 +719,7 @@
                     </h3>
                     <div style="display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap;">
                       @for (f of getFoundersList(sec.config); track $index) {
-                        <div class="ds-lift" style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 2rem; width: 320px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; align-items: center; text-align: center;">
+                        <div class="ds-lift" style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 2rem; width: 320px; max-width: 100%; box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; align-items: center; text-align: center;">
                           <img [src]="f.photoUrl || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&q=80'" alt="Founder Portrait" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; margin-bottom: 1.25rem; border: 3px solid #cbd5e1;" [style.border-color]="accentColor()" />
                           <h4 style="margin: 0 0 0.25rem 0; font-size: 1.15rem; font-weight: 700; color: #0f172a;">{{ f.name }}</h4>
                           <span [style.color]="primaryColor()" style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 1rem;">{{ f.role }}</span>
@@ -1122,31 +1149,30 @@
           </div> <!-- End of Website Page Body wrapper -->
 
           <!-- Modern Multi-Column Brand Footer -->
-          <footer class="site-footer" [style.background]="'linear-gradient(135deg, ' + primaryColor() + ' 0%, #0f172a 100%)'"
-            style="margin-top: auto; color: #fff; position: relative; overflow: hidden;">
+          <footer class="site-footer af-footer" [style.background]="'linear-gradient(135deg, ' + primaryColor() + ' 0%, #0f172a 100%)'">
 
             <!-- Decorative accent glow -->
-            <span [style.background]="accentColor()" style="position: absolute; top: -80px; right: -60px; width: 260px; height: 260px; border-radius: 50%; filter: blur(90px); opacity: 0.25; pointer-events: none;"></span>
-            <span [style.background]="accentColor()" style="position: absolute; top: 0; left: 0; width: 100%; height: 3px; opacity: 0.9;"></span>
+            <span [style.background]="accentColor()" class="af-footer-glow"></span>
+            <span [style.background]="accentColor()" class="af-footer-topline"></span>
 
-            <div class="footer-grid" style="position: relative; max-width: 1200px; margin: 0 auto; padding: 3.25rem 2rem 1.5rem; display: grid; grid-template-columns: 1.6fr 1fr 1.2fr; gap: 2.5rem;">
+            <div class="footer-grid af-footer-inner">
 
               <!-- Brand column -->
               <div>
-                <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.9rem;">
+                <div class="af-footer-brandrow">
                   @if (logoUrl() && logoUrl().startsWith('http')) {
-                    <img [src]="logoUrl()" alt="logo" style="width: 40px; height: 40px; border-radius: 10px; object-fit: cover; background: rgba(255,255,255,0.15); padding: 3px;" />
+                    <img [src]="logoUrl()" alt="logo" class="af-footer-logo-img" />
                   } @else {
-                    <span style="font-size: 1.9rem; line-height: 1;">{{ logoUrl() || '🏫' }}</span>
+                    <span class="af-footer-logo-emoji">{{ logoUrl() || '🏫' }}</span>
                   }
-                  <strong style="font-size: 1.2rem; font-weight: 800; letter-spacing: -0.02em;">{{ activeTenant().name }}</strong>
+                  <strong class="af-footer-brandname">{{ activeTenant().name }}</strong>
                 </div>
-                <p style="color: rgba(255,255,255,0.72); font-size: 0.9rem; line-height: 1.65; margin: 0 0 1.25rem; max-width: 38ch;">
+                <p class="af-footer-tagline">
                   Nurturing potential and inspiring excellence — empowering every learner with world-class academics, athletics and mentorship.
                 </p>
 
                 <!-- Social buttons -->
-                <div style="display: flex; gap: 0.6rem;">
+                <div class="af-footer-socials">
                   @if (facebookUrl()) {
                     <a [href]="facebookUrl()" target="_blank" rel="noopener" class="foot-social" aria-label="Facebook" title="Facebook">
                       <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07c0 6.02 4.39 11.02 10.13 11.93v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.09 24 18.09 24 12.07Z"/></svg>
@@ -1172,8 +1198,8 @@
 
               <!-- Quick links -->
               <div>
-                <h4 style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; margin: 0 0 1.1rem; color: rgba(255,255,255,0.9);">Quick Links</h4>
-                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.65rem;">
+                <h4 class="af-footer-coltitle">Quick Links</h4>
+                <ul class="af-footer-linklist">
                   <li><button class="foot-link" (click)="selectPreviewPageBySlug('home')">Home</button></li>
                   <li><button class="foot-link" (click)="selectPreviewPageBySlug('courses')">Academics</button></li>
                   <li><button class="foot-link" (click)="selectPreviewPageBySlug('admissions')">Admissions</button></li>
@@ -1184,15 +1210,15 @@
 
               <!-- Contact -->
               <div>
-                <h4 style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; margin: 0 0 1.1rem; color: rgba(255,255,255,0.9);">Get in Touch</h4>
-                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.85rem;">
-                  <li style="display: flex; align-items: center; gap: 0.65rem; font-size: 0.9rem; color: rgba(255,255,255,0.82);">
+                <h4 class="af-footer-coltitle">Get in Touch</h4>
+                <ul class="af-footer-contactlist">
+                  <li class="af-footer-contactrow">
                     <span class="foot-ico" [style.background]="accentColor()">✉️</span>
-                    <a [href]="'mailto:' + contactEmail()" style="color: inherit; text-decoration: none;">{{ contactEmail() }}</a>
+                    <a [href]="'mailto:' + contactEmail()" class="af-footer-contactlink">{{ contactEmail() }}</a>
                   </li>
-                  <li style="display: flex; align-items: center; gap: 0.65rem; font-size: 0.9rem; color: rgba(255,255,255,0.82);">
+                  <li class="af-footer-contactrow">
                     <span class="foot-ico" [style.background]="accentColor()">📞</span>
-                    <a [href]="'tel:' + contactPhone()" style="color: inherit; text-decoration: none;">{{ contactPhone() }}</a>
+                    <a [href]="'tel:' + contactPhone()" class="af-footer-contactlink">{{ contactPhone() }}</a>
                   </li>
                 </ul>
               </div>
@@ -1200,9 +1226,9 @@
             </div>
 
             <!-- Bottom bar -->
-            <div style="position: relative; border-top: 1px solid rgba(255,255,255,0.14); padding: 1.1rem 2rem; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-              <span style="font-size: 0.82rem; color: rgba(255,255,255,0.6);">© 2026 {{ activeTenant().name }} · Educational Trust. All rights reserved.</span>
-              <span style="font-size: 0.78rem; color: rgba(255,255,255,0.5);">Powered by <strong style="color: rgba(255,255,255,0.8);">SchoolSaaS.com</strong></span>
+            <div class="af-footer-bottom">
+              <span class="af-footer-copy">© 2026 {{ activeTenant().name }} · Educational Trust. All rights reserved.</span>
+              <span class="af-footer-powered">Powered by <strong>SchoolSaaS.com</strong></span>
             </div>
           </footer>
 

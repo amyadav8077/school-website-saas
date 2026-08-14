@@ -18,19 +18,19 @@ export interface SchoolBranch {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="ds-card ds-reveal" style="padding: 2.5rem; max-width: 1200px; margin: 2rem auto;">
+    <div class="ds-card ds-reveal sb-card">
       
-      <div style="text-align: center; margin-bottom: 2rem;">
-        <span [style.color]="accentColor" style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.5rem;">Our Network</span>
-        <h3 [style.color]="primaryColor" class="ds-heading" style="font-size: 1.75rem; font-weight: 800; margin: 0; letter-spacing: -0.025em; line-height: 1.2;">Branches Across the Country</h3>
-        <p style="color: #64748b; font-size: 0.9rem; margin-top: 0.5rem; margin-bottom: 0;">Select your state and city below to find a local academic campus with championship mentoring near you.</p>
+      <div class="sb-header">
+        <span [style.color]="accentColor" class="sb-eyebrow">Our Network</span>
+        <h3 [style.color]="primaryColor" class="ds-heading sb-title">Branches Across the Country</h3>
+        <p class="sb-subtitle">Select your state and city below to find a local academic campus with championship mentoring near you.</p>
       </div>
 
       <!-- State & City Dropdowns Bar -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2.5rem; background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+      <div class="sb-filter-bar">
         <div>
-          <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 0.35rem;">Select State</label>
-          <select [(ngModel)]="selectedState" (change)="onStateSelected()" style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; background: white;">
+          <label class="sb-label">Select State</label>
+          <select [(ngModel)]="selectedState" (change)="onStateSelected()" class="sb-select">
             <option value="All">-- All States --</option>
             @for (st of states(); track st) {
               <option [value]="st">{{ st }}</option>
@@ -38,8 +38,8 @@ export interface SchoolBranch {
           </select>
         </div>
         <div>
-          <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 0.35rem;">Select City</label>
-          <select [(ngModel)]="selectedCity" (change)="onCitySelected()" [disabled]="cities().length === 0" style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; background: white;">
+          <label class="sb-label">Select City</label>
+          <select [(ngModel)]="selectedCity" (change)="onCitySelected()" [disabled]="cities().length === 0" class="sb-select">
             <option value="All">-- All Cities --</option>
             @for (ct of cities(); track ct) {
               <option [value]="ct">{{ ct }}</option>
@@ -50,29 +50,29 @@ export interface SchoolBranch {
 
       <!-- Branches List Grid -->
       @if (filteredBranches().length === 0) {
-        <p style="text-align: center; color: #64748b; font-style: italic;">No active branches registered matching this criteria.</p>
+        <p class="sb-empty">No active branches registered matching this criteria.</p>
       } @else {
-        <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="mobile-grid-1 sb-grid">
           @for (br of filteredBranches(); track br.id) {
-            <div class="ds-card ds-card-hover" style="padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="ds-card ds-card-hover sb-branch-card">
               <div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.5rem;">
-                  <strong [style.color]="primaryColor" style="font-size: 1.1rem;">{{ br.name }}</strong>
-                  <span [style.background]="accentColor" style="color: #0f172a; font-size: 0.75rem; padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: 700; text-transform: uppercase;">
+                <div class="sb-branch-header">
+                  <strong [style.color]="primaryColor" class="sb-branch-name">{{ br.name }}</strong>
+                  <span [style.background]="accentColor" class="sb-branch-badge">
                     {{ br.city }}
                   </span>
                 </div>
                 
-                <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; color: #475569; line-height: 1.5;">
-                  <div style="display: flex; gap: 0.5rem; align-items: flex-start;">
+                <div class="sb-info-list">
+                  <div class="sb-info-row">
                     <span>📍</span>
                     <span><strong>Address:</strong> {{ br.address }}</span>
                   </div>
-                  <div style="display: flex; gap: 0.5rem; align-items: center;">
+                  <div class="sb-info-row-center">
                     <span>📞</span>
                     <span><strong>Phone:</strong> {{ br.phone }}</span>
                   </div>
-                  <div style="display: flex; gap: 0.5rem; align-items: center;">
+                  <div class="sb-info-row-center">
                     <span>✉️</span>
                     <span><strong>Email:</strong> {{ br.contactEmail }}</span>
                   </div>
@@ -84,7 +84,8 @@ export interface SchoolBranch {
       }
 
     </div>
-  `
+  `,
+  styleUrl: './school-branches.component.scss'
 })
 export class SchoolBranchesComponent implements OnChanges {
   @Input() tenantId!: number;

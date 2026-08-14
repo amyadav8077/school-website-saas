@@ -1,0 +1,152 @@
+.to-card {
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.to-title {
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.to-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.to-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 0.5rem;
+}
+
+.to-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
+
+.to-subdomain-row {
+  display: flex;
+  align-items: center;
+}
+
+.to-subdomain-input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px 0 0 6px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  min-width: 0;
+}
+
+.to-subdomain-suffix {
+  background: #f1f5f9;
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-left: 0;
+  border-radius: 0 6px 6px 0;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.to-color-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+.to-label-sm {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 0.5rem;
+}
+
+.to-color-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.to-color-swatch {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.to-color-text {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.to-select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  background: white;
+}
+
+.to-admin-block {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 1.25rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.to-admin-title {
+  font-size: 0.9rem;
+  color: #1e293b;
+}
+
+.to-admin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.to-label-xs {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 0.25rem;
+}
+
+.to-admin-input {
+  width: 100%;
+  padding: 0.55rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 0.9rem;
+}
+
+.to-submit-btn {
+  padding: 0.85rem 1.5rem;
+  font-size: 1rem;
+}
