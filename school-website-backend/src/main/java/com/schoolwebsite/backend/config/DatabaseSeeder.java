@@ -576,11 +576,12 @@ public class DatabaseSeeder implements CommandLineRunner {
 
             // ── ENRICHMENT ACTIVITIES (5) ─────────────────────────────────
             enrichmentRepository.save(EnrichmentActivity.builder().tenantId(tid).type("SPORTS")
-                    .title("nSports Athletics & League Championship")
+                    .title("Sports Athletics & League Championship")
                     .description(
                             "Structured basketball, football, cricket, and track training with inter-school league fixtures.")
                     .details(
                             "Weekly inter-school leagues, international-certified coaches, synthetic courts, student physical health analytics.")
+                    .imageUrl("https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=600&q=80")
                     .build());
             enrichmentRepository.save(EnrichmentActivity.builder().tenantId(tid).type("UNIFORMS")
                     .title("Official School Uniform Guidelines")
@@ -588,6 +589,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                             "Uniform protocols designed to instill identity, discipline, and pride across all students.")
                     .details(
                             "Formal academic uniform for weekdays, active sports tracksuit for PE days, lab aprons for senior lab experiments.")
+                    .imageUrl("https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=600&q=80")
                     .build());
             enrichmentRepository.save(EnrichmentActivity.builder().tenantId(tid).type("EXPO")
                     .title("National STEM & Robotics Innovation Expo")
@@ -595,12 +597,14 @@ public class DatabaseSeeder implements CommandLineRunner {
                             "Annual project expo where students showcase coding, robotics, and scientific innovations.")
                     .details(
                             "Live robot combat arena, software solution pitches, science project gallery, parent-teacher evaluation panels.")
+                    .imageUrl("https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?auto=format&fit=crop&w=600&q=80")
                     .build());
             enrichmentRepository.save(EnrichmentActivity.builder().tenantId(tid).type("SPORTS")
                     .title("Swimming & Aquatics Training Program")
                     .description("Certified swimming coaching for all grade levels with safety-first infrastructure.")
                     .details(
                             "Olympic-size pool, FINA-certified coaches, competitive swimming meets, aquatic therapy sessions.")
+                    .imageUrl("https://images.unsplash.com/photo-1530549387789-4c1017266635?auto=format&fit=crop&w=600&q=80")
                     .build());
             enrichmentRepository.save(EnrichmentActivity.builder().tenantId(tid).type("EXPO")
                     .title("Annual Cultural & Performing Arts Festival")
@@ -608,6 +612,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                             "A week-long celebration of music, dance, theater, and visual arts showcasing student creativity.")
                     .details(
                             "Classical and contemporary dance, orchestral performances, drama productions, painting exhibitions, student-curated art shows.")
+                    .imageUrl("https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80")
                     .build());
 
             // ── BOARD RESULTS (6 — Class 10 & 12 over 3 years) ───────────
