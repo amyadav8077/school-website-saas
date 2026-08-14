@@ -17,3 +17,8 @@ Thumbs.db
 **/data/*.mv.db
 **/data/*.trace.db
 **/data/*.lock.db
+
+# Environment files with secrets (keep .env.example tracked)
+.env
+**/.env
+!**/.env.example
