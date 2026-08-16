@@ -12,8 +12,10 @@ import com.schoolwebsite.backend.academics.entity.*;
 public interface TransferCertificateRepository extends JpaRepository<TransferCertificate, Long> {
     List<TransferCertificate> findByTenantIdOrderByIssueDateDesc(Long tenantId);
 
-    Optional<TransferCertificate> findByTenantIdAndAdmissionNoAndFatherNameContainingIgnoreCaseAndAadharNo(
-            Long tenantId, String admissionNo, String fatherName, String aadharNo);
+    // Exact-match verification tuple (case-insensitive father name) so a caller must
+    // know the precise record — a substring match would weaken the guarantee.
+    Optional<TransferCertificate> findByTenantIdAndAdmissionNoAndFatherNameIgnoreCaseAndAadharNo(Long tenantId,
+            String admissionNo, String fatherName, String aadharNo);
 
     List<TransferCertificate> findByTenantIdAndClassLevelAndSectionOrderByIssueDateDesc(Long tenantId,
             String classLevel, String section);

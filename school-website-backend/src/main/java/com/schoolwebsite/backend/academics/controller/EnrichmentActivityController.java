@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.schoolwebsite.backend.academics.entity.*;
@@ -24,6 +25,7 @@ public class EnrichmentActivityController {
         return ResponseEntity.ok(ApiResponse.ok(service.getActivitiesByTenant(tenantId)));
     }
 
+    @PreAuthorize("@tenantSecurity.canManage(#tenantId)")
     @PostMapping("/admin/sites/{tenantId}/enrichment")
     public ResponseEntity<ApiResponse<EnrichmentActivity>> createEnrichmentActivity(@PathVariable Long tenantId,
             @Valid @RequestBody EnrichmentActivity item) {

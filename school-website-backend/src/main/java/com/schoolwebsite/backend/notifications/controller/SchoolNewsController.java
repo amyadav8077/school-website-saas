@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.schoolwebsite.backend.common.dto.ApiResponse;
@@ -24,6 +25,7 @@ public class SchoolNewsController {
         return ResponseEntity.ok(ApiResponse.ok(service.getNewsByTenant(tenantId)));
     }
 
+    @PreAuthorize("@tenantSecurity.canManage(#tenantId)")
     @PostMapping("/admin/sites/{tenantId}/news")
     public ResponseEntity<ApiResponse<SchoolNews>> createNews(@PathVariable Long tenantId,
             @Valid @RequestBody SchoolNews news) {

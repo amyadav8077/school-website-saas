@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.schoolwebsite.backend.academics.entity.*;
@@ -24,6 +25,7 @@ public class SchoolBranchController {
         return ResponseEntity.ok(ApiResponse.ok(service.getBranchesByTenant(tenantId)));
     }
 
+    @PreAuthorize("@tenantSecurity.canManage(#tenantId)")
     @PostMapping("/admin/sites/{tenantId}/branches")
     public ResponseEntity<ApiResponse<SchoolBranch>> createBranch(@PathVariable Long tenantId,
             @Valid @RequestBody SchoolBranch branch) {

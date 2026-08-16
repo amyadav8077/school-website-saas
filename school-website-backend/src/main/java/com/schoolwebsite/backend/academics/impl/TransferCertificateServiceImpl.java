@@ -38,9 +38,8 @@ public class TransferCertificateServiceImpl implements TransferCertificateServic
         if (!StringUtils.hasText(admissionNo) || !StringUtils.hasText(fatherName) || !StringUtils.hasText(aadharNo)) {
             throw AppException.badRequest("Verification requires Admission Number, Father's Name and Aadhaar Number.");
         }
-        Optional<TransferCertificate> tc = repository
-                .findByTenantIdAndAdmissionNoAndFatherNameContainingIgnoreCaseAndAadharNo(tenantId, admissionNo.trim(),
-                        fatherName.trim(), aadharNo.trim());
+        Optional<TransferCertificate> tc = repository.findByTenantIdAndAdmissionNoAndFatherNameIgnoreCaseAndAadharNo(
+                tenantId, admissionNo.trim(), fatherName.trim(), aadharNo.trim());
         return tc.map(t -> List.of(maskSensitive(t))).orElse(List.of());
     }
 
@@ -53,13 +52,10 @@ public class TransferCertificateServiceImpl implements TransferCertificateServic
     }
 
     /**
-     * Masks the Aadhaar number so only the last 4 digits are ever returned publicly.
+     * Masks the Aadhaar number so only the last 4 digits are ever returned.
      */
     private TransferCertificate maskSensitive(TransferCertificate tc) {
-        String aadhar = tc.getAadharNo();
-        if (aadhar != null && aadhar.length() > 4) {
-            tc.setAadharNo("XXXX-XXXX-" + aadhar.substring(aadhar.length() - 4));
-        }
+        tc.setAadharNo(com.schoolwebsite.backend.common.util.PiiMasker.maskAadhaar(tc.getAadharNo()));
         return tc;
     }
 

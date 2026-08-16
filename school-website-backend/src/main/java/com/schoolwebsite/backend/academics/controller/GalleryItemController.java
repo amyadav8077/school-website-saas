@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.schoolwebsite.backend.academics.entity.*;
@@ -24,6 +25,7 @@ public class GalleryItemController {
         return ResponseEntity.ok(ApiResponse.ok(service.getGalleryByTenant(tenantId)));
     }
 
+    @PreAuthorize("@tenantSecurity.canManage(#tenantId)")
     @PostMapping("/admin/sites/{tenantId}/gallery")
     public ResponseEntity<ApiResponse<GalleryItem>> createGalleryItem(@PathVariable Long tenantId,
             @Valid @RequestBody GalleryItem item) {

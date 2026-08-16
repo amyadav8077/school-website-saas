@@ -74,10 +74,7 @@ public class BillingServiceImpl implements BillingService {
 
     /** Masks the Aadhaar number so only the last 4 digits are returned. */
     private StudentInvoice maskSensitive(StudentInvoice inv) {
-        String aadhar = inv.getAadharNo();
-        if (aadhar != null && aadhar.length() > 4) {
-            inv.setAadharNo("XXXX-XXXX-" + aadhar.substring(aadhar.length() - 4));
-        }
+        inv.setAadharNo(com.schoolwebsite.backend.common.util.PiiMasker.maskAadhaar(inv.getAadharNo()));
         return inv;
     }
 
