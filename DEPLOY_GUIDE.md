@@ -32,8 +32,8 @@ Security is built natively into your code at every layer to prevent breaches:
 
 1. **HTTPS / SSL Everywhere:** 
    Both Vercel (frontend) and Render (backend) enforce secure, encrypted SSL tunnels (`https://`) by default. This encrypts passwords, admissions records, and invoices in transit so they cannot be sniffed or hijacked.
-2. **Strict CORS (Cross-Origin Resource Sharing) Headers:**
-   Your backend is configured with `@CrossOrigin(origins = "http://localhost:4200")`. Before releasing to production, we allow the server to accept connections from your live Vercel URL. This blocks malicious external scripts from trying to query your backend.
+2. **CORS (Cross-Origin Resource Sharing):**
+   CORS is configured centrally in `SecurityConfig.java` via `allowedOriginPatterns` (with credentials enabled) so the API can be reached from `localhost`, your Vercel URL, and any tenant custom domain. For a hardened production posture, narrow these patterns to your known frontend + tenant domains.
 3. **Zero Secrets in Source Code:**
    Database passwords, API keys, and usernames are **never** written in code. Instead, we use spring parameter mapping (e.g. `${DB_PASSWORD}`) so you can type them directly into Render's secure admin dashboard panel.
 
@@ -141,10 +141,20 @@ To make your frontend securely talk to your Render backend:
 
 ---
 
-### Step F: Connect Your Custom GoDaddy Domain
-1. In your **Vercel Dashboard** -> Go to **Settings** -> **Domains**.
-2. Type your purchased domain (e.g., `www.pioneeracademy.edu`) and click **Add**.
-3. Vercel will display DNS records:
+### Step F: Connect a Per-Tenant Custom GoDaddy Domain
+Each school can be served on **its own domain** (e.g. `www.pioneerschool.com`). When a visitor opens that domain, the app detects the host, resolves the owning tenant, and renders that school's public website directly — no admin console, no login.
+
+There are three pieces to wire up, once per school:
+
+1. **DNS (GoDaddy):** In the school's **GoDaddy DNS Management**, add a `CNAME` record:
    - **Type:** `CNAME` | **Name:** `www` | **Value:** `cname.vercel-dns.com`
-4. Log into your **GoDaddy Domain Control Panel**, navigate to **DNS Management** for your domain, and add the CNAME record.
-5. In minutes, your school portal will be live, secure, and masked with your professional GoDaddy domain!
+2. **Vercel:** In your **Vercel project → Settings → Domains**, click **Add** and enter the school's domain (e.g. `www.pioneerschool.com`). Vercel provisions the SSL certificate automatically.
+3. **App (map domain → tenant):** In the platform admin (Branding Settings) set the school's **Custom Domain** to the exact host, OR call:
+   ```bash
+   PUT /api/admin/tenants/{tenantId}/custom-domain?customDomain=www.pioneerschool.com
+   ```
+   The backend resolves both `www.` and the bare domain, and also supports subdomain-style hosts (`pioneer.yourplatform.com`). Changing the domain immediately evicts the host/payload caches.
+
+Within minutes the school's portal is live on its own professional domain. Repeat for each additional school — no code changes required per tenant.
+
+> **Scale note:** Host resolution is a single indexed lookup plus an in-memory cache, and the public site loads via one aggregated `bootstrap` call, so onboarding many schools does not slow things down. For heavy production traffic, move the backend off Render's free (sleeping) tier and Neon's free tier to always-on plans.

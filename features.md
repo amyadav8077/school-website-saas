@@ -30,9 +30,13 @@ The backend is structured as a modular, stateless Spring Boot monolith supportin
 ### 1.1 Tech Stack & Database Strategy
 - **Framework:** Spring Boot (Java 17 / Jakarta Persistence)
 - **Dependency Management:** Gradle (`./gradlew`)
-- **Database:** Embedded H2 Database (In-Memory, auto-created and pre-seeded on startup)
+- **Database:** Environment-driven via Spring profiles:
+  - **Local (default profile):** file-based H2 database (`application.properties`), auto-created and pre-seeded on startup.
+  - **Production (`prod` profile):** PostgreSQL (Neon serverless in the cloud) via `application-prod.properties`, activated by `SPRING_PROFILES_ACTIVE=prod`.
+- **Schema Migrations:** Flyway migrations under `src/main/resources/db/migration` (currently `V1`–`V22`). `V22` adds scale indexes on `tenant_id` and composite search columns for the high-volume student tables.
+- **Connection Pool / Server (prod):** Hikari pool and Tomcat threads are tuned via env vars (`DB_POOL_MAX`, `TOMCAT_THREADS_MAX`, etc.); prod logging runs at INFO/WARN.
 - **Lombok Integration:** Rich usage of annotations like `@Getter`, `@Setter`, `@NoArgsConstructor`, `@AllArgsConstructor`, and `@Builder` for clean boilerplates.
-- **Security:** Custom role-based security configurations (`SecurityConfig.java`) with cross-origin headers (`@CrossOrigin(origins = "http://localhost:4200")`).
+- **Security:** Role-based configuration (`SecurityConfig.java`) with permissive CORS via `allowedOriginPatterns`. Admin passwords are hashed with **BCrypt** (`PasswordEncoder` bean); legacy plaintext passwords are transparently upgraded on next login. Passwords and OTP codes are never returned in API responses.
 
 ---
 
@@ -79,7 +83,8 @@ The backend serves REST API endpoints classified by security/access level:
 - `POST /api/admin/tenants` -> Onboards a new Tenant School and auto-generates its baseline `SiteConfig`.
 - `GET /api/admin/tenants` -> Lists all registered tenant schools.
 - `GET /api/admin/tenants/{subdomain}` -> Resolves tenant record by custom subdomain.
-- `PUT /api/admin/tenants/{tenantId}/custom-domain` -> Updates and registers a custom GoDaddy domain for a tenant school.
+- `GET /api/admin/tenants/resolve?host={host}` -> Resolves the owning tenant from a browser host. Matches an exact custom domain, a `www.`-optional custom domain, or the first DNS label as a subdomain. Powers "open a school directly on its own domain".
+- `PUT /api/admin/tenants/{tenantId}/custom-domain` -> Updates and registers a custom GoDaddy domain for a tenant school. Publishes a cache-evict event so host/payload caches refresh immediately.
 - `POST /api/admin/tenants/{sourceTenantId}/clone` -> Duplicates/clones an entire school's site branding configs and page builder layouts to a brand new school template workspace.
 - `POST /api/auth/login` -> Authenticates admin credentials.
 - `POST /api/auth/tenant-admins` -> Provisions credentials for a new Tenant School administrator.
@@ -90,7 +95,10 @@ The backend serves REST API endpoints classified by security/access level:
 
 #### 🎨 Custom Site Branding & Customizations (Public/Staff)
 - `GET /api/sites/{subdomain}/config` -> Retrieves primary logo, custom theme colors, marquee announcement strings, and contacts by subdomain.
-- `PUT /api/sites/{tenantId}/config` -> Updates design configurations (Primary, Secondary, Accent, Font, Logo Base64 string, Marquee alert JSON).
+- `PUT /api/sites/{tenantId}/config` -> Updates design configurations (Primary, Secondary, Accent, Font, Logo Base64 string, Marquee alert + Admissions Promo popup JSON). Publishes a cache-evict event so the public site reflects changes immediately.
+
+#### ⚡ Single-Call Public Bootstrap (Performance)
+- `GET /api/sites/bootstrap?host={host}` -> Returns EVERYTHING the public website needs to paint its first screen in one request: tenant, site config, pages, courses, programs, faculty, achievers, news, and events. Resolves the tenant by host, caches the host→tenant mapping and the full payload (short TTL), degrades gracefully per-section, and is the single request the public site makes on load. Eliminates the previous 6–8 request waterfall.
 
 #### 🏗️ Dynamic Page Layout Builder
 - `POST /api/sites/{tenantId}/pages` -> Provisions a custom blank page or pre-seeds predefined template pages.
@@ -120,7 +128,8 @@ The backend serves REST API endpoints classified by security/access level:
 - `DELETE /api/admin/tc/{id}` -> Retracts / deletes a TC record.
 
 #### 📊 Student Grades Ledger (Gradebook lookup)
-- `GET /api/sites/{tenantId}/grades` -> Resolves grade lookup (queries student name via `?studentName=`).
+- `GET /api/sites/{tenantId}/grades` -> Resolves grade lookup (queries student name via `?studentName=`, or `?classLevel=&section=`).
+- `GET /api/sites/{tenantId}/grades/paged?page=&size=` -> Paginated grade list for admin screens at scale (default size 25, capped at 100). Supports the same `studentName`/`classLevel`/`section` filters. Returns a Spring `Page` (`content`, `totalElements`, `totalPages`).
 - `POST /api/admin/sites/{tenantId}/grades` -> Submits student evaluation report card data.
 - `DELETE /api/admin/grades/{id}` -> Purges grade record.
 
@@ -147,12 +156,15 @@ The backend serves REST API endpoints classified by security/access level:
 - `GET /api/sites/{tenantId}/fees` -> Fetches fee structures (Bus, Tuition, Lab, etc.).
 - `POST /api/admin/sites/{tenantId}/fees` -> Logs a new fee Category.
 - `GET /api/sites/{tenantId}/invoices` -> Parents invoices lookup (queries student name via `?studentName=`).
+- `GET /api/sites/{tenantId}/invoices/paged?page=&size=` -> Paginated invoice list for admin screens at scale (default size 25, capped at 100). Returns a Spring `Page`.
+- `GET /api/sites/{tenantId}/invoices/stats` -> DB-computed billing totals (`totalBilled`, `totalPaid`, `totalPending`, `invoiceCount`) so admin dashboard figures stay accurate across all pages without loading every invoice.
 - `POST /api/admin/sites/{tenantId}/invoices` -> Dispatches an invoice to a student record.
 - `PUT /api/sites/invoices/{id}/pay` -> Simulates parent checkout payment and marks status as `PAID`.
 
 #### 📝 Admissions CRM & Help Desk Support
 - `POST /api/sites/{tenantId}/admissions` -> Receives prospective parents' admissions inquiry leads.
 - `GET /api/admin/sites/{tenantId}/admissions` -> Retrieves pipeline leads for CRM review.
+- `GET /api/admin/sites/{tenantId}/admissions/paged?page=&size=` -> Paginated admissions leads for CRM at scale (default size 25, capped at 100). Returns a Spring `Page`.
 - `PUT /api/admin/admissions/{leadId}/status` -> Transitions lead status (PENDING -> CONTACTED -> ADMITTED).
 - `POST /api/sites/{tenantId}/support` -> Submits a technical inquiry or parent feedback ticket.
 - `GET /api/admin/sites/{tenantId}/support` -> Fetches active support requests.
@@ -183,6 +195,9 @@ When the backend starts up, `DatabaseSeeder.java` initializes standard user perm
      - 2 Mock student Transfer Certificates (Harry Potter, Ron Weasley).
      - 2 Active Career vacancies (Senior IIT-JEE Prep Physics faculty with applicant Bruce Banner).
      - Tuition & Bus invoicing logs under active parent query indexes.
+     - A pre-enabled **Admissions Promo popup** config (hero video, requirements, phone/website) stored in the SiteConfig `socialLinks` JSON.
+   - **Passwords** are seeded already **BCrypt-hashed**. Seeded logins remain `admin/admin123` and `pioneer_admin/pioneer123` for local testing.
+   - Set `SEED_FORCE_REFRESH=true` to wipe & re-seed the pioneer tenant once on next boot (then set back to false).
 
 ---
 
@@ -199,7 +214,8 @@ The entry component `App` (`src/app/app.ts`) maintains core application state. I
 
 - **Active Tenant Context (`activeTenant`):** Holds the current school ID, name, and subdomain of the active workspace.
 - **Active Role Context (`activeRole`):** Dynamically alternates application layout between `SCHOOL_ADMIN` (staff customization desk) and `PARENT_VISITOR` (customized public sandbox view).
-- **Global Signals Directories:** Stores public catalog lists fetched from backend APIs (e.g., `publicCourses`, `publicFaculty`, `publicPrograms`, `publicNews`, `publicEvents`).
+- **Public Site Mode (`publicSiteMode`):** On startup the app reads `window.location.hostname`. Platform hosts (`localhost`, `*.vercel.app`, `*.onrender.com`, bare IPs) load the normal admin/demo experience. A recognised tenant host calls `GET /api/sites/bootstrap?host=` and switches into public-only mode — no admin console, no login, forced visitor view — rendering that school's website directly. Includes a branded loading screen with retry/backoff (covers backend cold starts) and a friendly error screen.
+- **Global Signals Directories:** Stores public catalog lists fetched from backend APIs (e.g., `publicCourses`, `publicFaculty`, `publicPrograms`, `publicNews`, `publicEvents`). On public sites these are hydrated from the single bootstrap call.
 - **Sync Trigger Signals:** Increments integers (e.g. `admissionsRefreshTrigger`, `billingRefreshTrigger`) which are input-bound to nested components. This forces sub-components to auto-refresh their list views when changes are made.
 
 ---
@@ -234,15 +250,16 @@ All features exist as single-file, standalone Angular components located in `src
 | `login.ts` | Platform User | Authenticates username and password against `POST /api/auth/login`. Sets session storage of logged-in admin identity. |
 | `user-profile.ts` | Logged-in User| Facilitates secure profile password changes (`POST /api/auth/change-password`). |
 | `tenant-onboarding.ts`| Super Admin | Onboards a new school (`POST /api/admin/tenants`) and provisions its default administrator account (`POST /api/auth/tenant-admins`). |
-| `branding-settings.ts`| School Admin | Manages theme presets (Traditional Gurukul, Academic Navy, Holistic Forest Green, Tech Slate). Serializes the marquee alert details into JSON strings for DB updates (`PUT /api/sites/{tenantId}/config`). |
+| `branding-settings.ts`| School Admin | Manages theme presets (Traditional Gurukul, Academic Navy, Holistic Forest Green, Tech Slate). Serializes the announcement banner AND Admissions Promo popup details into JSON strings for DB updates (`PUT /api/sites/{tenantId}/config`). Includes an "Upload & Save Logo" action that saves only the logo instantly (with live preview), plus the promo popup configuration panel. |
 | `admissions-form.ts` | Parent / Visitor | Submits prospective parent inquiry records (`POST /api/sites/{tenantId}/admissions`). |
-| `admissions-manager.ts`| School Admin | CRM terminal for reviewing parents' inquiries. Transitions leads (`PUT /api/admin/admissions/{id}/status?status=CONTACTED`). |
+| `admissions-manager.ts`| School Admin | CRM terminal for reviewing parents' inquiries. Paginated list (`GET /api/admin/sites/{tenantId}/admissions/paged`) with a shared pager. Transitions leads (`PUT /api/admin/admissions/{id}/status?status=CONTACTED`). |
+| `admissions-promo.component.ts`| Parent / Visitor | Configurable, dismissible full-screen Admissions Promo popup (hero video, 5 feature boxes, admission process/requirements, cursive footer). Rendered only on the public site; enabled/configured from Branding Settings and stored in the SiteConfig `socialLinks` JSON. Dismissal remembered per session. |
 | `contact-form.ts` | Parent / Visitor | Submits general help desk tickets (`POST /api/sites/{tenantId}/support`). |
 | `support-manager.ts` | School Admin | Dashboard for managing parent inquiries. Allows staff to record resolution remarks and close requests (`PUT /api/admin/support/{id}/resolve`). |
 | `payment-portal.ts` | Parent / Visitor | Looks up fee outstanding bills by student name (`GET /api/sites/{tenantId}/invoices`). Simulates secure mock online payment checkouts (`PUT /api/sites/invoices/{id}/pay`). |
-| `billing-manager.ts` | School Admin | Issues invoice bills (`POST /api/admin/sites/{tenantId}/invoices`) and catalogs new fee structures (`POST /api/admin/sites/{tenantId}/fees`). |
+| `billing-manager.ts` | School Admin | Issues invoice bills (`POST /api/admin/sites/{tenantId}/invoices`) and catalogs new fee structures (`POST /api/admin/sites/{tenantId}/fees`). Invoice table is paginated (`GET .../invoices/paged`); Billed/Paid/Pending totals come from the DB stats endpoint (`GET .../invoices/stats`) so they stay accurate across all pages. |
 | `report-card-lookup.ts`| Parent / Visitor | Looks up student midterm/final assessment transcripts by student name (`GET /api/sites/{tenantId}/grades`). |
-| `gradebook-manager.ts`| School Admin | Input terminal for recording student scores. Supports bulk grid entry inputs (`POST /api/admin/sites/{tenantId}/grades`). |
+| `gradebook-manager.ts`| School Admin | Input terminal for recording student scores. Supports bulk grid entry inputs (`POST /api/admin/sites/{tenantId}/grades`). Grade list is paginated (`GET .../grades/paged`) with a shared pager for scale. |
 | `tc-lookup.ts` | Parent / Visitor | Compliance search engine. Validates official Transfer Certificates by TC No or Aadhar number (`GET /api/sites/{tenantId}/tc`). |
 | `tc-manager.ts` | School Admin | Issues CBSE-compliant student transfer credentials (`POST /api/admin/sites/{tenantId}/tc`). |
 | `careers-portal.ts` | Job Applicant | Views vacancy opportunities (`GET /api/sites/{tenantId}/jobs`) and submits job applications (`POST /api/sites/{tenantId}/jobs/{jobId}/apply`). |
@@ -283,10 +300,10 @@ The **CMS School Page Builder** (`page-builder.ts`) provides a powerful visual i
 Use these exact commands to build, compile, and run the complete multi-tenant environment:
 
 ### ☕ Running the Backend (Spring Boot)
-Ensure Java 17+ is configured on your development terminal.
+Ensure Java 17 is configured on your development terminal (e.g. `JAVA_HOME=$(/usr/libexec/java_home -v 17)` on macOS). The default profile uses local H2; the `prod` profile (Postgres) is activated by Render via `SPRING_PROFILES_ACTIVE=prod`.
 ```bash
 # 1. Navigate to backend directory
-cd /Users/amyadav/Documents/SchoolWebsiteProject/school-website-backend
+cd school-website-backend
 
 # 2. Build application, skipping tests for fast compilation
 ./gradlew build -x test
@@ -299,7 +316,7 @@ cd /Users/amyadav/Documents/SchoolWebsiteProject/school-website-backend
 Ensure Node.js v18+ and npm are installed.
 ```bash
 # 1. Navigate to frontend directory
-cd /Users/amyadav/Documents/SchoolWebsiteProject/school-website-frontend
+cd school-website-frontend
 
 # 2. Install NPM packages
 npm install
