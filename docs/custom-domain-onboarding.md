@@ -95,15 +95,41 @@ Vercel project → **Settings → Domains → Add**:
 - Add `<SCHOOL_DOMAIN>` (apex) and set it to **redirect → `<WWW_DOMAIN>`**.
 Vercel provisions SSL automatically and shows the exact DNS records to create.
 
+> **Vercel will show "Invalid Configuration" until the DNS record exists** — that is a to-do,
+> not an error. It clears automatically once the record below is created and propagates.
+>
+> ⚠️ **Copy the EXACT CNAME target Vercel shows** for `www`. It is often a **unique per-domain
+> value** like `be2d9a436431fc29.vercel-dns-017.com`, **not** the generic `cname.vercel-dns.com`.
+> Use whatever Vercel displays for your domain.
+
+### Step 0 (pre-flight) — Confirm the domain is active & delegated to GoDaddy
+Before touching DNS records, verify the domain actually resolves to a nameserver:
+```bash
+dig NS <SCHOOL_DOMAIN> +short
+```
+- **Returns GoDaddy nameservers** (e.g. `ns**.domaincontrol.com`) → good, continue.
+- **Returns nothing / NXDOMAIN** → the domain is not usable yet. Causes: brand-new registration
+  still provisioning (new `.co.in` can take a few hours), domain parked, or **custom nameservers**
+  set (not GoDaddy). Fix in GoDaddy: ensure the domain is **registered/active** and its
+  **Nameservers = GoDaddy default** before adding records — DNS records you add won't take effect
+  under custom/parked nameservers.
+
 ### Step 3 — Configure DNS at GoDaddy
-GoDaddy → **DNS Management** for `<SCHOOL_DOMAIN>`:
-- **www (CNAME):** Name `www` → Value `cname.vercel-dns.com`
+GoDaddy → **DNS / Manage DNS** for `<SCHOOL_DOMAIN>` → **Add Record**:
+- **www (CNAME):** Type `CNAME`, Name `www` (just `www`, not the full domain), Value = the exact
+  target Vercel showed (e.g. `be2d9a436431fc29.vercel-dns-017.com`). If a default `www` record
+  already exists, **edit it** instead of adding a duplicate.
 - **apex (@):** use the **A record** Vercel shows for the apex (e.g. `76.76.21.21`), OR use
   GoDaddy **Domain Forwarding** `<SCHOOL_DOMAIN>` → `https://<WWW_DOMAIN>`.
   (Many registrars, incl. some `.co.in` setups, don't allow a CNAME on the apex — use the A
   record or forwarding.)
 
-DNS propagation takes minutes to a few hours.
+DNS propagation takes minutes to a few hours. Verify as it propagates:
+```bash
+dig CNAME www.<SCHOOL_DOMAIN> +short   # should show the Vercel target
+nslookup www.<SCHOOL_DOMAIN>           # NXDOMAIN = not propagated yet
+```
+Once the record is visible, Vercel flips to **"Valid Configuration"** and issues SSL.
 
 ### Step 4 — Add the domain to CORS
 Append `https://<WWW_DOMAIN>,https://<SCHOOL_DOMAIN>` to `CORS_ALLOWED_ORIGINS` in Render and
@@ -139,6 +165,9 @@ Both should return the school (tenant name, subdomain, pages, config).
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
+| Vercel shows **"Invalid Configuration"** | DNS record not created/propagated yet | Add the exact CNAME Vercel shows in GoDaddy (Step 3); wait for propagation — it clears itself |
+| `nslookup`/browser gives **NXDOMAIN** (domain won't open) | no DNS records / domain not delegated to GoDaddy | Confirm domain is active + Nameservers = GoDaddy default (Step 0); new registrations can take hours |
+| Added CNAME but Vercel still invalid | wrong target (used generic `cname.vercel-dns.com`) or `www.<domain>` typed in the Name field | Use the **exact per-domain target** Vercel shows; Name field = just `www` |
 | Domain shows the platform/dashboard, not the school | host not mapped, or matched as a platform host | Verify `customDomain` is set (Step 1); confirm the host isn't `*.vercel.app` |
 | "We couldn't load this school's website" | backend asleep or unreachable | Wait for cold start / retry; check `<BACKEND_URL>/api/health` |
 | CORS error in console | domain missing from allowlist | Add `https://<WWW_DOMAIN>` + apex to `CORS_ALLOWED_ORIGINS`, redeploy |
