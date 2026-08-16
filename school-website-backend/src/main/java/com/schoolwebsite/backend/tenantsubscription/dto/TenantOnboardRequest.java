@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TenantOnboardRequest
-{
+public class TenantOnboardRequest {
 
     @NotBlank(message = "School name is required")
     private String name;

@@ -9,8 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.schoolwebsite.backend.pagebuilder.entity.*;
 
 @Repository
-public interface PageRepository extends JpaRepository<Page, Long>
-{
+public interface PageRepository extends JpaRepository<Page, Long> {
     List<Page> findByTenantId(Long tenantId);
 
     Optional<Page> findByTenantIdAndSlug(Long tenantId, String slug);

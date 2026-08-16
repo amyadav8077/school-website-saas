@@ -6,8 +6,7 @@ import org.springframework.data.domain.Page;
 
 import com.schoolwebsite.backend.grades.entity.StudentGrade;
 
-public interface StudentGradeService
-{
+public interface StudentGradeService {
     List<StudentGrade> getGrades(Long tenantId, String studentName, String classLevel, String section);
 
     Page<StudentGrade> getGradesPaged(Long tenantId, String studentName, String classLevel, String section, int page,

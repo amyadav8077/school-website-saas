@@ -16,27 +16,23 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class BoardResultController
-{
+public class BoardResultController {
     private final BoardResultService service;
 
     @GetMapping("/sites/{tenantId}/board-results")
-    public ResponseEntity<ApiResponse<List<BoardResult>>> getBoardResults(@PathVariable Long tenantId)
-    {
+    public ResponseEntity<ApiResponse<List<BoardResult>>> getBoardResults(@PathVariable Long tenantId) {
         return ResponseEntity.ok(ApiResponse.ok(service.getBoardResultsByTenant(tenantId)));
     }
 
     @PostMapping("/admin/sites/{tenantId}/board-results")
     public ResponseEntity<ApiResponse<BoardResult>> createBoardResult(@PathVariable Long tenantId,
-            @Valid @RequestBody BoardResult result)
-    {
+            @Valid @RequestBody BoardResult result) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.ok("Board result created successfully", service.createBoardResult(tenantId, result)));
     }
 
     @DeleteMapping("/admin/board-results/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteBoardResult(@PathVariable Long id)
-    {
+    public ResponseEntity<ApiResponse<Void>> deleteBoardResult(@PathVariable Long id) {
         service.deleteBoardResult(id);
         return ResponseEntity.ok(ApiResponse.ok("Board result deleted successfully", null));
     }

@@ -22,34 +22,32 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class BillingServiceImpl implements BillingService
-{
+public class BillingServiceImpl implements BillingService {
     private final FeeItemRepository feeItemRepository;
 
     private final StudentInvoiceRepository invoiceRepository;
 
     @Override
     @Transactional
-    public FeeItem createFeeItem(Long tenantId, FeeItem item)
-    {
+    public FeeItem createFeeItem(Long tenantId, FeeItem item) {
         log.info("Creating fee item for tenantId={}, name={}", tenantId, item.getName());
+        item.setId(null);
         item.setTenantId(tenantId);
         return feeItemRepository.save(item);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<FeeItem> getFeeItems(Long tenantId)
-    {
+    public List<FeeItem> getFeeItems(Long tenantId) {
         log.debug("Fetching fee items for tenantId={}", tenantId);
         return feeItemRepository.findByTenantId(tenantId);
     }
 
     @Override
     @Transactional
-    public StudentInvoice generateInvoice(Long tenantId, StudentInvoice invoice)
-    {
+    public StudentInvoice generateInvoice(Long tenantId, StudentInvoice invoice) {
         log.info("Generating invoice for tenantId={}, student={}", tenantId, invoice.getStudentName());
+        invoice.setId(null);
         invoice.setTenantId(tenantId);
         invoice.setStatus(AppConstants.STATUS_PENDING);
         invoice.setDueDate(LocalDateTime.now().plusDays(AppConstants.INVOICE_DUE_DAYS));
@@ -58,16 +56,13 @@ public class BillingServiceImpl implements BillingService
 
     @Override
     @Transactional(readOnly = true)
-    public List<StudentInvoice> getInvoices(Long tenantId, String studentName, String gradeLevel, String section)
-    {
+    public List<StudentInvoice> getInvoices(Long tenantId, String studentName, String gradeLevel, String section) {
         log.debug("Fetching invoices for tenantId={}", tenantId);
-        if (StringUtils.hasText(studentName))
-        {
+        if (StringUtils.hasText(studentName)) {
             return invoiceRepository.findByTenantIdAndStudentNameContainingIgnoreCaseOrderByCreatedAtDesc(tenantId,
                     studentName.trim());
         }
-        if (StringUtils.hasText(gradeLevel) && StringUtils.hasText(section))
-        {
+        if (StringUtils.hasText(gradeLevel) && StringUtils.hasText(section)) {
             return invoiceRepository.findByTenantIdAndGradeLevelAndSectionOrderByCreatedAtDesc(tenantId,
                     gradeLevel.trim(), section.trim());
         }
@@ -76,8 +71,7 @@ public class BillingServiceImpl implements BillingService
 
     @Override
     @Transactional(readOnly = true)
-    public com.schoolwebsite.backend.billing.dto.InvoiceStatsResponse getInvoiceStats(Long tenantId)
-    {
+    public com.schoolwebsite.backend.billing.dto.InvoiceStatsResponse getInvoiceStats(Long tenantId) {
         double billed = invoiceRepository.sumBilledByTenant(tenantId);
         double paid = invoiceRepository.sumByTenantAndStatus(tenantId, AppConstants.STATUS_PAID);
         long count = invoiceRepository.countByTenantId(tenantId);
@@ -88,20 +82,17 @@ public class BillingServiceImpl implements BillingService
     @Override
     @Transactional(readOnly = true)
     public org.springframework.data.domain.Page<StudentInvoice> getInvoicesPaged(Long tenantId, String studentName,
-            String gradeLevel, String section, int page, int size)
-    {
+            String gradeLevel, String section, int page, int size) {
         int safeSize = size <= 0 || size > 100 ? 25 : size;
         int safePage = Math.max(page, 0);
         org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(safePage,
                 safeSize);
 
-        if (StringUtils.hasText(studentName))
-        {
+        if (StringUtils.hasText(studentName)) {
             return invoiceRepository.findByTenantIdAndStudentNameContainingIgnoreCaseOrderByCreatedAtDesc(tenantId,
                     studentName.trim(), pageable);
         }
-        if (StringUtils.hasText(gradeLevel) && StringUtils.hasText(section))
-        {
+        if (StringUtils.hasText(gradeLevel) && StringUtils.hasText(section)) {
             return invoiceRepository.findByTenantIdAndGradeLevelAndSectionOrderByCreatedAtDesc(tenantId,
                     gradeLevel.trim(), section.trim(), pageable);
         }
@@ -110,11 +101,19 @@ public class BillingServiceImpl implements BillingService
 
     @Override
     @Transactional
-    public StudentInvoice payInvoice(Long id)
-    {
+    public StudentInvoice payInvoice(Long id, String admissionNo) {
         log.info("Marking invoice id={} as PAID", id);
         StudentInvoice invoice = invoiceRepository.findById(id)
                 .orElseThrow(() -> AppException.of(ErrorCode.INVOICE_NOT_FOUND, id));
+
+        // Verify the caller knows the student's admission number for this invoice,
+        // so an arbitrary invoice's status cannot be flipped by guessing ids.
+        String expected = invoice.getAdmissionNo();
+        if (expected != null && !expected.isBlank()) {
+            if (admissionNo == null || !expected.trim().equalsIgnoreCase(admissionNo.trim())) {
+                throw AppException.badRequest("Payment verification failed: admission number does not match.");
+            }
+        }
 
         invoice.setStatus(AppConstants.STATUS_PAID);
         invoice.setPaymentDate(LocalDateTime.now());

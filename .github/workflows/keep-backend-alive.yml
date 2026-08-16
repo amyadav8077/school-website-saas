@@ -10,6 +10,10 @@ on:
   # Allows manual runs from the Actions tab for testing.
   workflow_dispatch:
 
+# Least privilege: this workflow only needs to read the repo (and nothing else).
+permissions:
+  contents: read
+
 # Avoid overlapping runs stacking up if a ping is slow (e.g. during a cold start).
 concurrency:
   group: keep-backend-alive

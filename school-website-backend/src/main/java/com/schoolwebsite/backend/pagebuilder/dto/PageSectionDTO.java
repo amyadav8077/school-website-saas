@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PageSectionDTO
-{
+public class PageSectionDTO {
     private Long id;
 
     private String type;

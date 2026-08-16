@@ -4,11 +4,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.schoolwebsite.backend.auth.security.AuthPrincipal;
+import com.schoolwebsite.backend.common.constant.AppConstants;
 import com.schoolwebsite.backend.pagebuilder.dto.PageCreateRequest;
 import com.schoolwebsite.backend.pagebuilder.dto.PageResponse;
 import com.schoolwebsite.backend.pagebuilder.dto.PageSectionDTO;
@@ -25,6 +32,20 @@ public class PageServiceTest {
 
     @Autowired
     private TenantRepository tenantRepository;
+
+    // Tenant-scoped service methods now require an authenticated principal. Use a
+    // super-admin context so these unit tests can exercise cross-cutting logic.
+    @BeforeEach
+    void authenticateSuperAdmin() {
+        AuthPrincipal principal = new AuthPrincipal(1L, "test-super-admin", AppConstants.ROLE_SUPER_ADMIN, null);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(principal, null,
+                List.of(new SimpleGrantedAuthority("ROLE_" + AppConstants.ROLE_SUPER_ADMIN))));
+    }
+
+    @AfterEach
+    void clearContext() {
+        SecurityContextHolder.clearContext();
+    }
 
     @Test
     public void testCreatePageAndUpdateSections() {

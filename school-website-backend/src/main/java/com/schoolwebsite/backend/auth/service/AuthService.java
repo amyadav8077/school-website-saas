@@ -5,8 +5,7 @@ import java.util.Optional;
 
 import com.schoolwebsite.backend.auth.entity.AdminUser;
 
-public interface AuthService
-{
+public interface AuthService {
     Optional<AdminUser> authenticate(String username, String password);
 
     Map<String, Object> buildLoginResponse(AdminUser user);

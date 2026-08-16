@@ -8,8 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SiteConfigUpdateRequest
-{
+public class SiteConfigUpdateRequest {
 
     @NotBlank(message = "Primary color is required")
     private String primaryColor;

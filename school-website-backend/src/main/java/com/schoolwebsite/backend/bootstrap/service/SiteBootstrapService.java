@@ -41,8 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SiteBootstrapService
-{
+public class SiteBootstrapService {
     private static final long CACHE_TTL_MS = 60_000L;
 
     private static final long PAYLOAD_TTL_MS = 30_000L;
@@ -70,16 +69,14 @@ public class SiteBootstrapService
     private final Map<String, CachedPayload> payloadCache = new ConcurrentHashMap<>();
 
     @Transactional(readOnly = true)
-    public SiteBootstrapResponse bootstrap(String host)
-    {
+    public SiteBootstrapResponse bootstrap(String host) {
         String key = host == null ? "" : host.trim().toLowerCase();
         long now = System.currentTimeMillis();
 
         // Fast path: serve the fully assembled payload from cache so repeat and
         // concurrent visitors barely touch the database.
         CachedPayload cachedPayload = payloadCache.get(key);
-        if (cachedPayload != null && (now - cachedPayload.timestamp) < PAYLOAD_TTL_MS)
-        {
+        if (cachedPayload != null && (now - cachedPayload.timestamp) < PAYLOAD_TTL_MS) {
             return cachedPayload.payload;
         }
 
@@ -88,34 +85,28 @@ public class SiteBootstrapService
         return response;
     }
 
-    private SiteBootstrapResponse assemble(String host)
-    {
+    private SiteBootstrapResponse assemble(String host) {
         TenantResponse tenant = resolveTenantCached(host);
         Long tenantId = tenant.getId();
 
         SiteConfigResponse config = safe(() -> siteConfigService.getSiteConfigBySubdomain(tenant.getSubdomain()), null,
                 "config");
 
-        return SiteBootstrapResponse.builder()
-                .tenant(tenant)
-                .config(config)
+        return SiteBootstrapResponse.builder().tenant(tenant).config(config)
                 .pages(safeList(() -> pageService.getPagesByTenant(tenantId), "pages"))
                 .courses(safeList(() -> courseService.getCoursesByTenant(tenantId), "courses"))
                 .programs(safeList(() -> programService.getProgramsByTenant(tenantId), "programs"))
                 .faculty(safeList(() -> facultyService.getFacultyByTenant(tenantId), "faculty"))
                 .achievers(safeList(() -> achieverService.getAchieversByTenant(tenantId), "achievers"))
                 .news(safeList(() -> newsService.getNewsByTenant(tenantId), "news"))
-                .events(safeList(() -> eventService.getEventsByTenant(tenantId), "events"))
-                .build();
+                .events(safeList(() -> eventService.getEventsByTenant(tenantId), "events")).build();
     }
 
-    private TenantResponse resolveTenantCached(String host)
-    {
+    private TenantResponse resolveTenantCached(String host) {
         String key = host == null ? "" : host.trim().toLowerCase();
         CachedTenant cached = hostCache.get(key);
         long now = System.currentTimeMillis();
-        if (cached != null && (now - cached.timestamp) < CACHE_TTL_MS)
-        {
+        if (cached != null && (now - cached.timestamp) < CACHE_TTL_MS) {
             return cached.tenant;
         }
         // Cache miss / expired — this throws TENANT_NOT_FOUND_BY_HOST for unknown
@@ -126,10 +117,8 @@ public class SiteBootstrapService
     }
 
     /** Drops any cached host + payload entries pointing at the given tenant. */
-    public void evictTenant(Long tenantId)
-    {
-        if (tenantId == null)
-        {
+    public void evictTenant(Long tenantId) {
+        if (tenantId == null) {
             return;
         }
         hostCache.entrySet().removeIf(e -> tenantId.equals(e.getValue().tenant.getId()));
@@ -137,54 +126,44 @@ public class SiteBootstrapService
     }
 
     @EventListener
-    public void onTenantCacheEvict(TenantCacheEvictEvent event)
-    {
+    public void onTenantCacheEvict(TenantCacheEvictEvent event) {
         log.debug("Evicting caches for tenantId={} after content change", event.tenantId());
         evictTenant(event.tenantId());
     }
 
-    private <T> List<T> safeList(Supplier<List<T>> supplier, String label)
-    {
+    private <T> List<T> safeList(Supplier<List<T>> supplier, String label) {
         List<T> result = safe(supplier, Collections.emptyList(), label);
         return result != null ? result : Collections.emptyList();
     }
 
-    private <T> T safe(Supplier<T> supplier, T fallback, String label)
-    {
-        try
-        {
+    private <T> T safe(Supplier<T> supplier, T fallback, String label) {
+        try {
             return supplier.get();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             log.warn("Bootstrap section '{}' failed, returning fallback: {}", label, e.getMessage());
             return fallback;
         }
     }
 
-    private static final class CachedTenant
-    {
+    private static final class CachedTenant {
         private final TenantResponse tenant;
 
         private final long timestamp;
 
-        private CachedTenant(TenantResponse tenant, long timestamp)
-        {
+        private CachedTenant(TenantResponse tenant, long timestamp) {
             this.tenant = tenant;
             this.timestamp = timestamp;
         }
     }
 
-    private static final class CachedPayload
-    {
+    private static final class CachedPayload {
         private final SiteBootstrapResponse payload;
 
         private final Long tenantId;
 
         private final long timestamp;
 
-        private CachedPayload(SiteBootstrapResponse payload, Long tenantId, long timestamp)
-        {
+        private CachedPayload(SiteBootstrapResponse payload, Long tenantId, long timestamp) {
             this.payload = payload;
             this.tenantId = tenantId;
             this.timestamp = timestamp;

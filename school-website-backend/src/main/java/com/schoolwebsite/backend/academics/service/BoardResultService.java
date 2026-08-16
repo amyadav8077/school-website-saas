@@ -4,8 +4,7 @@ import java.util.List;
 
 import com.schoolwebsite.backend.academics.entity.BoardResult;
 
-public interface BoardResultService
-{
+public interface BoardResultService {
     List<BoardResult> getBoardResultsByTenant(Long tenantId);
 
     BoardResult createBoardResult(Long tenantId, BoardResult result);

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.schoolwebsite.backend.auth.security.CurrentUser;
 import com.schoolwebsite.backend.common.constant.AppConstants;
 import com.schoolwebsite.backend.common.exception.AppException;
 import com.schoolwebsite.backend.common.exception.ErrorCode;
@@ -19,26 +20,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SchoolEventServiceImpl implements SchoolEventService
-{
+public class SchoolEventServiceImpl implements SchoolEventService {
     private final SchoolEventRepository repository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<SchoolEvent> getEventsByTenant(Long tenantId)
-    {
+    public List<SchoolEvent> getEventsByTenant(Long tenantId) {
         log.debug("Fetching school events for tenantId={}", tenantId);
         return repository.findByTenantIdOrderByEventDateAsc(tenantId);
     }
 
     @Override
     @Transactional
-    public SchoolEvent createEvent(Long tenantId, SchoolEvent event)
-    {
+    public SchoolEvent createEvent(Long tenantId, SchoolEvent event) {
         log.info("Creating school event for tenantId={}, title={}", tenantId, event.getTitle());
+        CurrentUser.assertTenantAccess(tenantId);
+        event.setId(null);
         event.setTenantId(tenantId);
-        if (event.getEventDate() == null)
-        {
+        if (event.getEventDate() == null) {
             event.setEventDate(LocalDateTime.now().plusDays(AppConstants.DEFAULT_EVENT_LEAD_DAYS));
         }
         return repository.save(event);
@@ -46,13 +45,10 @@ public class SchoolEventServiceImpl implements SchoolEventService
 
     @Override
     @Transactional
-    public void deleteEvent(Long id)
-    {
+    public void deleteEvent(Long id) {
         log.info("Deleting school event id={}", id);
-        if (!repository.existsById(id))
-        {
-            throw AppException.of(ErrorCode.SCHOOL_EVENT_NOT_FOUND, id);
-        }
+        var existing = repository.findById(id).orElseThrow(() -> AppException.of(ErrorCode.SCHOOL_EVENT_NOT_FOUND, id));
+        CurrentUser.assertTenantAccess(existing.getTenantId());
         repository.deleteById(id);
     }
 }

@@ -12,8 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class JobApplication
-{
+public class JobApplication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -46,15 +45,13 @@ public class JobApplication
     private LocalDateTime updatedAt;
 
     @PrePersist
-    protected void onCreate()
-    {
+    protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
-    protected void onUpdate()
-    {
+    protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
 }

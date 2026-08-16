@@ -21,8 +21,7 @@ import lombok.Getter;
  */
 @Getter
 @Builder
-public class SiteBootstrapResponse
-{
+public class SiteBootstrapResponse {
     private final TenantResponse tenant;
 
     private final SiteConfigResponse config;

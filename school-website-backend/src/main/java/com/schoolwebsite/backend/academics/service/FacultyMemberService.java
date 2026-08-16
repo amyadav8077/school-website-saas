@@ -4,8 +4,7 @@ import java.util.List;
 
 import com.schoolwebsite.backend.academics.entity.FacultyMember;
 
-public interface FacultyMemberService
-{
+public interface FacultyMemberService {
     List<FacultyMember> getFacultyByTenant(Long tenantId);
 
     FacultyMember createFaculty(Long tenantId, FacultyMember member);

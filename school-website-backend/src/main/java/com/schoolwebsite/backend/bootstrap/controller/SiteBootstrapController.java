@@ -19,13 +19,11 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/sites")
 @RequiredArgsConstructor
-public class SiteBootstrapController
-{
+public class SiteBootstrapController {
     private final SiteBootstrapService siteBootstrapService;
 
     @GetMapping("/bootstrap")
-    public ResponseEntity<ApiResponse<SiteBootstrapResponse>> bootstrap(@RequestParam String host)
-    {
+    public ResponseEntity<ApiResponse<SiteBootstrapResponse>> bootstrap(@RequestParam String host) {
         return ResponseEntity.ok(ApiResponse.ok(siteBootstrapService.bootstrap(host)));
     }
 }

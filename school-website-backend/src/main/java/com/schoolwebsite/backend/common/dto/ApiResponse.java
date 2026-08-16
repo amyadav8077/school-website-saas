@@ -10,8 +10,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiResponse<T>
-{
+public class ApiResponse<T> {
     private final boolean success;
 
     private final String message;
@@ -23,18 +22,15 @@ public class ApiResponse<T>
     @Builder.Default
     private final LocalDateTime timestamp = LocalDateTime.now();
 
-    public static <T> ApiResponse<T> ok(T data)
-    {
+    public static <T> ApiResponse<T> ok(T data) {
         return ApiResponse.<T>builder().success(true).data(data).build();
     }
 
-    public static <T> ApiResponse<T> ok(String message, T data)
-    {
+    public static <T> ApiResponse<T> ok(String message, T data) {
         return ApiResponse.<T>builder().success(true).message(message).data(data).build();
     }
 
-    public static <T> ApiResponse<T> error(String message, String errorCode)
-    {
+    public static <T> ApiResponse<T> error(String message, String errorCode) {
         return ApiResponse.<T>builder().success(false).message(message).errorCode(errorCode).build();
     }
 }

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.schoolwebsite.backend.academics.entity.*;
 
 @Repository
-public interface StudentAchieverRepository extends JpaRepository<StudentAchiever, Long>
-{
+public interface StudentAchieverRepository extends JpaRepository<StudentAchiever, Long> {
     List<StudentAchiever> findByTenantId(Long tenantId);
 }

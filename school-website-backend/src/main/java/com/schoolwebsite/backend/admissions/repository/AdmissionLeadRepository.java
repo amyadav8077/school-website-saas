@@ -10,8 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.schoolwebsite.backend.admissions.entity.*;
 
 @Repository
-public interface AdmissionLeadRepository extends JpaRepository<AdmissionLead, Long>
-{
+public interface AdmissionLeadRepository extends JpaRepository<AdmissionLead, Long> {
     List<AdmissionLead> findByTenantIdOrderByCreatedAtDesc(Long tenantId);
 
     Page<AdmissionLead> findByTenantIdOrderByCreatedAtDesc(Long tenantId, Pageable pageable);

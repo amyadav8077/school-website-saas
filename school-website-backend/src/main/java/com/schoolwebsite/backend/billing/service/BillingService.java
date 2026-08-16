@@ -8,8 +8,7 @@ import com.schoolwebsite.backend.billing.dto.InvoiceStatsResponse;
 import com.schoolwebsite.backend.billing.entity.FeeItem;
 import com.schoolwebsite.backend.billing.entity.StudentInvoice;
 
-public interface BillingService
-{
+public interface BillingService {
     InvoiceStatsResponse getInvoiceStats(Long tenantId);
 
     FeeItem createFeeItem(Long tenantId, FeeItem item);
@@ -23,5 +22,5 @@ public interface BillingService
     Page<StudentInvoice> getInvoicesPaged(Long tenantId, String studentName, String gradeLevel, String section,
             int page, int size);
 
-    StudentInvoice payInvoice(Long id);
+    StudentInvoice payInvoice(Long id, String admissionNo);
 }

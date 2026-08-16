@@ -5,8 +5,7 @@ import java.util.List;
 import com.schoolwebsite.backend.tenantsubscription.dto.TenantOnboardRequest;
 import com.schoolwebsite.backend.tenantsubscription.dto.TenantResponse;
 
-public interface TenantService
-{
+public interface TenantService {
     TenantResponse onboardTenant(TenantOnboardRequest request);
 
     TenantResponse getTenantBySubdomain(String subdomain);

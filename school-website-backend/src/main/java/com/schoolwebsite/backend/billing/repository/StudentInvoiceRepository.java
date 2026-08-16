@@ -12,8 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.schoolwebsite.backend.billing.entity.*;
 
 @Repository
-public interface StudentInvoiceRepository extends JpaRepository<StudentInvoice, Long>
-{
+public interface StudentInvoiceRepository extends JpaRepository<StudentInvoice, Long> {
     // Aggregate totals computed in the DB so financial figures stay accurate at
     // any scale without loading every invoice into memory.
     @Query("SELECT COALESCE(SUM(i.amount), 0) FROM StudentInvoice i WHERE i.tenantId = :tenantId")

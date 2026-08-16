@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.schoolwebsite.backend.notifications.entity.*;
 
 @Repository
-public interface SchoolEventRepository extends JpaRepository<SchoolEvent, Long>
-{
+public interface SchoolEventRepository extends JpaRepository<SchoolEvent, Long> {
     List<SchoolEvent> findByTenantIdOrderByEventDateAsc(Long tenantId);
 }

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.schoolwebsite.backend.support.entity.*;
 
 @Repository
-public interface SupportInquiryRepository extends JpaRepository<SupportInquiry, Long>
-{
+public interface SupportInquiryRepository extends JpaRepository<SupportInquiry, Long> {
     List<SupportInquiry> findByTenantIdOrderByCreatedAtDesc(Long tenantId);
 }

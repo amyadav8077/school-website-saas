@@ -10,8 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.schoolwebsite.backend.grades.entity.*;
 
 @Repository
-public interface StudentGradeRepository extends JpaRepository<StudentGrade, Long>
-{
+public interface StudentGradeRepository extends JpaRepository<StudentGrade, Long> {
     List<StudentGrade> findByTenantIdOrderByCreatedAtDesc(Long tenantId);
 
     List<StudentGrade> findByTenantIdAndStudentNameContainingIgnoreCaseOrderByCreatedAtDesc(Long tenantId,

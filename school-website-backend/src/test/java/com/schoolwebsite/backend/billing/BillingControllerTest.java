@@ -3,15 +3,23 @@ package com.schoolwebsite.backend.billing;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.schoolwebsite.backend.auth.security.AuthPrincipal;
 import com.schoolwebsite.backend.billing.entity.FeeItem;
 import com.schoolwebsite.backend.billing.entity.StudentInvoice;
 import com.schoolwebsite.backend.billing.service.BillingService;
+import com.schoolwebsite.backend.common.constant.AppConstants;
 import com.schoolwebsite.backend.tenantsubscription.entity.Tenant;
 import com.schoolwebsite.backend.tenantsubscription.repository.TenantRepository;
 
@@ -24,6 +32,18 @@ public class BillingControllerTest {
 
     @Autowired
     private TenantRepository tenantRepository;
+
+    @BeforeEach
+    void authenticateSuperAdmin() {
+        AuthPrincipal principal = new AuthPrincipal(1L, "test-super-admin", AppConstants.ROLE_SUPER_ADMIN, null);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(principal, null,
+                List.of(new SimpleGrantedAuthority("ROLE_" + AppConstants.ROLE_SUPER_ADMIN))));
+    }
+
+    @AfterEach
+    void clearContext() {
+        SecurityContextHolder.clearContext();
+    }
 
     @Test
     public void testBillingPipeline() {
@@ -49,7 +69,7 @@ public class BillingControllerTest {
         assertEquals("PENDING", savedInvoice.getStatus());
 
         // 4. Complete a mock payment checkout transaction
-        StudentInvoice paidInvoice = billingService.payInvoice(savedInvoice.getId());
+        StudentInvoice paidInvoice = billingService.payInvoice(savedInvoice.getId(), null);
         assertEquals("PAID", paidInvoice.getStatus());
         assertNotNull(paidInvoice.getPaymentDate());
     }

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.schoolwebsite.backend.siteconfiguration.entity.*;
 
 @Repository
-public interface SiteConfigRepository extends JpaRepository<SiteConfig, Long>
-{
+public interface SiteConfigRepository extends JpaRepository<SiteConfig, Long> {
     Optional<SiteConfig> findByTenantId(Long tenantId);
 }

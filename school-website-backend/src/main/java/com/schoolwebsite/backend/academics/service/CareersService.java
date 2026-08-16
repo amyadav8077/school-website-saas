@@ -5,8 +5,7 @@ import java.util.List;
 import com.schoolwebsite.backend.academics.entity.JobApplication;
 import com.schoolwebsite.backend.academics.entity.JobPosting;
 
-public interface CareersService
-{
+public interface CareersService {
     List<JobPosting> getJobPostings(Long tenantId);
 
     JobPosting createJobPosting(Long tenantId, JobPosting job);

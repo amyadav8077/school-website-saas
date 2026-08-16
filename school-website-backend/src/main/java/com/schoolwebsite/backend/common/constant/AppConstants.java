@@ -1,10 +1,8 @@
 package com.schoolwebsite.backend.common.constant;
 
-public final class AppConstants
-{
+public final class AppConstants {
 
-    private AppConstants()
-    {
+    private AppConstants() {
     }
 
     // ── Generic status values ───────────────────────────────────────────────
@@ -40,6 +38,4 @@ public final class AppConstants
 
     // ── Auth / OTP ──────────────────────────────────────────────────────────
     public static final int OTP_VALIDITY_MINUTES = 5;
-
-    public static final String MAIL_FROM = "amityadav.ssdn@gmail.com";
 }

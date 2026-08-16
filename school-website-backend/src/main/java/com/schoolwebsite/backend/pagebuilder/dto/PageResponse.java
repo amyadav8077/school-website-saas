@@ -12,8 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PageResponse
-{
+public class PageResponse {
     private Long id;
 
     private Long tenantId;

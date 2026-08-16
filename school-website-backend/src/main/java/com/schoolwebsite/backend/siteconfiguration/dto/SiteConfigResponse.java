@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SiteConfigResponse
-{
+public class SiteConfigResponse {
     private Long id;
 
     private Long tenantId;

@@ -5,6 +5,5 @@ package com.schoolwebsite.backend.tenantsubscription.event;
  * site config, pages, etc.) so host-resolution and payload caches evict the
  * affected tenant immediately instead of waiting for TTL expiry.
  */
-public record TenantCacheEvictEvent(Long tenantId)
-{
+public record TenantCacheEvictEvent(Long tenantId) {
 }

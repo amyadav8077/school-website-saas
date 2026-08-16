@@ -9,8 +9,7 @@ import lombok.Getter;
  */
 @Getter
 @Builder
-public class InvoiceStatsResponse
-{
+public class InvoiceStatsResponse {
     private final double totalBilled;
 
     private final double totalPaid;

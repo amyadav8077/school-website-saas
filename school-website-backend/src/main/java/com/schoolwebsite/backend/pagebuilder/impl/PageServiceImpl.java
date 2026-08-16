@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.schoolwebsite.backend.auth.security.CurrentUser;
 import com.schoolwebsite.backend.common.exception.AppException;
 import com.schoolwebsite.backend.common.exception.ErrorCode;
 import com.schoolwebsite.backend.pagebuilder.dto.PageCreateRequest;
@@ -23,19 +24,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PageServiceImpl implements PageService
-{
+public class PageServiceImpl implements PageService {
     private final PageRepository pageRepository;
 
     private final PageSectionRepository pageSectionRepository;
 
     @Override
     @Transactional
-    public PageResponse createPage(Long tenantId, PageCreateRequest request)
-    {
+    public PageResponse createPage(Long tenantId, PageCreateRequest request) {
         log.info("Creating page for tenantId={}, slug={}", tenantId, request.getSlug());
-        if (pageRepository.existsByTenantIdAndSlug(tenantId, request.getSlug()))
-        {
+        if (pageRepository.existsByTenantIdAndSlug(tenantId, request.getSlug())) {
             throw AppException.of(ErrorCode.PAGE_SLUG_CONFLICT, request.getSlug());
         }
 
@@ -49,8 +47,7 @@ public class PageServiceImpl implements PageService
 
     @Override
     @Transactional(readOnly = true)
-    public List<PageResponse> getPagesByTenant(Long tenantId)
-    {
+    public List<PageResponse> getPagesByTenant(Long tenantId) {
         log.debug("Fetching pages for tenantId={}", tenantId);
         return pageRepository.findByTenantId(tenantId).stream().map(page -> {
             List<PageSection> sections = pageSectionRepository.findByPageIdOrderByPositionOrderAsc(page.getId());
@@ -60,8 +57,7 @@ public class PageServiceImpl implements PageService
 
     @Override
     @Transactional(readOnly = true)
-    public PageResponse getPageByTenantAndSlug(Long tenantId, String slug)
-    {
+    public PageResponse getPageByTenantAndSlug(Long tenantId, String slug) {
         log.debug("Fetching page for tenantId={}, slug={}", tenantId, slug);
         Page page = pageRepository.findByTenantIdAndSlug(tenantId, slug)
                 .orElseThrow(() -> AppException.of(ErrorCode.PAGE_NOT_FOUND_BY_SLUG, slug));
@@ -72,11 +68,11 @@ public class PageServiceImpl implements PageService
 
     @Override
     @Transactional
-    public PageResponse updatePageSections(Long pageId, List<PageSectionDTO> sectionDTOs)
-    {
+    public PageResponse updatePageSections(Long pageId, List<PageSectionDTO> sectionDTOs) {
         log.info("Updating {} sections for pageId={}", sectionDTOs.size(), pageId);
         Page page = pageRepository.findById(pageId)
                 .orElseThrow(() -> AppException.of(ErrorCode.PAGE_NOT_FOUND_BY_ID, pageId));
+        CurrentUser.assertTenantAccess(page.getTenantId());
 
         pageSectionRepository.deleteByPageId(pageId);
 
@@ -90,18 +86,15 @@ public class PageServiceImpl implements PageService
 
     @Override
     @Transactional
-    public void deletePage(Long pageId)
-    {
+    public void deletePage(Long pageId) {
         log.info("Deleting page id={}", pageId);
-        if (!pageRepository.existsById(pageId))
-        {
-            throw AppException.of(ErrorCode.PAGE_NOT_FOUND_BY_ID, pageId);
-        }
+        Page page = pageRepository.findById(pageId)
+                .orElseThrow(() -> AppException.of(ErrorCode.PAGE_NOT_FOUND_BY_ID, pageId));
+        CurrentUser.assertTenantAccess(page.getTenantId());
         pageRepository.deleteById(pageId);
     }
 
-    private PageResponse toResponse(Page page, List<PageSection> sections)
-    {
+    private PageResponse toResponse(Page page, List<PageSection> sections) {
         List<PageSectionDTO> sectionDTOs = sections.stream().map(this::toSectionDTO).collect(Collectors.toList());
 
         return PageResponse.builder().id(page.getId()).tenantId(page.getTenantId()).title(page.getTitle())
@@ -110,14 +103,12 @@ public class PageServiceImpl implements PageService
                 .updatedAt(page.getUpdatedAt()).build();
     }
 
-    private PageSectionDTO toSectionDTO(PageSection section)
-    {
+    private PageSectionDTO toSectionDTO(PageSection section) {
         return PageSectionDTO.builder().id(section.getId()).type(section.getType())
                 .positionOrder(section.getPositionOrder()).config(section.getConfig()).build();
     }
 
-    private PageSection toSectionEntity(Long pageId, PageSectionDTO dto)
-    {
+    private PageSection toSectionEntity(Long pageId, PageSectionDTO dto) {
         return PageSection.builder().pageId(pageId).type(dto.getType()).positionOrder(dto.getPositionOrder())
                 .config(dto.getConfig()).build();
     }

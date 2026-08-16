@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.schoolwebsite.backend.academics.entity.*;
 
 @Repository
-public interface SchoolBranchRepository extends JpaRepository<SchoolBranch, Long>
-{
+public interface SchoolBranchRepository extends JpaRepository<SchoolBranch, Long> {
     List<SchoolBranch> findByTenantId(Long tenantId);
 }

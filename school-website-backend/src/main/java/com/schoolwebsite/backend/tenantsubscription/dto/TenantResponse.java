@@ -11,8 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TenantResponse
-{
+public class TenantResponse {
     private Long id;
 
     private String name;

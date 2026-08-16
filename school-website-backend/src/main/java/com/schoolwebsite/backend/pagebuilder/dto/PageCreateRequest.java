@@ -4,8 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class PageCreateRequest
-{
+public class PageCreateRequest {
     @NotBlank(message = "Page title is required")
     private String title;
 
