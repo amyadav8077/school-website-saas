@@ -204,18 +204,16 @@ export class App implements OnInit {
             this.activeTenant.set({ id: user.tenantId, name: user.tenantName, subdomain: user.subdomain });
             this.loadTenantProjectAndWebsite(user.subdomain);
           } else {
+            // Super-admin: the tenants list is admin-only, fetch it now that we have a token.
             this.fetchTenantsList();
           }
         } catch (e) {
           console.error('Failed to parse saved user session', e);
           sessionStorage.removeItem('school_saas_user');
-          this.fetchTenantsList();
         }
-      } else {
-        this.fetchTenantsList();
       }
-    } else {
-      this.fetchTenantsList();
+      // Anonymous visitors: do NOT call the admin-only tenants endpoint (it would 403).
+      // The list is loaded after a super-admin logs in (see onLoginSuccess).
     }
   }
 
@@ -334,10 +332,15 @@ export class App implements OnInit {
   }
 
   fetchTenantsList() {
+    // Admin-only endpoint; only meaningful for a logged-in super-admin.
     this.http.get<any[]>('http://localhost:8080/api/admin/tenants')
       .subscribe({
         next: (data) => this.tenantsList.set(data),
-        error: (err) => console.error('Failed to fetch tenants list', err)
+        error: (err) => {
+          if (err?.status !== 401 && err?.status !== 403) {
+            console.error('Failed to fetch tenants list', err);
+          }
+        }
       });
   }
 
