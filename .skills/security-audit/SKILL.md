@@ -232,6 +232,40 @@ tenant/internal IDs.
 Also give a short verdict per surface (clean / issues) and confirm secrets are env-driven and
 gitignored. Read-only.
 
+## AI-Generated / "Vibe-Coded" Code Audit (sub-playbook)
+Use when asked to audit for vulnerabilities typical of AI-generated code. Core principle:
+**do NOT assume code is secure just because it compiles, tests pass, types are correct,
+Spring Security is "configured", route guards exist, IDs are UUIDs, or endpoints are hidden
+from the UI.** AI-generated code tends to produce *plausible-looking* security that is
+inconsistent or enforced in the wrong layer.
+
+**Hunt specifically for:**
+- Authorization missing from *service* methods (only added in some controllers, not others).
+- Security enforced **only** in the frontend (route guards, `*ngIf`, disabled buttons).
+- Trusting client-provided **role** (role read from token body/param instead of a signed claim).
+- Trusting client-provided **tenantId** (from path/body instead of the authenticated principal).
+- Trusting hidden form fields / disabled UI controls.
+- **Mass assignment** (`@RequestBody Entity`), excessive DTO/entity fields in responses.
+- **Insecure defaults** (dev secrets, `admin123`, permissive CORS `*`, `ddl-auto=update`).
+- **Broad exception handling** that swallows/obscures security errors or returns 500 for authz.
+- **Inconsistent** security: same resource protected on one endpoint, open on a sibling.
+- **Duplicated authorization logic** that can drift (copy-pasted checks vs one helper).
+- Bypassable workflow checks (status transitions/payment/publish callable out of order).
+- Insecure CORS (wildcard + credentials), missing security headers/CSP.
+- Dangerous regex (catastrophic backtracking / ReDoS) on user input.
+- Unsafe file upload (no MIME/magic-byte/size/extension checks; SVG/polyglot).
+- Unsafe URL handling / `bypassSecurityTrust*` on user input; SSRF on server-side fetch.
+- XSS (innerHTML/page-builder content), sensitive logging, secrets in config.
+- Insecure random (`java.util.Random`/`Math.random` for tokens/OTP), predictable IDs.
+- Missing rate limits, missing pagination, missing request/upload size limits.
+- Dangerous deserialization; unsafe dynamic SQL / dynamic ORDER BY; unbounded DB ops
+  (`findAll`, `deleteAll`, `saveAll` across tenants, no `LIMIT`).
+
+**For every finding:** give the exact file:line, the precise reason it is insecure (not just
+the category), severity, and the fix. Explicitly call out where a check exists but is enforced
+in the wrong layer or applied inconsistently. Also list the AI-smell classes that were checked
+and found CLEAN, so the report distinguishes "verified safe" from "not looked at". Read-only.
+
 ## For every finding report
 1. What is vulnerable  2. Why  3. How an attacker exploits it  4. Severity
 5. Recommended fix  6. Exact file/class/function.
