@@ -194,6 +194,44 @@ Also list attacks that were **attempted and correctly blocked** (with the observ
 code, e.g. 401/403/400) so the report shows current defenses, not just gaps. Prefer live
 verification (curl against a running instance) when available. Read-only.
 
+## Sensitive-Data & Privacy Sweep (standalone sub-playbook)
+Use when asked for a "sensitive data" / "privacy" / "data-exposure" audit. Goal: find where
+secrets or PII could leak. **NEVER print actual secret/PII values** — report only file, line,
+type, severity, why, and fix.
+
+**Secret/credential classes to hunt:** passwords, API keys, JWT/refresh tokens, DB creds,
+private keys, cloud/storage creds, SMTP creds, OAuth secrets, webhook URLs.
+**PII classes to hunt:** email, phone, address, student info, parent/guardian info, academic
+records/grades, transfer certificates, Aadhaar/national IDs, uploaded documents, DOB, photos,
+tenant/internal IDs.
+
+**Surfaces to scan (each):**
+- Backend API responses (controllers returning full entities incl. sensitive columns).
+- Backend DTOs vs entities (does the response DTO include fields the client doesn't need?).
+- Database entities (which columns are sensitive; are they ever serialized outward?).
+- Debug/log statements (`log.info/debug/error`, printStackTrace) leaking PII/secrets/tokens.
+- Exception/error responses (stack traces, SQL, paths, versions).
+- Frontend models/interfaces holding sensitive fields.
+- Frontend state + storage: `localStorage`, `sessionStorage`, `cookies` (tokens/PII persisted?).
+- `console.log`/`console.error` in frontend leaking tokens/PII/responses.
+- Config: `application*.properties/yml`, `.env*` (only `.env.example` should be tracked),
+  Dockerfiles, docker-compose, render.yaml.
+- CI/CD: GitHub Actions logs/echoes of secrets, `${{ secrets.* }}` misuse.
+- Hardcoded values: emails, phone numbers, keys, URLs with embedded creds/tokens (incl. the
+  git remote URL).
+
+**Suggested grep seeds (adapt):**
+`password|secret|api[_-]?key|token|Authorization|Bearer|private[_-]?key|BEGIN .*PRIVATE`
+`aadhar|aadhaar|ssn|dob|phone|email|address` · `console\.(log|error|debug)` ·
+`printStackTrace|log\.(info|debug|error).*(password|otp|token|aadhar|email|phone)` ·
+`localStorage|sessionStorage|document\.cookie` · scan `.env`, `*.properties`, `*.yml`,
+`Dockerfile*`, `.github/**`.
+
+**Report table columns (values redacted):**
+`file | line | type of sensitive information | severity | why it is exposed | recommended fix`
+Also give a short verdict per surface (clean / issues) and confirm secrets are env-driven and
+gitignored. Read-only.
+
 ## For every finding report
 1. What is vulnerable  2. Why  3. How an attacker exploits it  4. Severity
 5. Recommended fix  6. Exact file/class/function.
