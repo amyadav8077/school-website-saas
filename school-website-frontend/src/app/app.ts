@@ -487,16 +487,16 @@ export class App implements OnInit {
 
   loadTenantCatalogs(tenantId: number) {
     this.http.get<any[]>(`http://localhost:8080/api/sites/${tenantId}/courses`)
-      .subscribe({ next: (data) => this.publicCourses.set(data), error: (err) => console.error(err) });
+      .subscribe({ next: (data) => this.publicCourses.set(data), error: () => console.error('Failed to load public content') });
 
     this.http.get<any[]>(`http://localhost:8080/api/sites/${tenantId}/programs`)
-      .subscribe({ next: (data) => this.publicPrograms.set(data), error: (err) => console.error(err) });
+      .subscribe({ next: (data) => this.publicPrograms.set(data), error: () => console.error('Failed to load public content') });
 
     this.http.get<any[]>(`http://localhost:8080/api/sites/${tenantId}/faculty`)
-      .subscribe({ next: (data) => this.publicFaculty.set(data), error: (err) => console.error(err) });
+      .subscribe({ next: (data) => this.publicFaculty.set(data), error: () => console.error('Failed to load public content') });
 
     this.http.get<any[]>(`http://localhost:8080/api/sites/${tenantId}/achievers`)
-      .subscribe({ next: (data) => this.publicAchievers.set(data), error: (err) => console.error(err) });
+      .subscribe({ next: (data) => this.publicAchievers.set(data), error: () => console.error('Failed to load public content') });
   }
 
   openAchievementsPage() {
@@ -508,10 +508,10 @@ export class App implements OnInit {
 
   loadTenantNotifications(tenantId: number) {
     this.http.get<any[]>(`http://localhost:8080/api/sites/${tenantId}/news`)
-      .subscribe({ next: (data) => this.publicNews.set(data), error: (err) => console.error(err) });
+      .subscribe({ next: (data) => this.publicNews.set(data), error: () => console.error('Failed to load public content') });
 
     this.http.get<any[]>(`http://localhost:8080/api/sites/${tenantId}/events`)
-      .subscribe({ next: (data) => this.publicEvents.set(data), error: (err) => console.error(err) });
+      .subscribe({ next: (data) => this.publicEvents.set(data), error: () => console.error('Failed to load public content') });
   }
 
   selectPreviewPage(page: any) {

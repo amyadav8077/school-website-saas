@@ -128,8 +128,11 @@ export class TenantOnboardingComponent {
     if (!this.form.adminUsername) {
       this.form.adminUsername = this.form.subdomain.toLowerCase() + '_admin';
     }
-    if (!this.form.adminPassword) {
-      this.form.adminPassword = 'admin123';
+    // Require an explicit strong password — never fall back to a well-known default.
+    if (!this.form.adminPassword || this.form.adminPassword.length < 8) {
+      this.isLoading.set(false);
+      this.errorMessage.set('Please set an administrator password of at least 8 characters.');
+      return;
     }
 
     this.http.post<any>('http://localhost:8080/api/admin/tenants', this.form)
