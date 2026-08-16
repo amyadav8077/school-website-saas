@@ -154,6 +154,46 @@ Output a standalone **MULTI-TENANT SECURITY REPORT**: table of every tenant-touc
 endpoint with the attack-scenario fields above, the enforcement matrix, a plain-English
 verdict ("can Tenant A access Tenant B? yes/no and where"), and prioritized fixes. Read-only.
 
+## Low-Privilege Attacker Assessment (red-team sub-playbook)
+Use when asked "what damage could a normal user cause" / ethical-hacker / pentest framing.
+
+**Assume the tester has:** a normal (non-admin) user account only. **No** server access,
+**no** DB access, **no** source access, **no** admin creds. Tooling limited to: browser,
+frontend JS, hand-crafted HTTP requests, modified request bodies/IDs/headers/cookies/tokens.
+Do NOT attack external systems; do NOT change code. (Internally you MAY read the source to
+reason about realistic attack paths, but the *attacker model* has none of the above.)
+
+**Reason through these 15 questions and answer each with evidence from the code:**
+1. Can I become another user? (token forgery, weak JWT secret, id in token not verified)
+2. Can I become an administrator? (role in token/body trusted, privilege escalation)
+3. Can I access another school's data? (cross-tenant IDOR on reads)
+4. Can I modify another school's website? (cross-tenant writes to config/pages/sections)
+5. Can I upload malicious files? (SVG/HTML/polyglot, missing MIME/magic-byte, size caps)
+6. Can I execute JavaScript? (stored/DOM XSS via page-builder/media/announcement content)
+7. Can I access unpublished content? (draft pages/status filters enforced server-side?)
+8. Can I retrieve private documents? (TC/Aadhaar/invoices/grades without authorization)
+9. Can I enumerate users? (login/forgot-password/lookup responses differ by existence)
+10. Can I brute force accounts? (no rate limit/lockout on login/OTP)
+11. Can I bypass frontend restrictions? (hidden/disabled controls, client-only role guards)
+12. Can I manipulate IDs? (sequential ids, id-only deletes/updates without ownership)
+13. Can I bypass workflow restrictions? (call endpoints out of order, self-approve, skip pay)
+14. Can I cause excessive resource consumption? (no size caps, unbounded lists, huge Base64)
+15. Can I extract sensitive information? (excessive fields, stack traces, verbose errors)
+
+**For every successful OR potentially-successful attack, report in this exact shape:**
+```
+Attack:
+Required privileges:      (anonymous | normal user | tenant admin)
+Affected endpoint:
+Attack vector:            (raw HTTP request, modified id/body/header/token, etc.)
+Impact:
+Severity:                 CRITICAL | HIGH | MEDIUM | LOW
+Recommended mitigation:
+```
+Also list attacks that were **attempted and correctly blocked** (with the observed status
+code, e.g. 401/403/400) so the report shows current defenses, not just gaps. Prefer live
+verification (curl against a running instance) when available. Read-only.
+
 ## For every finding report
 1. What is vulnerable  2. Why  3. How an attacker exploits it  4. Severity
 5. Recommended fix  6. Exact file/class/function.
