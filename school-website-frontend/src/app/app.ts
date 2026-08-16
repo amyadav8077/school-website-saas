@@ -1,9 +1,9 @@
-import { Component, OnInit, inject, signal, HostListener } from '@angular/core';
+import { Component, OnInit, inject, signal, effect, HostListener } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl, Title } from '@angular/platform-browser';
 import { TenantOnboardingComponent } from './admin/tenant-onboarding/tenant-onboarding.component';
 import { BrandingSettingsComponent } from './admin/branding-settings/branding-settings.component';
 import { PageBuilderComponent } from './admin/page-builder/page-builder.component';
@@ -74,7 +74,19 @@ import { AdmissionsPromoComponent } from './pages/admissions-promo/admissions-pr
 export class App implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly sanitizer = inject(DomSanitizer);
-  protected readonly title = signal('School Website SaaS Platform');
+  private readonly titleService = inject(Title);
+  private static readonly PLATFORM_TITLE = 'School Website SaaS Platform';
+  protected readonly title = signal(App.PLATFORM_TITLE);
+
+  constructor() {
+    // Keep the browser tab title in sync with the active tenant. On a tenant's
+    // public site (or when an admin selects a tenant) show the school's name;
+    // fall back to the platform name on the marketing/admin hub.
+    effect(() => {
+      const tenant = this.activeTenant();
+      this.titleService.setTitle(tenant?.name ? tenant.name : App.PLATFORM_TITLE);
+    });
+  }
   protected readonly backendStatus = signal<string>('Checking...');
   protected readonly backendMessage = signal<string>('');
   protected readonly currentUser = signal<any>(null);
