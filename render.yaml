@@ -52,3 +52,18 @@ services:
         sync: false
       - key: SPRING_MAIL_PASSWORD
         sync: false
+
+      # JWT signing secret — REQUIRED in prod (JwtService fails fast if blank).
+      # Render generates a strong random value on first deploy.
+      - key: JWT_SECRET
+        generateValue: true
+
+      # CORS allowlist — comma-separated. Set in the Render dashboard to your Vercel
+      # app URL plus every tenant custom domain, e.g.:
+      #   https://<your-app>.vercel.app,https://www.pioneerschools.co.in,https://pioneerschools.co.in
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+
+      # Sender identity for OTP / recovery emails.
+      - key: MAIL_FROM
+        sync: false
