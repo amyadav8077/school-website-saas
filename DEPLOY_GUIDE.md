@@ -142,7 +142,11 @@ To make your frontend securely talk to your Render backend:
 ---
 
 ### Step F: Connect a Per-Tenant Custom GoDaddy Domain
-Each school can be served on **its own domain** (e.g. `www.pioneerschool.com`). When a visitor opens that domain, the app detects the host, resolves the owning tenant, and renders that school's public website directly — no admin console, no login.
+Each school can be served on **its own domain** (e.g. `www.pioneerschools.co.in`). When a visitor opens that domain, the app detects the host, resolves the owning tenant, and renders that school's public website directly — no admin console, no login.
+
+> 📘 **Full repeatable runbook:** [`docs/custom-domain-onboarding.md`](docs/custom-domain-onboarding.md)
+> — step-by-step Render/Vercel/GoDaddy config, a per-school placeholder table, a testing
+> checklist, and troubleshooting. Use it every time you onboard a new school's domain.
 
 There are three pieces to wire up, once per school:
 
