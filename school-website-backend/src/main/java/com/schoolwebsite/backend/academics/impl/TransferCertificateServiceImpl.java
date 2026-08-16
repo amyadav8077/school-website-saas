@@ -47,7 +47,9 @@ public class TransferCertificateServiceImpl implements TransferCertificateServic
     @Override
     @Transactional(readOnly = true)
     public List<TransferCertificate> getIssuedTCs(Long tenantId) {
-        return repository.findByTenantIdOrderByIssueDateDesc(tenantId);
+        // Even for the owning admin, return Aadhaar masked to minimize PII exposure.
+        return repository.findByTenantIdOrderByIssueDateDesc(tenantId).stream().map(this::maskSensitive)
+                .collect(java.util.stream.Collectors.toList());
     }
 
     /**
@@ -64,7 +66,7 @@ public class TransferCertificateServiceImpl implements TransferCertificateServic
     @Override
     @Transactional
     public TransferCertificate issueTC(Long tenantId, TransferCertificate tc) {
-        log.info("Issuing transfer certificate for tenantId={}, student={}", tenantId, tc.getStudentName());
+        log.info("Issuing transfer certificate for tenantId={}", tenantId);
         tc.setId(null);
         tc.setTenantId(tenantId);
         if (tc.getIssueDate() == null) {

@@ -46,7 +46,7 @@ public class BillingServiceImpl implements BillingService {
     @Override
     @Transactional
     public StudentInvoice generateInvoice(Long tenantId, StudentInvoice invoice) {
-        log.info("Generating invoice for tenantId={}, student={}", tenantId, invoice.getStudentName());
+        log.info("Generating invoice for tenantId={}", tenantId);
         invoice.setId(null);
         invoice.setTenantId(tenantId);
         invoice.setStatus(AppConstants.STATUS_PENDING);
@@ -58,15 +58,27 @@ public class BillingServiceImpl implements BillingService {
     @Transactional(readOnly = true)
     public List<StudentInvoice> getInvoices(Long tenantId, String studentName, String gradeLevel, String section) {
         log.debug("Fetching invoices for tenantId={}", tenantId);
+        List<StudentInvoice> result;
         if (StringUtils.hasText(studentName)) {
-            return invoiceRepository.findByTenantIdAndStudentNameContainingIgnoreCaseOrderByCreatedAtDesc(tenantId,
+            result = invoiceRepository.findByTenantIdAndStudentNameContainingIgnoreCaseOrderByCreatedAtDesc(tenantId,
                     studentName.trim());
-        }
-        if (StringUtils.hasText(gradeLevel) && StringUtils.hasText(section)) {
-            return invoiceRepository.findByTenantIdAndGradeLevelAndSectionOrderByCreatedAtDesc(tenantId,
+        } else if (StringUtils.hasText(gradeLevel) && StringUtils.hasText(section)) {
+            result = invoiceRepository.findByTenantIdAndGradeLevelAndSectionOrderByCreatedAtDesc(tenantId,
                     gradeLevel.trim(), section.trim());
+        } else {
+            result = invoiceRepository.findByTenantIdOrderByCreatedAtDesc(tenantId);
         }
-        return invoiceRepository.findByTenantIdOrderByCreatedAtDesc(tenantId);
+        result.forEach(this::maskSensitive);
+        return result;
+    }
+
+    /** Masks the Aadhaar number so only the last 4 digits are returned. */
+    private StudentInvoice maskSensitive(StudentInvoice inv) {
+        String aadhar = inv.getAadharNo();
+        if (aadhar != null && aadhar.length() > 4) {
+            inv.setAadharNo("XXXX-XXXX-" + aadhar.substring(aadhar.length() - 4));
+        }
+        return inv;
     }
 
     @Override
@@ -88,15 +100,18 @@ public class BillingServiceImpl implements BillingService {
         org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(safePage,
                 safeSize);
 
+        org.springframework.data.domain.Page<StudentInvoice> result;
         if (StringUtils.hasText(studentName)) {
-            return invoiceRepository.findByTenantIdAndStudentNameContainingIgnoreCaseOrderByCreatedAtDesc(tenantId,
+            result = invoiceRepository.findByTenantIdAndStudentNameContainingIgnoreCaseOrderByCreatedAtDesc(tenantId,
                     studentName.trim(), pageable);
-        }
-        if (StringUtils.hasText(gradeLevel) && StringUtils.hasText(section)) {
-            return invoiceRepository.findByTenantIdAndGradeLevelAndSectionOrderByCreatedAtDesc(tenantId,
+        } else if (StringUtils.hasText(gradeLevel) && StringUtils.hasText(section)) {
+            result = invoiceRepository.findByTenantIdAndGradeLevelAndSectionOrderByCreatedAtDesc(tenantId,
                     gradeLevel.trim(), section.trim(), pageable);
+        } else {
+            result = invoiceRepository.findByTenantIdOrderByCreatedAtDesc(tenantId, pageable);
         }
-        return invoiceRepository.findByTenantIdOrderByCreatedAtDesc(tenantId, pageable);
+        result.forEach(this::maskSensitive);
+        return result;
     }
 
     @Override

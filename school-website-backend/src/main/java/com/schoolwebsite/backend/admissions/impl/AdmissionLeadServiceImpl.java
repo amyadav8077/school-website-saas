@@ -28,7 +28,7 @@ public class AdmissionLeadServiceImpl implements AdmissionLeadService {
     @Override
     @Transactional
     public AdmissionLeadResponse submitLead(Long tenantId, AdmissionLeadRequest request) {
-        log.info("Submitting admission lead for tenantId={}, student={}", tenantId, request.getStudentName());
+        log.info("Submitting admission lead for tenantId={}", tenantId);
         AdmissionLead lead = AdmissionLead.builder().tenantId(tenantId).studentName(request.getStudentName())
                 .gradeLevel(request.getGradeLevel()).parentName(request.getParentName())
                 .parentEmail(request.getParentEmail()).parentPhone(request.getParentPhone())

@@ -60,8 +60,7 @@ public class StudentGradeServiceImpl implements StudentGradeService {
     @Override
     @Transactional
     public StudentGrade addGrade(Long tenantId, StudentGrade grade) {
-        log.info("Adding student grade for tenantId={}, student={}, subject={}", tenantId, grade.getStudentName(),
-                grade.getSubjectName());
+        log.info("Adding student grade for tenantId={}", tenantId);
         grade.setId(null);
         grade.setTenantId(tenantId);
         return repository.save(grade);

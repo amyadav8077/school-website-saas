@@ -43,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public Optional<AdminUser> authenticate(String username, String password) {
-        log.info("Authenticating username={}", username);
+        log.debug("Authentication attempt received");
         return adminUserRepository.findByUsername(username).filter(user -> passwordMatches(password, user));
     }
 
@@ -110,7 +110,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public AdminUser saveTenantAdmin(String username, String password, Long tenantId) {
-        log.info("Saving tenant admin for tenantId={}, username={}", tenantId, username);
+        log.info("Saving tenant admin for tenantId={}", tenantId);
         AdminUser adminUser = adminUserRepository.findByTenantId(tenantId).orElse(new AdminUser());
         adminUser.setUsername(username);
         adminUser.setPassword(passwordEncoder.encode(password));
@@ -128,7 +128,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void updatePassword(AdminUser user, String newPassword) {
-        log.info("Updating password for username={}", user.getUsername());
+        log.info("Updating password for userId={}", user.getId());
         user.setPassword(passwordEncoder.encode(newPassword));
         adminUserRepository.save(user);
     }

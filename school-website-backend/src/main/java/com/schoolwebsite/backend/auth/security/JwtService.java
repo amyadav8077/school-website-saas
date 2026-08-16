@@ -27,12 +27,17 @@ public class JwtService {
     private final long expiryMillis;
 
     public JwtService(@Value("${security.jwt.secret:}") String secret,
-            @Value("${security.jwt.expiry-minutes:720}") long expiryMinutes) {
-        // Fall back to a stable dev secret only when none is configured. Production
-        // MUST set security.jwt.secret (via env JWT_SECRET); see application-prod.
-        String effective = (secret == null || secret.isBlank())
-                ? "dev-only-insecure-jwt-secret-change-me-please-32b+"
-                : secret;
+            @Value("${security.jwt.expiry-minutes:720}") long expiryMinutes,
+            org.springframework.core.env.Environment env) {
+        boolean isProd = java.util.Arrays.asList(env.getActiveProfiles()).contains("prod");
+        boolean blank = (secret == null || secret.isBlank());
+        if (isProd && blank) {
+            // Never run production with a fallback signing key — tokens would be forgeable.
+            throw new IllegalStateException(
+                    "JWT_SECRET (security.jwt.secret) must be set to a strong 32+ char value in the prod profile.");
+        }
+        // Fall back to a stable dev secret only for non-prod when none is configured.
+        String effective = blank ? "dev-only-insecure-jwt-secret-change-me-please-32b+" : secret;
         byte[] keyBytes = effective.getBytes(StandardCharsets.UTF_8);
         if (keyBytes.length < 32) {
             // Pad short dev secrets so HS256 has a valid-length key; real secrets
