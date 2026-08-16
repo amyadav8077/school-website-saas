@@ -1,10 +1,29 @@
-@if (!currentUser()) {
+@if (publicSiteMode() && publicSiteLoading()) {
+  <!-- Branded loading screen while the tenant site boots (covers backend wake-up) -->
+  <div class="sw-boot">
+    <div class="sw-boot-card">
+      <div class="sw-boot-spinner"></div>
+      <p class="sw-boot-text">Loading{{ activeTenant()?.name ? ' ' + activeTenant().name : ' your school website' }}…</p>
+    </div>
+  </div>
+} @else if (publicSiteMode() && publicSiteError()) {
+  <!-- Friendly error screen; never a blank/broken page -->
+  <div class="sw-boot">
+    <div class="sw-boot-card">
+      <span class="sw-boot-emoji">🏫</span>
+      <h1 class="sw-boot-title">We couldn't load this school's website</h1>
+      <p class="sw-boot-text">This may be a temporary connection issue. Please try again in a moment.</p>
+      <button class="sw-boot-btn" (click)="retryPublicSite()">↻ Retry</button>
+    </div>
+  </div>
+} @else if (!currentUser() && !publicSiteMode()) {
   <app-login (loginSuccess)="onLoginSuccess($event)"></app-login>
 } @else {
-  <main style="max-width: 1300px; width: 100%; padding: 1.5rem 1rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; box-sizing: border-box; margin: 0 auto;">
+  <main [style.max-width]="publicSiteMode() ? '100%' : '1300px'" style="width: 100%; padding: 1.5rem 1rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; box-sizing: border-box; margin: 0 auto;"
+        [style.padding]="publicSiteMode() ? '0' : '1.5rem 1rem'">
     
     <!-- SaaS Platform Master Header -->
-    @if (!activeTenant()) {
+    @if (!activeTenant() && !publicSiteMode()) {
       <div class="sw-top-bar ds-reveal" style="background: linear-gradient(135deg, #0f172a, #1e293b); padding: 0.85rem 1.25rem; border-radius: var(--ds-radius); margin-bottom: 2rem; border: 1px solid #1e293b; color: white; box-shadow: var(--ds-shadow);">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
           <span>🌐</span>
@@ -16,7 +35,7 @@
       </div>
     }
   
-  @if (!activeTenant()) {
+  @if (!activeTenant() && !publicSiteMode()) {
     <!-- ========================================== -->
     <!-- SaaS PLATFORM MARKETING HUB (SchoolSaaS.com) -->
     <!-- ========================================== -->
@@ -159,6 +178,7 @@
     <!-- ========================================== -->
     <!-- ACTIVE TENANT WORKSPACE (ADMIN TERMINAL)   -->
     <!-- ========================================== -->
+    @if (!publicSiteMode()) {
     <header class="ds-reveal" style="text-align: center; margin-bottom: 2rem; border-bottom: 2px solid var(--ds-line); padding-bottom: 1.5rem;">
       <span class="ds-chip" style="font-size: 0.8rem; padding: 0.25rem 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Multi-Tenant SaaS Portal</span>
       <h1 class="ds-heading" style="font-size: 2.25rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">{{ title() }}</h1>
@@ -334,9 +354,11 @@
         </app-admissions-manager>
       }
     </section>
+    }
 
     <!-- Live Multi-Tenant Theme Preview Sandbox -->
-    <section style="margin-top: 3rem;">
+    <section [style.margin-top]="publicSiteMode() ? '0' : '3rem'">
+      @if (!publicSiteMode()) {
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; border-bottom: 2px solid #cbd5e1; padding-bottom: 0.5rem;">
         <h2 style="font-size: 1.5rem; color: #1e293b; margin: 0; font-weight: 800;">Real-time Multi-Tenant Website Preview</h2>
         <span style="background-color: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; font-size: 0.8rem; padding: 0.25rem 0.5rem; border-radius: 6px; font-weight: 600;">
@@ -347,6 +369,7 @@
       <p style="color: #64748b; font-size: 0.95rem; margin-top: 0; margin-bottom: 1.5rem; line-height: 1.5;">
         This sandbox previews the tenant's public website template. The design, palette, header elements, buttons, and contact details update instantly in response to the active school configurations.
       </p>
+      }
 
       <!-- Simulated Browser Window Container (Dynamic Full-Screen Overlay) -->
       <div [style.position]="isFullscreenPreview() ? 'fixed' : 'relative'"
@@ -359,9 +382,11 @@
            [style.box-shadow]="isFullscreenPreview() ? 'none' : '0 10px 15px -3px rgba(0, 0, 0, 0.1)'"
            [style.display]="isFullscreenPreview() ? 'flex' : 'block'"
            [style.flex-direction]="isFullscreenPreview() ? 'column' : 'none'"
-           style="border: 1px solid #cbd5e1; overflow: hidden; background: white;">
+           [style.border]="publicSiteMode() ? '0' : '1px solid #cbd5e1'"
+           style="overflow: hidden; background: white;">
         
-        <!-- Simulated Browser Bar -->
+        <!-- Simulated Browser Bar (hidden on the real public site) -->
+        @if (!publicSiteMode()) {
         <div style="background: #f1f5f9; padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid #cbd5e1; flex-shrink: 0;">
           <div style="display: flex; gap: 0.35rem;">
             <span style="width: 10px; height: 10px; background: #ef4444; border-radius: 50%;"></span>
@@ -381,6 +406,7 @@
             </button>
           }
         </div>
+        }
 
         <!-- Public Site Content (Applied with Custom CSS variables) -->
         <div [style.font-family]="fontFamily()" 
@@ -388,26 +414,34 @@
              [style.overflow-y]="isFullscreenPreview() ? 'auto' : 'visible'"
              style="background: white; min-height: 450px; display: flex; flex-direction: column; transition: font-family 0.3s;">
           
-          <!-- Animated Top Announcement Banner -->
-          @if (activeBanner() && activeBanner().enabled) {
-            <div style="background: linear-gradient(90deg, #dc2626, #ea580c); color: white; padding: 0.65rem 1rem; font-size: 0.85rem; font-weight: 700; overflow: hidden; position: relative; display: flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-bottom: 2px solid rgba(255,255,255,0.15); flex-shrink: 0;">
-              
-              <!-- Marquee container with CSS animation -->
-              <div style="white-space: nowrap; width: 100%; display: flex; align-items: center; justify-content: space-between;">
-                <marquee [direction]="activeBanner().direction === 'right' ? 'right' : 'left'" scrollamount="5" style="flex-grow: 1; margin-right: 1.5rem; font-family: system-ui, sans-serif;">
-                  ⚡ ATTENTION ANNOUNCEMENT: {{ activeBanner().text }}
-                </marquee>
-                
-                <!-- "Click Me / View Details" Action Button -->
-                <button (click)="selectPreviewPageBySlug(activeBanner().pageSlug)" 
-                        [style.background-color]="accentColor()"
-                        style="color: #0f172a; border: 0; padding: 0.35rem 0.95rem; border-radius: 9999px; font-weight: 800; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"
-                        onmouseenter="this.style.transform='scale(1.05)'"
-                        onmouseleave="this.style.transform='scale(1)'">
-                  🔥 {{ activeBanner().buttonText || 'Click Me!' }}
-                </button>
+          <!-- Rich Admissions Promo Popup (public website only, dismissible) -->
+          @if (activeRole() === 'PARENT_VISITOR' && showPromo() && promoConfig()) {
+            <app-admissions-promo
+              [promo]="promoConfig()"
+              [logo]="logoUrl()"
+              (close)="closePromo()"
+              (cta)="onPromoCta($event)">
+            </app-admissions-promo>
+          }
+
+          <!-- Modern Top Announcement Banner -->
+          @if (activeBanner() && activeBanner().enabled && showAnnouncement()) {
+            <div class="sw-announce" [style.--sw-announce-accent]="accentColor()">
+              <span class="sw-announce-badge">📣 News</span>
+
+              <!-- Smooth CSS-scrolling marquee (no <marquee> tag) -->
+              <div class="sw-announce-track">
+                <div class="sw-announce-scroll" [class.sw-announce-scroll--right]="activeBanner().direction === 'right'">
+                  <span class="sw-announce-text">{{ activeBanner().text }}</span>
+                  <span class="sw-announce-text" aria-hidden="true">{{ activeBanner().text }}</span>
+                </div>
               </div>
 
+              <button class="sw-announce-cta" (click)="selectPreviewPageBySlug(activeBanner().pageSlug)">
+                {{ activeBanner().buttonText || 'Learn more' }} <span class="sw-announce-arrow">→</span>
+              </button>
+
+              <button class="sw-announce-close" (click)="dismissAnnouncement()" aria-label="Dismiss announcement">✕</button>
             </div>
           }
 
@@ -522,16 +556,6 @@
 
           <!-- Website Page Body (Pushes the footer to the bottom of the page) -->
           <div style="flex: 1 0 auto; flex-shrink: 0; display: flex; flex-direction: column; width: 100%;">
-
-          <!-- Prominent CBSE Compliance Header Bar (CBSE Cir No. 09/2021 Appendix IX prominent link requirement) -->
-          @if (activeTenant()) {
-            <div class="af-cbse-bar">
-              <span>⚠️ CBSE Appendix IX Compliance Desk Active</span>
-              <button (click)="selectPreviewPageBySlug('disclosures')" class="af-cbse-btn">
-                📜 VIEW MANDATORY PUBLIC DISCLOSURE (CBSE)
-              </button>
-             </div>
-           }
 
            <!-- Connection Lost / Offline State -->
            @if (connectionLost()) {
@@ -1205,6 +1229,7 @@
                   <li><button class="foot-link" (click)="selectPreviewPageBySlug('admissions')">Admissions</button></li>
                   <li><button class="foot-link" (click)="selectPreviewPageBySlug('gallery')">Campus Gallery</button></li>
                   <li><button class="foot-link" (click)="selectPreviewPageBySlug('contact')">Contact Us</button></li>
+                  <li><button class="foot-link" (click)="selectPreviewPageBySlug('disclosures')">Mandatory Disclosures</button></li>
                 </ul>
               </div>
 

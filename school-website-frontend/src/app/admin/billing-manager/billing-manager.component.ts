@@ -345,6 +345,14 @@ export interface StudentInvoice {
             </tbody>
           </table>
         </div>
+
+        @if (invoiceTotalPages() > 1) {
+          <div class="sw-pager">
+            <button class="sw-pager-btn" [disabled]="invoicePage() === 0" (click)="goToInvoicePage(invoicePage() - 1)">← Prev</button>
+            <span class="sw-pager-info">Page {{ invoicePage() + 1 }} of {{ invoiceTotalPages() }} · {{ invoiceTotalElements() }} invoices</span>
+            <button class="sw-pager-btn" [disabled]="invoicePage() + 1 >= invoiceTotalPages()" (click)="goToInvoicePage(invoicePage() + 1)">Next →</button>
+          </div>
+        }
       }
     </div>
   `,
@@ -358,6 +366,10 @@ export class BillingManagerComponent implements OnChanges {
 
   protected readonly feeItems = signal<FeeItem[]>([]);
   protected readonly invoices = signal<StudentInvoice[]>([]);
+  protected readonly invoicePage = signal<number>(0);
+  protected readonly invoiceTotalPages = signal<number>(0);
+  protected readonly invoiceTotalElements = signal<number>(0);
+  protected readonly invoicePageSize = 25;
 
   // Stats signals
   protected readonly totalBilled = signal<number>(0);
@@ -400,8 +412,10 @@ export class BillingManagerComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if ((changes['tenantId'] && this.tenantId) || (changes['refreshTrigger'] && !changes['refreshTrigger'].firstChange)) {
+      this.invoicePage.set(0);
       this.fetchFeeItems();
       this.fetchInvoices();
+      this.fetchInvoiceStats();
     }
   }
 
@@ -414,28 +428,37 @@ export class BillingManagerComponent implements OnChanges {
   }
 
   fetchInvoices() {
-    this.http.get<StudentInvoice[]>(`http://localhost:8080/api/sites/${this.tenantId}/invoices`)
+    const page = this.invoicePage();
+    this.http.get<any>(`http://localhost:8080/api/sites/${this.tenantId}/invoices/paged?page=${page}&size=${this.invoicePageSize}`)
       .subscribe({
-        next: (data) => {
-          this.invoices.set(data);
-          this.calculateStats(data);
+        next: (res) => {
+          this.invoices.set(res?.content || []);
+          this.invoiceTotalPages.set(res?.totalPages || 0);
+          this.invoiceTotalElements.set(res?.totalElements || 0);
         },
         error: (err) => console.error(err)
       });
   }
 
-  calculateStats(list: StudentInvoice[]) {
-    let billed = 0;
-    let paid = 0;
-    let pending = 0;
-    list.forEach(i => {
-      billed += i.amount;
-      if (i.status === 'PAID') paid += i.amount;
-      else pending += i.amount;
-    });
-    this.totalBilled.set(billed);
-    this.totalPaid.set(paid);
-    this.totalPending.set(pending);
+  /** Totals are computed in the DB so they stay accurate across all pages. */
+  fetchInvoiceStats() {
+    this.http.get<any>(`http://localhost:8080/api/sites/${this.tenantId}/invoices/stats`)
+      .subscribe({
+        next: (s) => {
+          this.totalBilled.set(s?.totalBilled || 0);
+          this.totalPaid.set(s?.totalPaid || 0);
+          this.totalPending.set(s?.totalPending || 0);
+        },
+        error: (err) => console.error(err)
+      });
+  }
+
+  goToInvoicePage(page: number) {
+    if (page < 0 || page >= this.invoiceTotalPages()) {
+      return;
+    }
+    this.invoicePage.set(page);
+    this.fetchInvoices();
   }
 
   addFeeItem() {
@@ -468,7 +491,9 @@ export class BillingManagerComponent implements OnChanges {
     this.http.post<StudentInvoice>(`http://localhost:8080/api/admin/sites/${this.tenantId}/invoices`, this.newInvoice)
       .subscribe({
         next: () => {
+          this.invoicePage.set(0);
           this.fetchInvoices();
+          this.fetchInvoiceStats();
           this.billingModified.emit();
           this.newInvoice.studentName = '';
           this.newInvoice.admissionNo = '';
@@ -548,7 +573,9 @@ export class BillingManagerComponent implements OnChanges {
             if (completedCount === list.length) {
               this.isImporting.set(false);
               this.clearParsed();
+              this.invoicePage.set(0);
               this.fetchInvoices();
+              this.fetchInvoiceStats();
               this.billingModified.emit();
             }
           },
@@ -558,7 +585,9 @@ export class BillingManagerComponent implements OnChanges {
             if (completedCount === list.length) {
               this.isImporting.set(false);
               this.clearParsed();
+              this.invoicePage.set(0);
               this.fetchInvoices();
+              this.fetchInvoiceStats();
               this.billingModified.emit();
             }
           }

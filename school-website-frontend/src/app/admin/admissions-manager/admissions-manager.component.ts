@@ -85,6 +85,14 @@ export interface AdmissionInquiry {
             </tbody>
           </table>
         </div>
+
+        @if (leadTotalPages() > 1) {
+          <div class="sw-pager">
+            <button class="sw-pager-btn" [disabled]="leadPage() === 0" (click)="goToLeadPage(leadPage() - 1)">← Prev</button>
+            <span class="sw-pager-info">Page {{ leadPage() + 1 }} of {{ leadTotalPages() }} · {{ leadTotalElements() }} inquiries</span>
+            <button class="sw-pager-btn" [disabled]="leadPage() + 1 >= leadTotalPages()" (click)="goToLeadPage(leadPage() + 1)">Next →</button>
+          </div>
+        }
       }
     </div>
   `,
@@ -96,25 +104,41 @@ export class AdmissionsManagerComponent implements OnChanges {
   @Input() refreshTrigger: number = 0;
 
   protected readonly inquiries = signal<AdmissionInquiry[]>([]);
+  protected readonly leadPage = signal<number>(0);
+  protected readonly leadTotalPages = signal<number>(0);
+  protected readonly leadTotalElements = signal<number>(0);
+  protected readonly leadPageSize = 25;
 
   constructor(private readonly http: HttpClient) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if ((changes['tenantId'] && this.tenantId) || (changes['refreshTrigger'] && !changes['refreshTrigger'].firstChange)) {
+      this.leadPage.set(0);
       this.fetchInquiries();
     }
   }
 
   fetchInquiries() {
-    this.http.get<AdmissionInquiry[]>(`http://localhost:8080/api/admin/sites/${this.tenantId}/admissions`)
+    const page = this.leadPage();
+    this.http.get<any>(`http://localhost:8080/api/admin/sites/${this.tenantId}/admissions/paged?page=${page}&size=${this.leadPageSize}`)
       .subscribe({
-        next: (data) => {
-          this.inquiries.set(data);
+        next: (res) => {
+          this.inquiries.set(res?.content || []);
+          this.leadTotalPages.set(res?.totalPages || 0);
+          this.leadTotalElements.set(res?.totalElements || 0);
         },
         error: (err) => {
           console.error('Failed to fetch admissions inquiries', err);
         }
       });
+  }
+
+  goToLeadPage(page: number) {
+    if (page < 0 || page >= this.leadTotalPages()) {
+      return;
+    }
+    this.leadPage.set(page);
+    this.fetchInquiries();
   }
 
   updateStatus(leadId: number, status: string) {

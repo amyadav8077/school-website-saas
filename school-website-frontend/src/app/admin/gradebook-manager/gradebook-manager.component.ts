@@ -306,6 +306,14 @@ export interface StudentGrade {
             </tbody>
           </table>
         </div>
+
+        @if (gradeTotalPages() > 1) {
+          <div class="sw-pager">
+            <button class="sw-pager-btn" [disabled]="gradePage() === 0" (click)="goToGradePage(gradePage() - 1)">← Prev</button>
+            <span class="sw-pager-info">Page {{ gradePage() + 1 }} of {{ gradeTotalPages() }} · {{ gradeTotalElements() }} records</span>
+            <button class="sw-pager-btn" [disabled]="gradePage() + 1 >= gradeTotalPages()" (click)="goToGradePage(gradePage() + 1)">Next →</button>
+          </div>
+        }
       }
     </div>
   `,
@@ -319,6 +327,10 @@ export class GradebookManagerComponent implements OnChanges {
 
   protected readonly managerMode = signal<string>('SINGLE'); // SINGLE, BULK
   protected readonly grades = signal<StudentGrade[]>([]);
+  protected readonly gradePage = signal<number>(0);
+  protected readonly gradeTotalPages = signal<number>(0);
+  protected readonly gradeTotalElements = signal<number>(0);
+  protected readonly gradePageSize = 25;
   
   protected readonly parsedRows = signal<StudentGrade[]>([]);
   protected readonly isImporting = signal(false);
@@ -347,16 +359,31 @@ export class GradebookManagerComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if ((changes['tenantId'] && this.tenantId) || (changes['refreshTrigger'] && !changes['refreshTrigger'].firstChange)) {
+      this.gradePage.set(0);
       this.fetchGrades();
     }
   }
 
   fetchGrades() {
-    this.http.get<StudentGrade[]>(`http://localhost:8080/api/sites/${this.tenantId}/grades`)
+    const page = this.gradePage();
+    this.http.get<any>(`http://localhost:8080/api/sites/${this.tenantId}/grades/paged?page=${page}&size=${this.gradePageSize}`)
       .subscribe({
-        next: (data) => this.grades.set(data),
+        next: (res) => {
+          // Interceptor unwraps ApiResponse; res is the Spring Page object.
+          this.grades.set(res?.content || []);
+          this.gradeTotalPages.set(res?.totalPages || 0);
+          this.gradeTotalElements.set(res?.totalElements || 0);
+        },
         error: (err) => console.error(err)
       });
+  }
+
+  goToGradePage(page: number) {
+    if (page < 0 || page >= this.gradeTotalPages()) {
+      return;
+    }
+    this.gradePage.set(page);
+    this.fetchGrades();
   }
 
   addGradeRecord() {

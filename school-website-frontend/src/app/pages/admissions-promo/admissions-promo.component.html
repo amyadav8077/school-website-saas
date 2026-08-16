@@ -1,0 +1,111 @@
+<div class="promo-overlay" (click)="onClose()">
+  <div class="promo-modal" (click)="$event.stopPropagation()">
+
+    <!-- Close button -->
+    <button class="promo-close" (click)="onClose()" aria-label="Close">✕</button>
+
+    <!-- HERO / VIDEO SECTION -->
+    <header class="promo-hero">
+      @if (promo.promoVideoUrl) {
+        <video class="promo-hero-media" autoplay loop muted playsinline
+               [poster]="promo.promoPosterUrl || ''">
+          <source [src]="promo.promoVideoUrl" type="video/mp4" />
+        </video>
+      } @else if (promo.promoPosterUrl) {
+        <img class="promo-hero-media" [src]="promo.promoPosterUrl" alt="Campus" />
+      } @else {
+        <div class="promo-hero-media promo-hero-fallback"></div>
+      }
+      <div class="promo-hero-overlay"></div>
+
+      <!-- Logo -->
+      <div class="promo-logo">
+        @if (logo && logo.startsWith('data:')) {
+          <img [src]="logo" alt="logo" class="promo-logo-img" />
+        } @else {
+          <span class="promo-logo-emoji">{{ logo || '🎓' }}</span>
+        }
+        <div class="promo-logo-name">{{ promo.promoSchoolName || 'Our School' }}</div>
+      </div>
+    </header>
+
+    <!-- MIDDLE FEATURE BOXES -->
+    <div class="promo-boxes-wrap">
+      <div class="promo-boxes">
+        @for (box of boxes; track $index) {
+          <div class="promo-box"
+               [class.promo-box-center]="$index === centerIndex()"
+               [style.background]="box.color">
+            <span class="promo-box-icon">{{ box.icon || '⭐' }}</span>
+            <span class="promo-box-label">
+              @for (line of boxLines(box.label); track $index) {
+                {{ line }}<br />
+              }
+            </span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- MAIN ADMISSION CONTENT -->
+    <main class="promo-main">
+      <div class="promo-grid">
+        <!-- Left: Title & Process -->
+        <div class="promo-col-left">
+          <h1 class="promo-title">
+            <span class="promo-title-1">{{ promo.promoTitle || 'Admission' }}</span>
+            <span class="promo-title-2" [style.color]="accent">{{ promo.promoSubtitle || 'Open For 2026' }}</span>
+          </h1>
+          <div class="promo-process">
+            <h2 class="promo-h2">
+              <span class="promo-h2-muted">Admission</span>
+              <span class="promo-h2-accent">Process</span>
+            </h2>
+            <p class="promo-para">
+              {{ promo.promoProcessText || 'Begin your journey with us. Our streamlined admission process makes it simple to join our community of learners.' }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Right: Requirements -->
+        <div class="promo-col-right">
+          <h2 class="promo-h2">
+            <span class="promo-h2-muted">Admission</span>
+            <span class="promo-h2-accent">Requirements</span>
+          </h2>
+          <p class="promo-para promo-para-tight">
+            {{ promo.promoRequirementsText || 'Please ensure the following documents are ready before you apply.' }}
+          </p>
+          <ul class="promo-req-list">
+            @for (req of requirements; track $index) {
+              <li class="promo-req-item">
+                <span class="promo-req-check">✓</span>
+                <span class="promo-req-text">{{ req }}</span>
+              </li>
+            }
+          </ul>
+          <button class="promo-cta" [style.background]="accent" (click)="onCta()">
+            {{ promo.promoCtaText || 'Apply Now' }}
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="promo-footer" [style.background]="accent">
+      <div class="promo-footer-cutout"></div>
+      <div class="promo-footer-inner">
+        <div class="promo-footer-left">
+          <span class="promo-footer-cursive">for more info</span>
+          <span class="promo-footer-web">{{ promo.promoWebsite || 'www.ourschool.edu' }}</span>
+        </div>
+        <div class="promo-footer-divider"></div>
+        <div class="promo-footer-right">
+          <span class="promo-footer-callus">Call Us</span>
+          <span class="promo-footer-phone">{{ promo.promoPhone || '+1 555 019 9000' }}</span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+</div>

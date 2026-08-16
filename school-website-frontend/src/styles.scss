@@ -703,15 +703,249 @@ img, video, iframe {
   }
 }
 
-// ─── Announcement banner marquee ──────────────────────────────────────────────
+// ─── Shared admin list pager ──────────────────────────────────────────────────
+.sw-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.sw-pager-btn {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 0.45rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.sw-pager-btn:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.sw-pager-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sw-pager-info {
+  font-size: 0.82rem;
+  color: #475569;
+  font-weight: 600;
+}
+
+// ─── Public site boot (loading / error) ───────────────────────────────────────
+.sw-boot {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  z-index: 5000;
+  padding: 1.5rem;
+}
+
+.sw-boot-card {
+  text-align: center;
+  color: #fff;
+  max-width: 460px;
+}
+
+.sw-boot-spinner {
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 1.25rem;
+  border: 4px solid rgba(255, 255, 255, 0.18);
+  border-top-color: #fbbf24;
+  border-radius: 50%;
+  animation: swBootSpin 0.9s linear infinite;
+}
+
+@keyframes swBootSpin {
+  to { transform: rotate(360deg); }
+}
+
+.sw-boot-emoji {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.sw-boot-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+}
+
+.sw-boot-text {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.98rem;
+  margin: 0 0 1.25rem;
+}
+
+.sw-boot-btn {
+  border: 0;
+  cursor: pointer;
+  background: #fbbf24;
+  color: #0f172a;
+  font-weight: 800;
+  padding: 0.65rem 1.5rem;
+  border-radius: 9999px;
+  font-size: 0.9rem;
+  transition: transform 0.15s;
+}
+
+.sw-boot-btn:hover {
+  transform: translateY(-1px);
+}
+
+// ─── Modern announcement banner ───────────────────────────────────────────────
+.sw-announce {
+  --sw-announce-accent: #fbbf24;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-shrink: 0;
+  padding: 0.5rem 0.85rem;
+  color: #fff;
+  background: linear-gradient(90deg, #0f172a 0%, #1e293b 55%, #0f172a 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+  font-size: 0.85rem;
+}
+
+.sw-announce-badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  background: var(--sw-announce-accent);
+  color: #0f172a;
+  font-weight: 800;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.sw-announce-track {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(90deg, transparent 0, #000 3%, #000 97%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 3%, #000 97%, transparent 100%);
+}
+
+.sw-announce-scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 3rem;
+  white-space: nowrap;
+  will-change: transform;
+  animation: swAnnounceScroll 22s linear infinite;
+}
+
+.sw-announce-scroll--right {
+  animation-direction: reverse;
+}
+
+.sw-announce:hover .sw-announce-scroll {
+  animation-play-state: paused;
+}
+
+.sw-announce-text {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+@keyframes swAnnounceScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.sw-announce-cta {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 0;
+  cursor: pointer;
+  padding: 0.35rem 0.9rem;
+  border-radius: 9999px;
+  background: var(--sw-announce-accent);
+  color: #0f172a;
+  font-weight: 800;
+  font-size: 0.74rem;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+
+.sw-announce-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.sw-announce-arrow {
+  transition: transform 0.18s;
+}
+
+.sw-announce-cta:hover .sw-announce-arrow {
+  transform: translateX(3px);
+}
+
+.sw-announce-close {
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.25rem;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.sw-announce-close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sw-announce-scroll {
+    animation: none;
+    transform: none;
+  }
+}
+
 @media (max-width: 639px) {
-  marquee {
-    font-size: 0.75rem !important;
+  .sw-announce {
+    gap: 0.5rem;
+    padding: 0.45rem 0.6rem;
+    font-size: 0.75rem;
   }
 
-  .sw-banner-btn {
-    font-size: 0.65rem !important;
-    padding: 0.25rem 0.5rem !important;
+  .sw-announce-badge {
+    display: none;
+  }
+
+  .sw-announce-cta {
+    font-size: 0.66rem;
+    padding: 0.28rem 0.6rem;
   }
 }
 

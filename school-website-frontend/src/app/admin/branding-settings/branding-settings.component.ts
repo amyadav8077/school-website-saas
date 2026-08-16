@@ -59,10 +59,35 @@ import { HttpClient } from '@angular/common/http';
                     <option [value]="form.logoUrl" selected>Custom Logo (Uploaded)</option>
                   }
                 </select>
-                <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: #475569;">
-                  <span>Or Upload Custom Logo:</span>
+                <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: #475569; flex-wrap: wrap;">
+                  <span>Or Attach Custom Logo:</span>
                   <input type="file" (change)="onLogoUpload($event)" accept="image/*" style="font-size: 0.75rem;" />
+                  <button type="button" (click)="saveLogoOnly()" [disabled]="isLogoSaving()"
+                    style="background: #16a34a; color: white; border: 0; padding: 0.4rem 0.85rem; border-radius: 6px; font-weight: 700; font-size: 0.75rem; cursor: pointer;"
+                    [style.opacity]="isLogoSaving() ? '0.6' : '1'">
+                    @if (isLogoSaving()) { ⏳ Saving… } @else { ⬆️ Upload & Save Logo }
+                  </button>
                 </div>
+
+                <!-- Live preview of the currently selected/uploaded logo -->
+                @if (isCustomLogo()) {
+                  <div style="display: flex; align-items: center; gap: 0.6rem; margin-top: 0.35rem; padding: 0.5rem 0.6rem; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px;">
+                    <img [src]="form.logoUrl" alt="Logo preview" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 1px solid #cbd5e1;" />
+                    <span style="font-size: 0.72rem; color: #166534; font-weight: 700;">
+                      ✅ Custom logo attached{{ uploadedFileName() ? ' — ' + uploadedFileName() : '' }}. Click “Upload &amp; Save Logo” to apply it directly.
+                    </span>
+                    <button type="button" (click)="clearCustomLogo()" style="margin-left: auto; background: transparent; border: 0; color: #dc2626; font-weight: 800; cursor: pointer; font-size: 0.9rem;" title="Remove uploaded logo">✕</button>
+                  </div>
+                } @else {
+                  <div style="display: flex; align-items: center; gap: 0.6rem; margin-top: 0.35rem;">
+                    <span style="font-size: 1.6rem;">{{ form.logoUrl }}</span>
+                    <span style="font-size: 0.72rem; color: #64748b;">Current emblem preview — click “Upload &amp; Save Logo” to apply a change.</span>
+                  </div>
+                }
+
+                @if (logoMessage()) {
+                  <div style="margin-top: 0.35rem; font-size: 0.72rem; font-weight: 700; color: #166534;">{{ logoMessage() }}</div>
+                }
               </div>
             </div>
           </div>
@@ -212,6 +237,93 @@ import { HttpClient } from '@angular/common/http';
             }
           </div>
 
+          <!-- Admissions Promo Popup Settings -->
+          <div style="background: #fff7ed; padding: 1.25rem; border-radius: 8px; border: 1px solid #fed7aa; margin-bottom: 0.5rem; display: flex; flex-direction: column; gap: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <strong style="font-size: 0.9rem; color: #9a3412;">🎬 Admissions Promo Popup (Splash Overlay)</strong>
+              <label style="display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.85rem; font-weight: 700; color: #9a3412;">
+                <input type="checkbox" name="promoEnabled" [(ngModel)]="promoEnabled" style="width: 16px; height: 16px; cursor: pointer;" />
+                Enable Popup
+              </label>
+            </div>
+
+            @if (promoEnabled) {
+              <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                  <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #7c2d12; margin-bottom: 0.25rem;">Hero Background Video URL (MP4)</label>
+                  <input type="text" name="promoVideoUrl" [(ngModel)]="promoVideoUrl" placeholder="https://…/video.mp4" style="width: 100%; padding: 0.5rem; border: 1px solid #fdba74; border-radius: 4px; font-size: 0.85rem;" />
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #7c2d12; margin-bottom: 0.25rem;">Fallback Poster Image URL</label>
+                  <input type="text" name="promoPosterUrl" [(ngModel)]="promoPosterUrl" placeholder="https://…/poster.jpg" style="width: 100%; padding: 0.5rem; border: 1px solid #fdba74; border-radius: 4px; font-size: 0.85rem;" />
+                </div>
+              </div>
+
+              <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                  <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #7c2d12; margin-bottom: 0.25rem;">Main Title</label>
+                  <input type="text" name="promoTitle" [(ngModel)]="promoTitle" style="width: 100%; padding: 0.5rem; border: 1px solid #fdba74; border-radius: 4px; font-size: 0.85rem;" />
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #7c2d12; margin-bottom: 0.25rem;">Subtitle</label>
+                  <input type="text" name="promoSubtitle" [(ngModel)]="promoSubtitle" style="width: 100%; padding: 0.5rem; border: 1px solid #fdba74; border-radius: 4px; font-size: 0.85rem;" />
+                </div>
+              </div>
+
+              <div>
+                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #7c2d12; margin-bottom: 0.25rem;">Admission Process Text</label>
+                <textarea name="promoProcessText" [(ngModel)]="promoProcessText" rows="2" style="width: 100%; padding: 0.5rem; border: 1px solid #fdba74; border-radius: 4px; font-size: 0.85rem; resize: vertical;"></textarea>
+              </div>
+
+              <div>
+                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #7c2d12; margin-bottom: 0.25rem;">Requirements Intro Text</label>
+                <input type="text" name="promoRequirementsText" [(ngModel)]="promoRequirementsText" style="width: 100%; padding: 0.5rem; border: 1px solid #fdba74; border-radius: 4px; font-size: 0.85rem;" />
+              </div>
+
+              <div>
+                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #7c2d12; margin-bottom: 0.25rem;">Requirements Checklist (one per line)</label>
+                <textarea name="promoRequirementsRaw" [(ngModel)]="promoRequirementsRaw" rows="4" style="width: 100%; padding: 0.5rem; border: 1px solid #fdba74; border-radius: 4px; font-size: 0.85rem; resize: vertical;"></textarea>
+              </div>
+
+              <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div>
+                  <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #7c2d12; margin-bottom: 0.25rem;">Phone</label>
+                  <input type="text" name="promoPhone" [(ngModel)]="promoPhone" style="width: 100%; padding: 0.5rem; border: 1px solid #fdba74; border-radius: 4px; font-size: 0.85rem;" />
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #7c2d12; margin-bottom: 0.25rem;">Website</label>
+                  <input type="text" name="promoWebsite" [(ngModel)]="promoWebsite" style="width: 100%; padding: 0.5rem; border: 1px solid #fdba74; border-radius: 4px; font-size: 0.85rem;" />
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #7c2d12; margin-bottom: 0.25rem;">Accent Color</label>
+                  <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <input type="color" name="promoAccent" [(ngModel)]="promoAccent" style="width: 40px; height: 38px; border: 0; padding: 0; cursor: pointer; border-radius: 4px;" />
+                    <input type="text" name="promoAccentText" [(ngModel)]="promoAccent" style="flex: 1; padding: 0.5rem; border: 1px solid #fdba74; border-radius: 4px; font-size: 0.85rem; width: 100%;" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                  <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #7c2d12; margin-bottom: 0.25rem;">CTA Button Label</label>
+                  <input type="text" name="promoCtaText" [(ngModel)]="promoCtaText" style="width: 100%; padding: 0.5rem; border: 1px solid #fdba74; border-radius: 4px; font-size: 0.85rem;" />
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #7c2d12; margin-bottom: 0.25rem;">CTA Target Page</label>
+                  <select name="promoCtaSlug" [(ngModel)]="promoCtaSlug" style="width: 100%; padding: 0.55rem; border: 1px solid #fdba74; border-radius: 4px; background: white; font-size: 0.85rem;">
+                    <option value="admissions">Admissions Inquiry Portal</option>
+                    <option value="news">News bulletins &amp; Circulars</option>
+                    <option value="fees">Fees Desk payments portal</option>
+                    <option value="gallery">School Media Gallery</option>
+                    <option value="careers">Careers recruitment office</option>
+                  </select>
+                </div>
+              </div>
+
+              <p style="font-size: 0.72rem; color: #9a3412; margin: 0;">The 5 feature boxes use built-in defaults (Smart Technology, Team Work, Best Quality Education, Creative Learning, Advanced Program).</p>
+            }
+          </div>
+
           <button type="submit" [disabled]="!settingsForm.form.valid || isLoading()"
             class="ds-btn ds-btn-success">
             @if (isLoading()) { <span class="ds-spinner"></span> Updating... } @else { Save & Propagate Brand Theme }
@@ -232,12 +344,113 @@ export class BrandingSettingsComponent implements OnChanges {
   protected readonly isLoading = signal(false);
   protected readonly successMessage = signal('');
   protected readonly errorMessage = signal('');
+  protected readonly uploadedFileName = signal('');
+  protected readonly isLogoSaving = signal(false);
+  protected readonly logoMessage = signal('');
+
+  private static readonly EMOJI_LOGOS = ['🏰', '🎓', '🦁', '📖', '☀️'];
+
+  protected isCustomLogo(): boolean {
+    const v = this.form.logoUrl;
+    return !!v && !BrandingSettingsComponent.EMOJI_LOGOS.includes(v);
+  }
+
+  protected clearCustomLogo(): void {
+    this.form.logoUrl = '🏰';
+    this.uploadedFileName.set('');
+  }
+
+  /**
+   * Builds the JSON object stored in `socialLinks`, carrying banner, social,
+   * and admissions-promo popup configuration together.
+   */
+  private buildBannerObj(): any {
+    const requirements = this.promoRequirementsRaw
+      .split('\n')
+      .map(r => r.trim())
+      .filter(r => r.length > 0);
+
+    return {
+      enabled: this.bannerEnabled,
+      text: this.bannerText,
+      direction: this.bannerDirection,
+      buttonText: this.bannerButtonText,
+      pageSlug: this.bannerPageSlug,
+      facebookUrl: this.facebookUrl,
+      instagramUrl: this.instagramUrl,
+      twitterUrl: this.twitterUrl,
+      youtubeUrl: this.youtubeUrl,
+      googleMapUrl: this.googleMapUrl,
+      // Admissions promo popup
+      promoEnabled: this.promoEnabled,
+      promoVideoUrl: this.promoVideoUrl,
+      promoPosterUrl: this.promoPosterUrl,
+      promoTitle: this.promoTitle,
+      promoSubtitle: this.promoSubtitle,
+      promoProcessText: this.promoProcessText,
+      promoRequirementsText: this.promoRequirementsText,
+      promoRequirements: requirements,
+      promoPhone: this.promoPhone,
+      promoWebsite: this.promoWebsite,
+      promoAccent: this.promoAccent,
+      promoCtaText: this.promoCtaText,
+      promoCtaSlug: this.promoCtaSlug
+    };
+  }
+
+  /**
+   * Saves ONLY the logo without submitting the whole branding form. It reuses
+   * the current form values (colors, fonts, banner, etc.) so nothing else is
+   * overwritten, then persists immediately and refreshes the live preview.
+   */
+  saveLogoOnly(): void {
+    if (!this.tenantId) {
+      return;
+    }
+    this.isLogoSaving.set(true);
+    this.logoMessage.set('');
+    this.errorMessage.set('');
+
+    // Preserve the current banner/social/promo config exactly as the full save does.
+    const payload = { ...this.form, socialLinks: JSON.stringify(this.buildBannerObj()) };
+
+    this.http.put<any>(`http://localhost:8080/api/sites/${this.tenantId}/config`, payload)
+      .subscribe({
+        next: (res) => {
+          this.isLogoSaving.set(false);
+          this.uploadedFileName.set('');
+          this.logoMessage.set('✅ Logo saved and applied to your website.');
+          this.brandingUpdated.emit(res);
+        },
+        error: (err) => {
+          this.isLogoSaving.set(false);
+          this.errorMessage.set(err.error?.message || 'Failed to save logo. Please try again.');
+          console.error(err);
+        }
+      });
+  }
 
   bannerEnabled = false;
   bannerText = 'Admission is officially open for the Academic Cohort of 2026-27!';
   bannerDirection = 'left';
   bannerButtonText = 'Apply Now!';
   bannerPageSlug = 'admissions';
+
+  // Admissions promo popup (rich splash overlay) config
+  promoEnabled = false;
+  promoVideoUrl = '';
+  promoPosterUrl = '';
+  promoTitle = 'Admission';
+  promoSubtitle = 'Open For 2026';
+  promoProcessText = 'Begin your journey with us. Our streamlined admission process makes it simple to join our community of learners.';
+  promoRequirementsText = 'Please ensure the following documents are ready before you apply.';
+  promoRequirementsRaw = 'Completed application form\nBirth certificate copy\nPrevious academic records\nPassport-size photographs';
+  promoPhone = '+1 555 019 9000';
+  promoWebsite = 'www.ourschool.edu';
+  promoAccent = '#d95d41';
+  promoCtaText = 'Apply Now';
+  promoCtaSlug = 'admissions';
+
   customDomain = '';
   facebookUrl = '';
   instagramUrl = '';
@@ -293,6 +506,22 @@ export class BrandingSettingsComponent implements OnChanges {
               this.twitterUrl = banner.twitterUrl || '';
               this.youtubeUrl = banner.youtubeUrl || '';
               this.googleMapUrl = banner.googleMapUrl || '';
+              // Admissions promo popup
+              this.promoEnabled = banner.promoEnabled || false;
+              this.promoVideoUrl = banner.promoVideoUrl || '';
+              this.promoPosterUrl = banner.promoPosterUrl || '';
+              this.promoTitle = banner.promoTitle || 'Admission';
+              this.promoSubtitle = banner.promoSubtitle || 'Open For 2026';
+              this.promoProcessText = banner.promoProcessText || this.promoProcessText;
+              this.promoRequirementsText = banner.promoRequirementsText || this.promoRequirementsText;
+              if (banner.promoRequirements && Array.isArray(banner.promoRequirements)) {
+                this.promoRequirementsRaw = banner.promoRequirements.join('\n');
+              }
+              this.promoPhone = banner.promoPhone || this.promoPhone;
+              this.promoWebsite = banner.promoWebsite || this.promoWebsite;
+              this.promoAccent = banner.promoAccent || '#d95d41';
+              this.promoCtaText = banner.promoCtaText || 'Apply Now';
+              this.promoCtaSlug = banner.promoCtaSlug || 'admissions';
             } catch (e) {
               this.bannerEnabled = false;
               this.facebookUrl = '';
@@ -357,19 +586,7 @@ export class BrandingSettingsComponent implements OnChanges {
     this.successMessage.set('');
     this.errorMessage.set('');
 
-    const bannerObj = {
-      enabled: this.bannerEnabled,
-      text: this.bannerText,
-      direction: this.bannerDirection,
-      buttonText: this.bannerButtonText,
-      pageSlug: this.bannerPageSlug,
-      facebookUrl: this.facebookUrl,
-      instagramUrl: this.instagramUrl,
-      twitterUrl: this.twitterUrl,
-      youtubeUrl: this.youtubeUrl,
-      googleMapUrl: this.googleMapUrl
-    };
-    this.form.socialLinks = JSON.stringify(bannerObj);
+    this.form.socialLinks = JSON.stringify(this.buildBannerObj());
 
     this.http.put<any>(`http://localhost:8080/api/sites/${this.tenantId}/config`, this.form)
       .subscribe({
@@ -398,13 +615,23 @@ export class BrandingSettingsComponent implements OnChanges {
   }
 
   onLogoUpload(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.form.logoUrl = e.target.result; // Base64 data URL
-      };
-      reader.readAsDataURL(file);
+    const file = event.target.files && event.target.files[0];
+    if (!file) {
+      return;
     }
+    // Guard against oversized images — logo is stored inline as Base64.
+    const MAX_BYTES = 1024 * 1024; // 1 MB
+    if (file.size > MAX_BYTES) {
+      this.errorMessage.set('Logo image is too large. Please upload an image under 1 MB.');
+      event.target.value = '';
+      return;
+    }
+    this.errorMessage.set('');
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.form.logoUrl = e.target.result; // Base64 data URL
+      this.uploadedFileName.set(file.name);
+    };
+    reader.readAsDataURL(file);
   }
 }

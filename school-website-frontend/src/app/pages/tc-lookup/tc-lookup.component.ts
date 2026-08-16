@@ -191,9 +191,9 @@ export interface TransferCertificate {
 
               <!-- Download Button -->
               <div class="tl-download-wrap">
-                <a [href]="certificate()?.pdfUrl" download class="ds-btn tl-download-btn" [style.background-color]="primaryColor">
+                <button type="button" (click)="downloadCertificate()" class="ds-btn tl-download-btn" [style.background-color]="primaryColor">
                   ⬇️ Download Verified Transfer Certificate (PDF)
-                </a>
+                </button>
               </div>
 
             </div>
@@ -233,6 +233,92 @@ export class TCLookupComponent {
 
   selectTC(tc: TransferCertificate) {
     this.certificate.set(tc);
+  }
+
+  /**
+   * Renders the verified certificate as a self-contained, print-ready HTML
+   * document in a new window and triggers the browser print dialog so the user
+   * can Save-as-PDF. This replaces the old dead `pdfUrl` link that downloaded
+   * the SPA's index.html.
+   */
+  downloadCertificate() {
+    const tc = this.certificate();
+    if (!tc || typeof window === 'undefined') {
+      return;
+    }
+
+    const esc = (v: unknown): string =>
+      String(v ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+
+    const issueDate = tc.issueDate ? new Date(tc.issueDate).toLocaleDateString(undefined,
+      { year: 'numeric', month: 'long', day: 'numeric' }) : '—';
+    const primary = esc(this.primaryColor);
+
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Transfer Certificate ${esc(tc.tcNumber)}</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: #0f172a; margin: 0; padding: 40px; background: #fff; }
+  .cert { max-width: 800px; margin: 0 auto; border: 3px double ${primary}; padding: 40px 48px; }
+  .head { text-align: center; border-bottom: 2px solid ${primary}; padding-bottom: 16px; margin-bottom: 24px; }
+  .flag { font-size: 34px; }
+  .board { color: ${primary}; font-size: 22px; margin: 8px 0 2px; letter-spacing: 0.5px; }
+  .desk { font-size: 12px; letter-spacing: 2px; color: #475569; text-transform: uppercase; margin: 0; }
+  .title { text-align: center; font-size: 18px; font-weight: bold; margin: 18px 0 24px; text-decoration: underline; }
+  .status { text-align: center; color: #15803d; font-weight: bold; margin-bottom: 20px; }
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 10px 8px; font-size: 14px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+  td.label { color: #475569; width: 45%; }
+  td.value { font-weight: bold; }
+  .foot { margin-top: 40px; display: flex; justify-content: space-between; font-size: 13px; }
+  .sign { text-align: center; }
+  .sign .line { margin-top: 40px; border-top: 1px solid #0f172a; padding-top: 6px; }
+  .note { margin-top: 28px; font-size: 11px; color: #94a3b8; text-align: center; }
+  @media print { body { padding: 0; } .cert { border-width: 3px; } }
+</style>
+</head>
+<body>
+  <div class="cert">
+    <div class="head">
+      <div class="flag">🇮🇳</div>
+      <h1 class="board">Central Board of Secondary Education</h1>
+      <p class="desk">Statutory Transfer Certificate Verification Desk</p>
+    </div>
+    <div class="title">TRANSFER CERTIFICATE</div>
+    <div class="status">🟢 Officially Verified &amp; Active</div>
+    <table>
+      <tr><td class="label">Certificate Reference No.</td><td class="value">${esc(tc.tcNumber)}</td></tr>
+      <tr><td class="label">Issue Date</td><td class="value">${esc(issueDate)}</td></tr>
+      <tr><td class="label">Student Full Name</td><td class="value">${esc(tc.studentName)}</td></tr>
+      <tr><td class="label">Admission Number</td><td class="value">${esc(tc.admissionNo)}</td></tr>
+      <tr><td class="label">Class &amp; Section</td><td class="value">${esc(tc.classLevel)} (Section ${esc(tc.section)})</td></tr>
+      <tr><td class="label">Father's Name</td><td class="value">${esc(tc.fatherName)}</td></tr>
+      <tr><td class="label">Candidate Aadhar</td><td class="value">${esc(tc.aadharNo)}</td></tr>
+    </table>
+    <div class="foot">
+      <div class="sign"><div class="line">Class Teacher</div></div>
+      <div class="sign"><div class="line">Principal / Head of Institution</div></div>
+    </div>
+    <p class="note">This is a system-generated verification docket. Print or Save-as-PDF to retain a copy.</p>
+  </div>
+  <script>window.onload = function () { window.focus(); window.print(); };</script>
+</body>
+</html>`;
+
+    const win = window.open('', '_blank');
+    if (!win) {
+      return;
+    }
+    win.document.open();
+    win.document.write(html);
+    win.document.close();
   }
 
   verifyTC() {

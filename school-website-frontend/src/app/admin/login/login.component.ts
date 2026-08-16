@@ -101,7 +101,9 @@ import { HttpClient } from '@angular/common/http';
           <!-- RESET -->
           @if (currentView() === 'RESET') {
             <div class="stack">
-              <div class="otp-banner stagger" style="--i:1">🔑 Demo OTP: <code>{{ demoPrefilledOtp }}</code></div>
+              @if (demoPrefilledOtp) {
+                <div class="otp-banner stagger" style="--i:1">🔑 Demo OTP: <code>{{ demoPrefilledOtp }}</code></div>
+              }
               <div class="field stagger" style="--i:2">
                 <input type="text" [(ngModel)]="resetOtp" maxlength="6" class="otp-input" placeholder=" " />
                 <label>6-Digit OTP</label>

@@ -31,6 +31,7 @@ import { UserProfileComponent } from './admin/user-profile/user-profile.componen
 import { ScrollRevealDirective } from './shared/directives/scroll-reveal.directive';
 import { HeroCarouselComponent } from './pages/hero-carousel/hero-carousel.component';
 import { ErrorPageComponent } from './pages/error-page/error-page.component';
+import { AdmissionsPromoComponent } from './pages/admissions-promo/admissions-promo.component';
 
 @Component({
   selector: 'app-root',
@@ -65,6 +66,7 @@ import { ErrorPageComponent } from './pages/error-page/error-page.component';
     ScrollRevealDirective,
     HeroCarouselComponent,
     ErrorPageComponent,
+    AdmissionsPromoComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
@@ -123,6 +125,13 @@ export class App implements OnInit {
   protected readonly activeHomeSlideIdx = signal<number>(0);
   protected readonly activeBanner = signal<any>(null);
 
+  // Admissions promo popup (rich splash overlay)
+  protected readonly promoConfig = signal<any>(null);
+  protected readonly showPromo = signal<boolean>(false);
+
+  // Top announcement banner visibility (dismissible)
+  protected readonly showAnnouncement = signal<boolean>(true);
+
   // Dynamic public catalog directories
   protected readonly publicCourses = signal<any[]>([]);
   protected readonly publicFaculty = signal<any[]>([]);
@@ -145,6 +154,14 @@ export class App implements OnInit {
 
   // Security Role-Based Access Control
   protected readonly activeRole = signal<string>('SCHOOL_ADMIN'); // SCHOOL_ADMIN, PARENT_VISITOR
+
+  // When the app is opened via a tenant's custom domain / subdomain, it runs in
+  // public-only mode: no admin console, no onboarding, forced visitor view.
+  protected readonly publicSiteMode = signal<boolean>(false);
+  protected readonly publicSiteLoading = signal<boolean>(false);
+  protected readonly publicSiteError = signal<boolean>(false);
+  private publicHost = '';
+  private publicRetryCount = 0;
   protected readonly isFullscreenPreview = signal<boolean>(false);
   protected readonly activeGalleryFilter = signal<string>('ALL');
   protected readonly activeCloneTenantId = signal<number | null>(null);
@@ -170,7 +187,13 @@ export class App implements OnInit {
   ngOnInit() {
     this.checkBackendHealth();
     this.updateMaxVisibleTabs();
-    
+
+    // If opened via a tenant's custom domain / subdomain, serve that school's
+    // public website directly and skip the admin dashboard entirely.
+    if (this.tryResolveTenantByHost()) {
+      return;
+    }
+
     if (typeof sessionStorage !== 'undefined') {
       const savedUser = sessionStorage.getItem('school_saas_user');
       if (savedUser) {
@@ -194,6 +217,105 @@ export class App implements OnInit {
     } else {
       this.fetchTenantsList();
     }
+  }
+
+  /**
+   * Detects whether the app is being served from a tenant's own domain or
+   * subdomain. Platform hosts (localhost, *.vercel.app, bare IPs) fall through
+   * to the normal admin/demo experience. A recognised tenant host switches the
+   * app into public-only mode and loads that school's website directly.
+   *
+   * @returns true if a tenant host was detected (resolution in progress).
+   */
+  tryResolveTenantByHost(): boolean {
+    if (typeof window === 'undefined' || !window.location) {
+      return false;
+    }
+    const host = (window.location.hostname || '').toLowerCase();
+    if (this.isPlatformHost(host)) {
+      return false;
+    }
+    // We're on a tenant host: commit to public mode immediately so the visitor
+    // never sees the admin dashboard, even while the data is loading.
+    this.publicHost = host;
+    this.publicSiteMode.set(true);
+    this.activeRole.set('PARENT_VISITOR');
+    this.loadPublicSite();
+    return true;
+  }
+
+  /**
+   * Loads the entire public site in a single request. On transient failures
+   * (e.g. a backend cold start) it retries with backoff and shows a branded
+   * loading screen — never a broken page. A confirmed "unknown host" stops
+   * retrying and shows a friendly not-found screen.
+   */
+  loadPublicSite(): void {
+    this.publicSiteLoading.set(true);
+    this.publicSiteError.set(false);
+
+    this.http.get<any>(`http://localhost:8080/api/sites/bootstrap?host=${encodeURIComponent(this.publicHost)}`)
+      .subscribe({
+        next: (data) => {
+          this.publicRetryCount = 0;
+          this.applyBootstrap(data);
+          this.publicSiteLoading.set(false);
+        },
+        error: (err) => {
+          const status = err?.status;
+          // 404 = host genuinely not mapped to a tenant; don't retry forever.
+          if (status === 404) {
+            this.publicSiteLoading.set(false);
+            this.publicSiteError.set(true);
+            return;
+          }
+          // Transient (0/5xx, e.g. backend waking up) — retry with backoff.
+          if (this.publicRetryCount < 6) {
+            this.publicRetryCount++;
+            const delay = Math.min(1000 * this.publicRetryCount, 5000);
+            setTimeout(() => this.loadPublicSite(), delay);
+          } else {
+            this.publicSiteLoading.set(false);
+            this.publicSiteError.set(true);
+          }
+        }
+      });
+  }
+
+  retryPublicSite(): void {
+    this.publicRetryCount = 0;
+    this.loadPublicSite();
+  }
+
+  /** Applies a single aggregated bootstrap payload to all public signals. */
+  private applyBootstrap(data: any): void {
+    if (!data || !data.tenant) {
+      this.publicSiteError.set(true);
+      return;
+    }
+    this.activeTenant.set(data.tenant);
+
+    if (data.config) {
+      this.applyBrandingTokens(data.config);
+    }
+    this.applyPagesData(data.pages || []);
+    this.publicCourses.set(data.courses || []);
+    this.publicPrograms.set(data.programs || []);
+    this.publicFaculty.set(data.faculty || []);
+    this.publicAchievers.set(data.achievers || []);
+    this.publicNews.set(data.news || []);
+    this.publicEvents.set(data.events || []);
+    this.connectionLost.set(false);
+  }
+
+  private isPlatformHost(host: string): boolean {
+    if (!host) return true;
+    if (host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0') return true;
+    if (host.endsWith('.vercel.app')) return true;
+    if (host.endsWith('.onrender.com')) return true;
+    // Bare IPv4 address.
+    if (/^\d{1,3}(\.\d{1,3}){3}$/.test(host)) return true;
+    return false;
   }
 
   checkBackendHealth() {
@@ -310,41 +432,7 @@ export class App implements OnInit {
   loadTenantPages(tenantId: number) {
     this.http.get<any>(`http://localhost:8080/api/sites/${tenantId}/pages`)
       .subscribe({
-        next: (data: any[]) => {
-          const pageSortOrder: Record<string, number> = {
-            'home': 1,
-            'courses': 2,
-            'admissions': 3,
-            'faculty': 4,
-            'fees': 5,
-            'careers': 6,
-            'news': 7,
-            'gallery': 8,
-            'disclosures': 9,
-            'tc': 10
-          };
-          data.sort((a, b) => {
-            const orderA = pageSortOrder[a.slug] || 99;
-            const orderB = pageSortOrder[b.slug] || 99;
-            return orderA - orderB;
-          });
-
-          this.schoolPages.set(data);
-          this.connectionLost.set(false);
-
-          // Select first page by default if none selected or if active preview no longer exists
-          if (data.length > 0) {
-            const currentActive = this.activePreviewPage();
-            const found = currentActive ? data.find(p => p.id === currentActive.id) : null;
-            if (found) {
-              this.activePreviewPage.set(found);
-            } else {
-              this.activePreviewPage.set(data[0]);
-            }
-          } else {
-            this.activePreviewPage.set(null);
-          }
-        },
+        next: (data: any[]) => this.applyPagesData(data),
         error: (err) => {
           console.error('Failed to load school pages', err);
           this.connectionLost.set(true);
@@ -352,6 +440,39 @@ export class App implements OnInit {
           this.activePreviewPage.set(null);
         }
       });
+  }
+
+  /** Sorts pages into the canonical nav order and picks the active page. */
+  private applyPagesData(data: any[]): void {
+    const pageSortOrder: Record<string, number> = {
+      'home': 1,
+      'courses': 2,
+      'admissions': 3,
+      'faculty': 4,
+      'fees': 5,
+      'careers': 6,
+      'news': 7,
+      'gallery': 8,
+      'disclosures': 9,
+      'tc': 10
+    };
+    data.sort((a, b) => {
+      const orderA = pageSortOrder[a.slug] || 99;
+      const orderB = pageSortOrder[b.slug] || 99;
+      return orderA - orderB;
+    });
+
+    this.schoolPages.set(data);
+    this.connectionLost.set(false);
+
+    // Select first page by default if none selected or if active preview no longer exists
+    if (data.length > 0) {
+      const currentActive = this.activePreviewPage();
+      const found = currentActive ? data.find(p => p.id === currentActive.id) : null;
+      this.activePreviewPage.set(found ? found : data[0]);
+    } else {
+      this.activePreviewPage.set(null);
+    }
   }
 
   /** Retry loading the active tenant's pages after a connection error. */
@@ -434,6 +555,7 @@ export class App implements OnInit {
         this.twitterUrl.set(banner.twitterUrl || '');
         this.youtubeUrl.set(banner.youtubeUrl || '');
         this.googleMapUrl.set(banner.googleMapUrl || '');
+        this.applyPromoConfig(banner);
       } catch (e) {
         this.activeBanner.set(null);
         this.facebookUrl.set('');
@@ -441,6 +563,8 @@ export class App implements OnInit {
         this.twitterUrl.set('');
         this.youtubeUrl.set('');
         this.googleMapUrl.set('');
+        this.promoConfig.set(null);
+        this.showPromo.set(false);
       }
     } else {
       this.activeBanner.set(null);
@@ -449,6 +573,8 @@ export class App implements OnInit {
       this.twitterUrl.set('');
       this.youtubeUrl.set('');
       this.googleMapUrl.set('');
+      this.promoConfig.set(null);
+      this.showPromo.set(false);
     }
 
     // Inject CSS Custom Properties dynamically!
@@ -459,6 +585,38 @@ export class App implements OnInit {
       root.style.setProperty('--tenant-accent', config.accentColor);
       root.style.setProperty('--tenant-font', config.fontFamily);
     }
+  }
+
+  /**
+   * Reads the promo popup fields (stored inside the same banner JSON) and shows
+   * the splash overlay once per session when enabled.
+   */
+  applyPromoConfig(banner: any) {
+    if (banner && banner.promoEnabled) {
+      this.promoConfig.set(banner);
+      const dismissed = typeof sessionStorage !== 'undefined'
+        && sessionStorage.getItem('school_saas_promo_dismissed') === (this.activeTenant()?.subdomain || '1');
+      this.showPromo.set(!dismissed);
+    } else {
+      this.promoConfig.set(null);
+      this.showPromo.set(false);
+    }
+  }
+
+  closePromo() {
+    this.showPromo.set(false);
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.setItem('school_saas_promo_dismissed', this.activeTenant()?.subdomain || '1');
+    }
+  }
+
+  onPromoCta(slug: string) {
+    this.closePromo();
+    this.selectPreviewPageBySlug(slug || 'admissions');
+  }
+
+  dismissAnnouncement() {
+    this.showAnnouncement.set(false);
   }
 
   parsedSectionConfig(configStr: string): any {
