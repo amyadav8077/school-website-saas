@@ -18,20 +18,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SchoolNewsServiceImpl implements SchoolNewsService {
-
+public class SchoolNewsServiceImpl implements SchoolNewsService
+{
     private final SchoolNewsRepository repository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<SchoolNews> getNewsByTenant(Long tenantId) {
+    public List<SchoolNews> getNewsByTenant(Long tenantId)
+    {
         log.debug("Fetching school news for tenantId={}", tenantId);
         return repository.findByTenantIdOrderByPublishedDateDesc(tenantId);
     }
 
     @Override
     @Transactional
-    public SchoolNews createNews(Long tenantId, SchoolNews news) {
+    public SchoolNews createNews(Long tenantId, SchoolNews news)
+    {
         log.info("Creating school news for tenantId={}, title={}", tenantId, news.getTitle());
         news.setTenantId(tenantId);
         news.setPublishedDate(LocalDateTime.now());
@@ -40,9 +42,11 @@ public class SchoolNewsServiceImpl implements SchoolNewsService {
 
     @Override
     @Transactional
-    public void deleteNews(Long id) {
+    public void deleteNews(Long id)
+    {
         log.info("Deleting school news id={}", id);
-        if (!repository.existsById(id)) {
+        if (!repository.existsById(id))
+        {
             throw AppException.of(ErrorCode.SCHOOL_NEWS_NOT_FOUND, id);
         }
         repository.deleteById(id);

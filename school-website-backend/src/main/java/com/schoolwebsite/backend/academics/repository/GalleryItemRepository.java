@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.schoolwebsite.backend.academics.entity.*;
 
 @Repository
-public interface GalleryItemRepository extends JpaRepository<GalleryItem, Long> {
+public interface GalleryItemRepository extends JpaRepository<GalleryItem, Long>
+{
     List<GalleryItem> findByTenantId(Long tenantId);
 }

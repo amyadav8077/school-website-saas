@@ -6,14 +6,14 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "pages", uniqueConstraints = {@UniqueConstraint(columnNames = {"tenant_id", "slug"})})
+@Table(name = "pages", uniqueConstraints = { @UniqueConstraint(columnNames = { "tenant_id", "slug" }) })
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Page {
-
+public class Page
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,13 +43,15 @@ public class Page {
     private LocalDateTime updatedAt;
 
     @PrePersist
-    protected void onCreate() {
+    protected void onCreate()
+    {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
-    protected void onUpdate() {
+    protected void onUpdate()
+    {
         updatedAt = LocalDateTime.now();
     }
 }

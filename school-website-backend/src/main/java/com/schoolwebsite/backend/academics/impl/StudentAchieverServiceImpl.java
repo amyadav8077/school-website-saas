@@ -17,19 +17,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class StudentAchieverServiceImpl implements StudentAchieverService {
+public class StudentAchieverServiceImpl implements StudentAchieverService
+{
     private final StudentAchieverRepository repository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<StudentAchiever> getAchieversByTenant(Long tenantId) {
+    public List<StudentAchiever> getAchieversByTenant(Long tenantId)
+    {
         log.debug("Fetching student achievers for tenantId={}", tenantId);
         return repository.findByTenantId(tenantId);
     }
 
     @Override
     @Transactional
-    public StudentAchiever createAchiever(Long tenantId, StudentAchiever achiever) {
+    public StudentAchiever createAchiever(Long tenantId, StudentAchiever achiever)
+    {
         log.info("Creating student achiever for tenantId={}, name={}", tenantId, achiever.getName());
         achiever.setTenantId(tenantId);
         return repository.save(achiever);
@@ -37,9 +40,11 @@ public class StudentAchieverServiceImpl implements StudentAchieverService {
 
     @Override
     @Transactional
-    public void deleteAchiever(Long id) {
+    public void deleteAchiever(Long id)
+    {
         log.info("Deleting student achiever id={}", id);
-        if (!repository.existsById(id)) {
+        if (!repository.existsById(id))
+        {
             throw AppException.of(ErrorCode.STUDENT_ACHIEVER_NOT_FOUND, id);
         }
         repository.deleteById(id);

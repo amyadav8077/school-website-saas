@@ -16,24 +16,27 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class SchoolNewsController {
-
+public class SchoolNewsController
+{
     private final SchoolNewsService service;
 
     @GetMapping("/sites/{tenantId}/news")
-    public ResponseEntity<ApiResponse<List<SchoolNews>>> getNews(@PathVariable Long tenantId) {
+    public ResponseEntity<ApiResponse<List<SchoolNews>>> getNews(@PathVariable Long tenantId)
+    {
         return ResponseEntity.ok(ApiResponse.ok(service.getNewsByTenant(tenantId)));
     }
 
     @PostMapping("/admin/sites/{tenantId}/news")
     public ResponseEntity<ApiResponse<SchoolNews>> createNews(@PathVariable Long tenantId,
-            @Valid @RequestBody SchoolNews news) {
+            @Valid @RequestBody SchoolNews news)
+    {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.ok("News article created successfully", service.createNews(tenantId, news)));
     }
 
     @DeleteMapping("/admin/news/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteNews(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> deleteNews(@PathVariable Long id)
+    {
         service.deleteNews(id);
         return ResponseEntity.ok(ApiResponse.ok("News article deleted successfully", null));
     }

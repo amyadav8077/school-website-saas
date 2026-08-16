@@ -17,20 +17,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class FacultyMemberServiceImpl implements FacultyMemberService {
-
+public class FacultyMemberServiceImpl implements FacultyMemberService
+{
     private final FacultyMemberRepository repository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<FacultyMember> getFacultyByTenant(Long tenantId) {
+    public List<FacultyMember> getFacultyByTenant(Long tenantId)
+    {
         log.debug("Fetching faculty members for tenantId={}", tenantId);
         return repository.findByTenantId(tenantId);
     }
 
     @Override
     @Transactional
-    public FacultyMember createFaculty(Long tenantId, FacultyMember member) {
+    public FacultyMember createFaculty(Long tenantId, FacultyMember member)
+    {
         log.info("Creating faculty member for tenantId={}, name={}", tenantId, member.getName());
         member.setTenantId(tenantId);
         return repository.save(member);
@@ -38,9 +40,11 @@ public class FacultyMemberServiceImpl implements FacultyMemberService {
 
     @Override
     @Transactional
-    public void deleteFaculty(Long id) {
+    public void deleteFaculty(Long id)
+    {
         log.info("Deleting faculty member id={}", id);
-        if (!repository.existsById(id)) {
+        if (!repository.existsById(id))
+        {
             throw AppException.of(ErrorCode.FACULTY_MEMBER_NOT_FOUND, id);
         }
         repository.deleteById(id);

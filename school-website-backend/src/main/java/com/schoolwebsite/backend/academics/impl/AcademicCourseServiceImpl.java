@@ -17,20 +17,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AcademicCourseServiceImpl implements AcademicCourseService {
-
+public class AcademicCourseServiceImpl implements AcademicCourseService
+{
     private final AcademicCourseRepository repository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<AcademicCourse> getCoursesByTenant(Long tenantId) {
+    public List<AcademicCourse> getCoursesByTenant(Long tenantId)
+    {
         log.debug("Fetching academic courses for tenantId={}", tenantId);
         return repository.findByTenantId(tenantId);
     }
 
     @Override
     @Transactional
-    public AcademicCourse createCourse(Long tenantId, AcademicCourse course) {
+    public AcademicCourse createCourse(Long tenantId, AcademicCourse course)
+    {
         log.info("Creating academic course for tenantId={}, name={}", tenantId, course.getName());
         course.setTenantId(tenantId);
         return repository.save(course);
@@ -38,9 +40,11 @@ public class AcademicCourseServiceImpl implements AcademicCourseService {
 
     @Override
     @Transactional
-    public void deleteCourse(Long id) {
+    public void deleteCourse(Long id)
+    {
         log.info("Deleting academic course id={}", id);
-        if (!repository.existsById(id)) {
+        if (!repository.existsById(id))
+        {
             throw AppException.of(ErrorCode.ACADEMIC_COURSE_NOT_FOUND, id);
         }
         repository.deleteById(id);

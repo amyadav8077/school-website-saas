@@ -9,7 +9,8 @@ import org.springframework.stereotype.Repository;
 import com.schoolwebsite.backend.academics.entity.*;
 
 @Repository
-public interface TransferCertificateRepository extends JpaRepository<TransferCertificate, Long> {
+public interface TransferCertificateRepository extends JpaRepository<TransferCertificate, Long>
+{
     List<TransferCertificate> findByTenantIdOrderByIssueDateDesc(Long tenantId);
 
     Optional<TransferCertificate> findByTenantIdAndAdmissionNoAndFatherNameContainingIgnoreCaseAndAadharNo(

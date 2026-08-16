@@ -6,8 +6,8 @@ import com.schoolwebsite.backend.pagebuilder.dto.PageCreateRequest;
 import com.schoolwebsite.backend.pagebuilder.dto.PageResponse;
 import com.schoolwebsite.backend.pagebuilder.dto.PageSectionDTO;
 
-public interface PageService {
-
+public interface PageService
+{
     PageResponse createPage(Long tenantId, PageCreateRequest request);
 
     List<PageResponse> getPagesByTenant(Long tenantId);

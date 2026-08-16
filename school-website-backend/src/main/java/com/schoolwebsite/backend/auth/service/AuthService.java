@@ -5,7 +5,8 @@ import java.util.Optional;
 
 import com.schoolwebsite.backend.auth.entity.AdminUser;
 
-public interface AuthService {
+public interface AuthService
+{
     Optional<AdminUser> authenticate(String username, String password);
 
     Map<String, Object> buildLoginResponse(AdminUser user);
@@ -21,6 +22,8 @@ public interface AuthService {
     Optional<AdminUser> findTenantAdmin(Long tenantId);
 
     void updatePassword(AdminUser user, String newPassword);
+
+    boolean checkPassword(AdminUser user, String rawPassword);
 
     Optional<AdminUser> findByContact(String contact);
 

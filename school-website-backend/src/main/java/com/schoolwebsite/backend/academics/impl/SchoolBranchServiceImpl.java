@@ -17,20 +17,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SchoolBranchServiceImpl implements SchoolBranchService {
-
+public class SchoolBranchServiceImpl implements SchoolBranchService
+{
     private final SchoolBranchRepository repository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<SchoolBranch> getBranchesByTenant(Long tenantId) {
+    public List<SchoolBranch> getBranchesByTenant(Long tenantId)
+    {
         log.debug("Fetching school branches for tenantId={}", tenantId);
         return repository.findByTenantId(tenantId);
     }
 
     @Override
     @Transactional
-    public SchoolBranch createBranch(Long tenantId, SchoolBranch branch) {
+    public SchoolBranch createBranch(Long tenantId, SchoolBranch branch)
+    {
         log.info("Creating school branch for tenantId={}, name={}", tenantId, branch.getName());
         branch.setTenantId(tenantId);
         return repository.save(branch);
@@ -38,9 +40,11 @@ public class SchoolBranchServiceImpl implements SchoolBranchService {
 
     @Override
     @Transactional
-    public void deleteBranch(Long id) {
+    public void deleteBranch(Long id)
+    {
         log.info("Deleting school branch id={}", id);
-        if (!repository.existsById(id)) {
+        if (!repository.existsById(id))
+        {
             throw AppException.of(ErrorCode.SCHOOL_BRANCH_NOT_FOUND, id);
         }
         repository.deleteById(id);

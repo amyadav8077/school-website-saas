@@ -12,8 +12,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SiteConfig {
-
+public class SiteConfig
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -58,16 +58,19 @@ public class SiteConfig {
     private LocalDateTime updatedAt;
 
     @PrePersist
-    protected void onCreate() {
+    protected void onCreate()
+    {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
-        if (themeName == null) {
+        if (themeName == null)
+        {
             themeName = "DEFAULT";
         }
     }
 
     @PreUpdate
-    protected void onUpdate() {
+    protected void onUpdate()
+    {
         updatedAt = LocalDateTime.now();
     }
 }

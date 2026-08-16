@@ -17,20 +17,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AcademicProgramServiceImpl implements AcademicProgramService {
-
+public class AcademicProgramServiceImpl implements AcademicProgramService
+{
     private final AcademicProgramRepository repository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<AcademicProgram> getProgramsByTenant(Long tenantId) {
+    public List<AcademicProgram> getProgramsByTenant(Long tenantId)
+    {
         log.debug("Fetching academic programs for tenantId={}", tenantId);
         return repository.findByTenantId(tenantId);
     }
 
     @Override
     @Transactional
-    public AcademicProgram createProgram(Long tenantId, AcademicProgram program) {
+    public AcademicProgram createProgram(Long tenantId, AcademicProgram program)
+    {
         log.info("Creating academic program for tenantId={}, name={}", tenantId, program.getName());
         program.setTenantId(tenantId);
         return repository.save(program);
@@ -38,9 +40,11 @@ public class AcademicProgramServiceImpl implements AcademicProgramService {
 
     @Override
     @Transactional
-    public void deleteProgram(Long id) {
+    public void deleteProgram(Long id)
+    {
         log.info("Deleting academic program id={}", id);
-        if (!repository.existsById(id)) {
+        if (!repository.existsById(id))
+        {
             throw AppException.of(ErrorCode.ACADEMIC_PROGRAM_NOT_FOUND, id);
         }
         repository.deleteById(id);

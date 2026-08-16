@@ -16,24 +16,27 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class SchoolEventController {
-
+public class SchoolEventController
+{
     private final SchoolEventService service;
 
     @GetMapping("/sites/{tenantId}/events")
-    public ResponseEntity<ApiResponse<List<SchoolEvent>>> getEvents(@PathVariable Long tenantId) {
+    public ResponseEntity<ApiResponse<List<SchoolEvent>>> getEvents(@PathVariable Long tenantId)
+    {
         return ResponseEntity.ok(ApiResponse.ok(service.getEventsByTenant(tenantId)));
     }
 
     @PostMapping("/admin/sites/{tenantId}/events")
     public ResponseEntity<ApiResponse<SchoolEvent>> createEvent(@PathVariable Long tenantId,
-            @Valid @RequestBody SchoolEvent event) {
+            @Valid @RequestBody SchoolEvent event)
+    {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.ok("Event created successfully", service.createEvent(tenantId, event)));
     }
 
     @DeleteMapping("/admin/events/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteEvent(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> deleteEvent(@PathVariable Long id)
+    {
         service.deleteEvent(id);
         return ResponseEntity.ok(ApiResponse.ok("Event deleted successfully", null));
     }

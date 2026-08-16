@@ -18,19 +18,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class StudentGradeServiceImpl implements StudentGradeService {
-
+public class StudentGradeServiceImpl implements StudentGradeService
+{
     private final StudentGradeRepository repository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<StudentGrade> getGrades(Long tenantId, String studentName, String classLevel, String section) {
+    public List<StudentGrade> getGrades(Long tenantId, String studentName, String classLevel, String section)
+    {
         log.debug("Fetching student grades for tenantId={}", tenantId);
-        if (StringUtils.hasText(studentName)) {
+        if (StringUtils.hasText(studentName))
+        {
             return repository.findByTenantIdAndStudentNameContainingIgnoreCaseOrderByCreatedAtDesc(tenantId,
                     studentName.trim());
         }
-        if (StringUtils.hasText(classLevel) && StringUtils.hasText(section)) {
+        if (StringUtils.hasText(classLevel) && StringUtils.hasText(section))
+        {
             return repository.findByTenantIdAndClassLevelAndSectionOrderByCreatedAtDesc(tenantId, classLevel.trim(),
                     section.trim());
         }
@@ -38,8 +41,32 @@ public class StudentGradeServiceImpl implements StudentGradeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public org.springframework.data.domain.Page<StudentGrade> getGradesPaged(Long tenantId, String studentName,
+            String classLevel, String section, int page, int size)
+    {
+        int safeSize = size <= 0 || size > 100 ? 25 : size;
+        int safePage = Math.max(page, 0);
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(safePage,
+                safeSize);
+
+        if (StringUtils.hasText(studentName))
+        {
+            return repository.findByTenantIdAndStudentNameContainingIgnoreCaseOrderByCreatedAtDesc(tenantId,
+                    studentName.trim(), pageable);
+        }
+        if (StringUtils.hasText(classLevel) && StringUtils.hasText(section))
+        {
+            return repository.findByTenantIdAndClassLevelAndSectionOrderByCreatedAtDesc(tenantId, classLevel.trim(),
+                    section.trim(), pageable);
+        }
+        return repository.findByTenantIdOrderByCreatedAtDesc(tenantId, pageable);
+    }
+
+    @Override
     @Transactional
-    public StudentGrade addGrade(Long tenantId, StudentGrade grade) {
+    public StudentGrade addGrade(Long tenantId, StudentGrade grade)
+    {
         log.info("Adding student grade for tenantId={}, student={}, subject={}", tenantId, grade.getStudentName(),
                 grade.getSubjectName());
         grade.setTenantId(tenantId);
@@ -48,9 +75,11 @@ public class StudentGradeServiceImpl implements StudentGradeService {
 
     @Override
     @Transactional
-    public void deleteGrade(Long id) {
+    public void deleteGrade(Long id)
+    {
         log.info("Deleting student grade id={}", id);
-        if (!repository.existsById(id)) {
+        if (!repository.existsById(id))
+        {
             throw AppException.of(ErrorCode.STUDENT_GRADE_NOT_FOUND, id);
         }
         repository.deleteById(id);

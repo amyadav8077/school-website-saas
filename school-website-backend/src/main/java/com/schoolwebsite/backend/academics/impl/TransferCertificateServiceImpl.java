@@ -20,28 +20,32 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TransferCertificateServiceImpl implements TransferCertificateService {
-
+public class TransferCertificateServiceImpl implements TransferCertificateService
+{
     private final TransferCertificateRepository repository;
 
     @Override
     @Transactional(readOnly = true)
     public List<TransferCertificate> searchTCs(Long tenantId, String studentName, String classLevel, String section,
-            String admissionNo, String fatherName, String aadharNo) {
+            String admissionNo, String fatherName, String aadharNo)
+    {
         log.debug("Searching transfer certificates for tenantId={}", tenantId);
-        if (StringUtils.hasText(studentName)) {
+        if (StringUtils.hasText(studentName))
+        {
             return repository.findByTenantIdAndStudentNameContainingIgnoreCaseOrderByIssueDateDesc(tenantId,
                     studentName.trim());
         }
-        if (StringUtils.hasText(classLevel) && StringUtils.hasText(section)) {
+        if (StringUtils.hasText(classLevel) && StringUtils.hasText(section))
+        {
             return repository.findByTenantIdAndClassLevelAndSectionOrderByIssueDateDesc(tenantId, classLevel.trim(),
                     section.trim());
         }
-        if (StringUtils.hasText(admissionNo)) {
-            if (StringUtils.hasText(fatherName) && StringUtils.hasText(aadharNo)) {
-                Optional<TransferCertificate> tc = repository
-                        .findByTenantIdAndAdmissionNoAndFatherNameContainingIgnoreCaseAndAadharNo(tenantId,
-                                admissionNo.trim(), fatherName.trim(), aadharNo.trim());
+        if (StringUtils.hasText(admissionNo))
+        {
+            if (StringUtils.hasText(fatherName) && StringUtils.hasText(aadharNo))
+            {
+                Optional<TransferCertificate> tc = repository.findByTenantIdAndAdmissionNoAndFatherNameContainingIgnoreCaseAndAadharNo(
+                        tenantId, admissionNo.trim(), fatherName.trim(), aadharNo.trim());
                 return tc.map(List::of).orElse(List.of());
             }
             return repository.findByTenantIdAndAdmissionNoOrderByIssueDateDesc(tenantId, admissionNo.trim());
@@ -51,10 +55,12 @@ public class TransferCertificateServiceImpl implements TransferCertificateServic
 
     @Override
     @Transactional
-    public TransferCertificate issueTC(Long tenantId, TransferCertificate tc) {
+    public TransferCertificate issueTC(Long tenantId, TransferCertificate tc)
+    {
         log.info("Issuing transfer certificate for tenantId={}, student={}", tenantId, tc.getStudentName());
         tc.setTenantId(tenantId);
-        if (tc.getIssueDate() == null) {
+        if (tc.getIssueDate() == null)
+        {
             tc.setIssueDate(LocalDateTime.now());
         }
         return repository.save(tc);
@@ -62,9 +68,11 @@ public class TransferCertificateServiceImpl implements TransferCertificateServic
 
     @Override
     @Transactional
-    public void deleteTC(Long id) {
+    public void deleteTC(Long id)
+    {
         log.info("Deleting transfer certificate id={}", id);
-        if (!repository.existsById(id)) {
+        if (!repository.existsById(id))
+        {
             throw AppException.of(ErrorCode.TRANSFER_CERTIFICATE_NOT_FOUND, id);
         }
         repository.deleteById(id);

@@ -8,8 +8,11 @@ import org.springframework.stereotype.Repository;
 import com.schoolwebsite.backend.tenantsubscription.entity.*;
 
 @Repository
-public interface TenantRepository extends JpaRepository<Tenant, Long> {
+public interface TenantRepository extends JpaRepository<Tenant, Long>
+{
     Optional<Tenant> findBySubdomain(String subdomain);
+
+    Optional<Tenant> findByCustomDomain(String customDomain);
 
     boolean existsBySubdomain(String subdomain);
 

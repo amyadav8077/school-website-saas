@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.schoolwebsite.backend.academics.entity.StudentAchiever;
 
-public interface StudentAchieverService {
-
+public interface StudentAchieverService
+{
     List<StudentAchiever> getAchieversByTenant(Long tenantId);
 
     StudentAchiever createAchiever(Long tenantId, StudentAchiever achiever);

@@ -11,15 +11,25 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdmissionLeadResponse {
+public class AdmissionLeadResponse
+{
     private Long id;
+
     private Long tenantId;
+
     private String studentName;
+
     private String gradeLevel;
+
     private String parentName;
+
     private String parentEmail;
+
     private String parentPhone;
+
     private String status;
+
     private String message;
+
     private LocalDateTime createdAt;
 }

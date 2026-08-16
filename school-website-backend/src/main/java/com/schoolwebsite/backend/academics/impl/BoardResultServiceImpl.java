@@ -17,20 +17,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class BoardResultServiceImpl implements BoardResultService {
-
+public class BoardResultServiceImpl implements BoardResultService
+{
     private final BoardResultRepository repository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<BoardResult> getBoardResultsByTenant(Long tenantId) {
+    public List<BoardResult> getBoardResultsByTenant(Long tenantId)
+    {
         log.debug("Fetching board results for tenantId={}", tenantId);
         return repository.findByTenantIdOrderByAssessmentYearDesc(tenantId);
     }
 
     @Override
     @Transactional
-    public BoardResult createBoardResult(Long tenantId, BoardResult result) {
+    public BoardResult createBoardResult(Long tenantId, BoardResult result)
+    {
         log.info("Creating board result for tenantId={}, classLevel={}, year={}", tenantId, result.getClassLevel(),
                 result.getAssessmentYear());
         result.setTenantId(tenantId);
@@ -39,9 +41,11 @@ public class BoardResultServiceImpl implements BoardResultService {
 
     @Override
     @Transactional
-    public void deleteBoardResult(Long id) {
+    public void deleteBoardResult(Long id)
+    {
         log.info("Deleting board result id={}", id);
-        if (!repository.existsById(id)) {
+        if (!repository.existsById(id))
+        {
             throw AppException.of(ErrorCode.BOARD_RESULT_NOT_FOUND, id);
         }
         repository.deleteById(id);

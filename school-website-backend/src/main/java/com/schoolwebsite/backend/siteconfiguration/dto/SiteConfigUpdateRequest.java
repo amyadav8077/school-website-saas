@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SiteConfigUpdateRequest {
+public class SiteConfigUpdateRequest
+{
 
     @NotBlank(message = "Primary color is required")
     private String primaryColor;
@@ -23,9 +24,14 @@ public class SiteConfigUpdateRequest {
     private String fontFamily;
 
     private String themeName;
+
     private String logoUrl;
+
     private String faviconUrl;
+
     private String contactEmail;
+
     private String contactPhone;
+
     private String socialLinks;
 }

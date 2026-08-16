@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.schoolwebsite.backend.academics.entity.TransferCertificate;
 
-public interface TransferCertificateService {
-
+public interface TransferCertificateService
+{
     List<TransferCertificate> searchTCs(Long tenantId, String studentName, String classLevel, String section,
             String admissionNo, String fatherName, String aadharNo);
 

@@ -13,18 +13,20 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/sites")
 @RequiredArgsConstructor
-public class SiteConfigController {
-
+public class SiteConfigController
+{
     private final SiteConfigService siteConfigService;
 
     @GetMapping("/{subdomain}/config")
-    public ResponseEntity<ApiResponse<SiteConfigResponse>> getSiteConfig(@PathVariable String subdomain) {
+    public ResponseEntity<ApiResponse<SiteConfigResponse>> getSiteConfig(@PathVariable String subdomain)
+    {
         return ResponseEntity.ok(ApiResponse.ok(siteConfigService.getSiteConfigBySubdomain(subdomain)));
     }
 
     @PutMapping("/{tenantId}/config")
     public ResponseEntity<ApiResponse<SiteConfigResponse>> updateSiteConfig(@PathVariable Long tenantId,
-            @Valid @RequestBody SiteConfigUpdateRequest request) {
+            @Valid @RequestBody SiteConfigUpdateRequest request)
+    {
         return ResponseEntity.ok(
                 ApiResponse.ok("Site configuration updated", siteConfigService.updateSiteConfig(tenantId, request)));
     }

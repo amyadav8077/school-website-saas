@@ -16,25 +16,36 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class AdmissionLeadController {
-
+public class AdmissionLeadController
+{
     private final AdmissionLeadService service;
 
     @PostMapping("/sites/{tenantId}/admissions")
     public ResponseEntity<ApiResponse<AdmissionLeadResponse>> submitInquiry(@PathVariable Long tenantId,
-            @Valid @RequestBody AdmissionLeadRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                ApiResponse.ok("Admission inquiry submitted successfully", service.submitLead(tenantId, request)));
+            @Valid @RequestBody AdmissionLeadRequest request)
+    {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("Admission inquiry submitted successfully",
+                service.submitLead(tenantId, request)));
     }
 
     @GetMapping("/admin/sites/{tenantId}/admissions")
-    public ResponseEntity<ApiResponse<List<AdmissionLeadResponse>>> getInquiries(@PathVariable Long tenantId) {
+    public ResponseEntity<ApiResponse<List<AdmissionLeadResponse>>> getInquiries(@PathVariable Long tenantId)
+    {
         return ResponseEntity.ok(ApiResponse.ok(service.getLeadsByTenant(tenantId)));
+    }
+
+    @GetMapping("/admin/sites/{tenantId}/admissions/paged")
+    public ResponseEntity<ApiResponse<org.springframework.data.domain.Page<AdmissionLeadResponse>>> getInquiriesPaged(
+            @PathVariable Long tenantId, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "25") int size)
+    {
+        return ResponseEntity.ok(ApiResponse.ok(service.getLeadsByTenantPaged(tenantId, page, size)));
     }
 
     @PutMapping("/admin/admissions/{leadId}/status")
     public ResponseEntity<ApiResponse<AdmissionLeadResponse>> updateStatus(@PathVariable Long leadId,
-            @RequestParam String status) {
+            @RequestParam String status)
+    {
         return ResponseEntity.ok(ApiResponse.ok("Status updated", service.updateStatus(leadId, status)));
     }
 }

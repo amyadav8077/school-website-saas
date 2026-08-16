@@ -16,36 +16,47 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/admin/tenants")
 @RequiredArgsConstructor
-public class TenantController {
-
+public class TenantController
+{
     private final TenantService tenantService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<TenantResponse>> onboardTenant(@Valid @RequestBody TenantOnboardRequest request) {
+    public ResponseEntity<ApiResponse<TenantResponse>> onboardTenant(@Valid @RequestBody TenantOnboardRequest request)
+    {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.ok("Tenant onboarded successfully", tenantService.onboardTenant(request)));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<TenantResponse>>> getAllTenants() {
+    public ResponseEntity<ApiResponse<List<TenantResponse>>> getAllTenants()
+    {
         return ResponseEntity.ok(ApiResponse.ok(tenantService.getAllTenants()));
     }
 
     @GetMapping("/{subdomain}")
-    public ResponseEntity<ApiResponse<TenantResponse>> getTenant(@PathVariable String subdomain) {
+    public ResponseEntity<ApiResponse<TenantResponse>> getTenant(@PathVariable String subdomain)
+    {
         return ResponseEntity.ok(ApiResponse.ok(tenantService.getTenantBySubdomain(subdomain)));
+    }
+
+    @GetMapping("/resolve")
+    public ResponseEntity<ApiResponse<TenantResponse>> resolveByHost(@RequestParam String host)
+    {
+        return ResponseEntity.ok(ApiResponse.ok(tenantService.resolveByHost(host)));
     }
 
     @PutMapping("/{tenantId}/custom-domain")
     public ResponseEntity<ApiResponse<TenantResponse>> updateCustomDomain(@PathVariable Long tenantId,
-            @RequestParam(required = false) String customDomain) {
-        return ResponseEntity
-                .ok(ApiResponse.ok("Custom domain updated", tenantService.updateCustomDomain(tenantId, customDomain)));
+            @RequestParam(required = false) String customDomain)
+    {
+        return ResponseEntity.ok(
+                ApiResponse.ok("Custom domain updated", tenantService.updateCustomDomain(tenantId, customDomain)));
     }
 
     @PostMapping("/{sourceTenantId}/clone")
     public ResponseEntity<ApiResponse<TenantResponse>> cloneTenant(@PathVariable Long sourceTenantId,
-            @RequestParam String name, @RequestParam String subdomain) {
+            @RequestParam String name, @RequestParam String subdomain)
+    {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("Tenant cloned successfully",
                 tenantService.cloneTenant(sourceTenantId, name, subdomain)));
     }

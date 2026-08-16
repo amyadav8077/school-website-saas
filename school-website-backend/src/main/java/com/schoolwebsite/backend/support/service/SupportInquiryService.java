@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.schoolwebsite.backend.support.entity.SupportInquiry;
 
-public interface SupportInquiryService {
-
+public interface SupportInquiryService
+{
     SupportInquiry submitInquiry(Long tenantId, SupportInquiry inquiry);
 
     List<SupportInquiry> getInquiries(Long tenantId);

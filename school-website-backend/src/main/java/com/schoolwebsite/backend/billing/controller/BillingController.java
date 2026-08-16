@@ -16,25 +16,28 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class BillingController {
-
+public class BillingController
+{
     private final BillingService service;
 
     @PostMapping("/admin/sites/{tenantId}/fees")
     public ResponseEntity<ApiResponse<FeeItem>> createFeeItem(@PathVariable Long tenantId,
-            @Valid @RequestBody FeeItem item) {
+            @Valid @RequestBody FeeItem item)
+    {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.ok("Fee category created successfully", service.createFeeItem(tenantId, item)));
     }
 
     @GetMapping("/sites/{tenantId}/fees")
-    public ResponseEntity<ApiResponse<List<FeeItem>>> getFeeItems(@PathVariable Long tenantId) {
+    public ResponseEntity<ApiResponse<List<FeeItem>>> getFeeItems(@PathVariable Long tenantId)
+    {
         return ResponseEntity.ok(ApiResponse.ok(service.getFeeItems(tenantId)));
     }
 
     @PostMapping("/admin/sites/{tenantId}/invoices")
     public ResponseEntity<ApiResponse<StudentInvoice>> generateInvoice(@PathVariable Long tenantId,
-            @Valid @RequestBody StudentInvoice invoice) {
+            @Valid @RequestBody StudentInvoice invoice)
+    {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.ok("Invoice generated successfully", service.generateInvoice(tenantId, invoice)));
     }
@@ -42,12 +45,31 @@ public class BillingController {
     @GetMapping("/sites/{tenantId}/invoices")
     public ResponseEntity<ApiResponse<List<StudentInvoice>>> getInvoices(@PathVariable Long tenantId,
             @RequestParam(required = false) String studentName, @RequestParam(required = false) String gradeLevel,
-            @RequestParam(required = false) String section) {
+            @RequestParam(required = false) String section)
+    {
         return ResponseEntity.ok(ApiResponse.ok(service.getInvoices(tenantId, studentName, gradeLevel, section)));
     }
 
+    @GetMapping("/sites/{tenantId}/invoices/paged")
+    public ResponseEntity<ApiResponse<org.springframework.data.domain.Page<StudentInvoice>>> getInvoicesPaged(
+            @PathVariable Long tenantId, @RequestParam(required = false) String studentName,
+            @RequestParam(required = false) String gradeLevel, @RequestParam(required = false) String section,
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size)
+    {
+        return ResponseEntity
+                .ok(ApiResponse.ok(service.getInvoicesPaged(tenantId, studentName, gradeLevel, section, page, size)));
+    }
+
+    @GetMapping("/sites/{tenantId}/invoices/stats")
+    public ResponseEntity<ApiResponse<com.schoolwebsite.backend.billing.dto.InvoiceStatsResponse>> getInvoiceStats(
+            @PathVariable Long tenantId)
+    {
+        return ResponseEntity.ok(ApiResponse.ok(service.getInvoiceStats(tenantId)));
+    }
+
     @PutMapping("/sites/invoices/{id}/pay")
-    public ResponseEntity<ApiResponse<StudentInvoice>> payInvoice(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<StudentInvoice>> payInvoice(@PathVariable Long id)
+    {
         return ResponseEntity.ok(ApiResponse.ok("Payment recorded successfully", service.payInvoice(id)));
     }
 }

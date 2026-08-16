@@ -11,11 +11,17 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TenantResponse {
+public class TenantResponse
+{
     private Long id;
+
     private String name;
+
     private String subdomain;
+
     private String customDomain;
+
     private String status;
+
     private LocalDateTime createdAt;
 }

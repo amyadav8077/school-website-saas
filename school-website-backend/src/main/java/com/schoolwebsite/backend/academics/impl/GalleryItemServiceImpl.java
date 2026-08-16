@@ -17,20 +17,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GalleryItemServiceImpl implements GalleryItemService {
-
+public class GalleryItemServiceImpl implements GalleryItemService
+{
     private final GalleryItemRepository repository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<GalleryItem> getGalleryByTenant(Long tenantId) {
+    public List<GalleryItem> getGalleryByTenant(Long tenantId)
+    {
         log.debug("Fetching gallery items for tenantId={}", tenantId);
         return repository.findByTenantId(tenantId);
     }
 
     @Override
     @Transactional
-    public GalleryItem createGalleryItem(Long tenantId, GalleryItem item) {
+    public GalleryItem createGalleryItem(Long tenantId, GalleryItem item)
+    {
         log.info("Creating gallery item for tenantId={}, title={}", tenantId, item.getTitle());
         item.setTenantId(tenantId);
         return repository.save(item);
@@ -38,9 +40,11 @@ public class GalleryItemServiceImpl implements GalleryItemService {
 
     @Override
     @Transactional
-    public void deleteGalleryItem(Long id) {
+    public void deleteGalleryItem(Long id)
+    {
         log.info("Deleting gallery item id={}", id);
-        if (!repository.existsById(id)) {
+        if (!repository.existsById(id))
+        {
             throw AppException.of(ErrorCode.GALLERY_ITEM_NOT_FOUND, id);
         }
         repository.deleteById(id);

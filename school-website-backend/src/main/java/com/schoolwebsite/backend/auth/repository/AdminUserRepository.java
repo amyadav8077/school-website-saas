@@ -6,7 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.schoolwebsite.backend.auth.entity.*;
 
-public interface AdminUserRepository extends JpaRepository<AdminUser, Long> {
+public interface AdminUserRepository extends JpaRepository<AdminUser, Long>
+{
     Optional<AdminUser> findByUsername(String username);
 
     Optional<AdminUser> findByTenantId(Long tenantId);

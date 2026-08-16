@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,31 +24,63 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService {
-
+public class AuthServiceImpl implements AuthService
+{
     private final AdminUserRepository adminUserRepository;
 
     private final TenantRepository tenantRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired(required = false)
     private JavaMailSender mailSender;
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<AdminUser> authenticate(String username, String password) {
+    @Transactional
+    public Optional<AdminUser> authenticate(String username, String password)
+    {
         log.info("Authenticating username={}", username);
-        return adminUserRepository.findByUsername(username).filter(user -> user.getPassword().equals(password));
+        return adminUserRepository.findByUsername(username).filter(user -> passwordMatches(password, user));
+    }
+
+    /**
+     * Verifies a raw password against the stored value. Stored passwords are
+     * BCrypt hashes; any legacy plaintext value is matched directly and then
+     * transparently re-hashed on successful login so old seed data is migrated.
+     */
+    private boolean passwordMatches(String rawPassword, AdminUser user)
+    {
+        String stored = user.getPassword();
+        if (isBcryptHash(stored))
+        {
+            return passwordEncoder.matches(rawPassword, stored);
+        }
+        // Legacy plaintext password — compare directly, then upgrade to a hash.
+        if (stored != null && stored.equals(rawPassword))
+        {
+            user.setPassword(passwordEncoder.encode(rawPassword));
+            adminUserRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isBcryptHash(String value)
+    {
+        return value != null && (value.startsWith("$2a$") || value.startsWith("$2b$") || value.startsWith("$2y$"));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Map<String, Object> buildLoginResponse(AdminUser user) {
+    public Map<String, Object> buildLoginResponse(AdminUser user)
+    {
         Map<String, Object> response = new HashMap<>();
         response.put("username", user.getUsername());
         response.put("role", user.getRole());
         response.put("tenantId", user.getTenantId());
 
-        if (user.getTenantId() != null) {
+        if (user.getTenantId() != null)
+        {
             tenantRepository.findById(user.getTenantId()).ifPresent(tenant -> {
                 response.put("tenantName", tenant.getName());
                 response.put("subdomain", tenant.getSubdomain());
@@ -58,30 +91,34 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<AdminUser> findByUsername(String username) {
+    public Optional<AdminUser> findByUsername(String username)
+    {
         return adminUserRepository.findByUsername(username);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public boolean isUsernameTakenByAnotherTenant(String username, Long tenantId) {
+    public boolean isUsernameTakenByAnotherTenant(String username, Long tenantId)
+    {
         Optional<AdminUser> existing = adminUserRepository.findByUsername(username);
         return existing.isPresent() && !existing.get().getTenantId().equals(tenantId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public boolean tenantExists(Long tenantId) {
+    public boolean tenantExists(Long tenantId)
+    {
         return tenantRepository.findById(tenantId).isPresent();
     }
 
     @Override
     @Transactional
-    public AdminUser saveTenantAdmin(String username, String password, Long tenantId) {
+    public AdminUser saveTenantAdmin(String username, String password, Long tenantId)
+    {
         log.info("Saving tenant admin for tenantId={}, username={}", tenantId, username);
         AdminUser adminUser = adminUserRepository.findByTenantId(tenantId).orElse(new AdminUser());
         adminUser.setUsername(username);
-        adminUser.setPassword(password);
+        adminUser.setPassword(passwordEncoder.encode(password));
         adminUser.setRole(AppConstants.ROLE_TENANT_ADMIN);
         adminUser.setTenantId(tenantId);
         return adminUserRepository.save(adminUser);
@@ -89,30 +126,47 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<AdminUser> findTenantAdmin(Long tenantId) {
+    public Optional<AdminUser> findTenantAdmin(Long tenantId)
+    {
         return adminUserRepository.findByTenantId(tenantId);
     }
 
     @Override
     @Transactional
-    public void updatePassword(AdminUser user, String newPassword) {
+    public void updatePassword(AdminUser user, String newPassword)
+    {
         log.info("Updating password for username={}", user.getUsername());
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
         adminUserRepository.save(user);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<AdminUser> findByContact(String contact) {
+    public boolean checkPassword(AdminUser user, String rawPassword)
+    {
+        String stored = user.getPassword();
+        if (isBcryptHash(stored))
+        {
+            return passwordEncoder.matches(rawPassword, stored);
+        }
+        return stored != null && stored.equals(rawPassword);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<AdminUser> findByContact(String contact)
+    {
         Optional<AdminUser> userOpt = adminUserRepository.findByEmail(contact);
-        if (userOpt.isEmpty()) {
+        if (userOpt.isEmpty())
+        {
             userOpt = adminUserRepository.findByPhoneNumber(contact);
         }
         return userOpt;
     }
 
     @Override
-    public String issueOtp(String contact) {
+    public String issueOtp(String contact)
+    {
         String otp = OtpUtil.generateAndStore(contact);
         sendOtpEmailIfApplicable(contact, otp);
         logOtpToConsole(contact, otp);
@@ -120,19 +174,24 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean verifyOtp(String contact, String enteredOtp) {
+    public boolean verifyOtp(String contact, String enteredOtp)
+    {
         boolean valid = OtpUtil.isValid(contact, enteredOtp);
-        if (valid) {
+        if (valid)
+        {
             OtpUtil.invalidate(contact);
         }
         return valid;
     }
 
-    private void sendOtpEmailIfApplicable(String contact, String otp) {
-        if (!contact.contains("@") || mailSender == null) {
+    private void sendOtpEmailIfApplicable(String contact, String otp)
+    {
+        if (!contact.contains("@") || mailSender == null)
+        {
             return;
         }
-        try {
+        try
+        {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(AppConstants.MAIL_FROM);
             message.setTo(contact);
@@ -145,12 +204,15 @@ public class AuthServiceImpl implements AuthService {
                             + "Best regards,\n" + "Unified Security Team\n" + "SchoolSaaS.com");
             mailSender.send(message);
             log.info("Secure SMTP OTP email sent to {}", contact);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             log.error("Failed to send SMTP OTP email to {}: {}", contact, e.getMessage());
         }
     }
 
-    private void logOtpToConsole(String contact, String otp) {
+    private void logOtpToConsole(String contact, String otp)
+    {
         log.info("SECURE OTP dispatched to {} : {}", contact, otp);
     }
 }

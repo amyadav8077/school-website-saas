@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TenantOnboardRequest {
+public class TenantOnboardRequest
+{
 
     @NotBlank(message = "School name is required")
     private String name;
@@ -19,7 +20,10 @@ public class TenantOnboardRequest {
     private String subdomain;
 
     private String primaryColor = "#1e3a8a"; // Default deep blue
+
     private String secondaryColor = "#3b82f6"; // Default light blue
+
     private String accentColor = "#f59e0b"; // Default warm amber
+
     private String fontFamily = "Inter";
 }

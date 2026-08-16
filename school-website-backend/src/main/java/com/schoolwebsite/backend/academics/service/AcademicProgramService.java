@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.schoolwebsite.backend.academics.entity.AcademicProgram;
 
-public interface AcademicProgramService {
-
+public interface AcademicProgramService
+{
     List<AcademicProgram> getProgramsByTenant(Long tenantId);
 
     AcademicProgram createProgram(Long tenantId, AcademicProgram program);

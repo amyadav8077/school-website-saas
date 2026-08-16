@@ -5,7 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class AdmissionLeadRequest {
+public class AdmissionLeadRequest
+{
     @NotBlank(message = "Student name is required")
     private String studentName;
 
