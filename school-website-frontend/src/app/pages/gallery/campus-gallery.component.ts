@@ -166,7 +166,27 @@ export class CampusGalleryComponent implements OnChanges {
     this.activeVideoItem.set(null);
   }
 
+  private static readonly ALLOWED_EMBED_HOSTS = [
+    'youtube.com', 'www.youtube.com', 'youtube-nocookie.com', 'www.youtube-nocookie.com',
+    'player.vimeo.com', 'vimeo.com', 'drive.google.com'
+  ];
+
+  private isSafeEmbedUrl(url: string): boolean {
+    if (!url) return false;
+    try {
+      const parsed = new URL(url, 'https://invalid.local');
+      if (parsed.protocol !== 'https:') return false;
+      const host = parsed.hostname.toLowerCase();
+      return CampusGalleryComponent.ALLOWED_EMBED_HOSTS.some(h => host === h || host.endsWith('.' + h));
+    } catch {
+      return false;
+    }
+  }
+
   getSafeUrl(url: string): SafeResourceUrl {
+    if (!this.isSafeEmbedUrl(url)) {
+      return this.sanitizer.bypassSecurityTrustResourceUrl('about:blank');
+    }
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }

@@ -196,8 +196,9 @@ export class SchoolApiService {
     return this.http.post<any>(`${BASE}/admin/sites/${tenantId}/invoices`, body);
   }
 
-  payInvoice(id: number): Observable<any> {
-    return this.http.put<any>(`${BASE}/sites/invoices/${id}/pay`, {});
+  payInvoice(id: number, admissionNo?: string): Observable<any> {
+    const suffix = admissionNo ? `?admissionNo=${encodeURIComponent(admissionNo)}` : '';
+    return this.http.put<any>(`${BASE}/sites/invoices/${id}/pay${suffix}`, {});
   }
 
   // ── Grades ────────────────────────────────────────────────────────────────

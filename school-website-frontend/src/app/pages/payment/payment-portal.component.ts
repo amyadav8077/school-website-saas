@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 export interface StudentInvoice {
   id: number;
   studentName: string;
+  admissionNo?: string;
   gradeLevel: string;
   feeItemName: string;
   amount: number;
@@ -271,7 +272,7 @@ export class PaymentPortalComponent {
   executePaymentOnServer() {
     const inv = this.selectedInvoice();
     if (!inv) return;
-    this.http.put<any>(`http://localhost:8080/api/sites/invoices/${inv.id}/pay`, {})
+    this.http.put<any>(`http://localhost:8080/api/sites/invoices/${inv.id}/pay?admissionNo=${encodeURIComponent(inv.admissionNo || '')}`, {})
       .subscribe({
         next: () => {
           this.checkoutState.set('SUCCESS');

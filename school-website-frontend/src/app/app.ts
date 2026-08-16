@@ -627,7 +627,30 @@ export class App implements OnInit {
     }
   }
 
+  // Only trust embeddable URLs from known video/https hosts. This prevents
+  // javascript:/data: and arbitrary hostile embeds injected via tenant content.
+  private static readonly ALLOWED_EMBED_HOSTS = [
+    'youtube.com', 'www.youtube.com', 'youtube-nocookie.com', 'www.youtube-nocookie.com',
+    'player.vimeo.com', 'vimeo.com', 'drive.google.com'
+  ];
+
+  private isSafeEmbedUrl(url: string): boolean {
+    if (!url) return false;
+    try {
+      const parsed = new URL(url, 'https://invalid.local');
+      if (parsed.protocol !== 'https:') return false;
+      const host = parsed.hostname.toLowerCase();
+      return App.ALLOWED_EMBED_HOSTS.some(h => host === h || host.endsWith('.' + h));
+    } catch {
+      return false;
+    }
+  }
+
   getSafeUrl(url: string): SafeResourceUrl {
+    if (!this.isSafeEmbedUrl(url)) {
+      // Refuse to trust an unrecognized/unsafe URL; return a harmless blank.
+      return this.sanitizer.bypassSecurityTrustResourceUrl('about:blank');
+    }
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
@@ -733,7 +756,12 @@ export class App implements OnInit {
 
   onLoginSuccess(user: any) {
     if (typeof sessionStorage !== 'undefined') {
-      sessionStorage.setItem('school_saas_user', JSON.stringify(user));
+      // Persist the JWT separately; keep the stored profile free of the token.
+      if (user?.token) {
+        sessionStorage.setItem('school_saas_token', user.token);
+      }
+      const { token, ...profile } = user || {};
+      sessionStorage.setItem('school_saas_user', JSON.stringify(profile));
     }
     this.currentUser.set(user);
     if (user.role === 'TENANT_ADMIN') {
@@ -779,6 +807,7 @@ export class App implements OnInit {
 
   logout() {
     if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.removeItem('school_saas_token');
       sessionStorage.removeItem('school_saas_user');
     }
     this.currentUser.set(null);
