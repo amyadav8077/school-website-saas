@@ -20,10 +20,11 @@ public class SiteConfig {
     @Column(name = "tenant_id", nullable = false, unique = true)
     private Long tenantId;
 
-    @Column(name = "logo_url")
+    // Stored inline as Base64 data URIs — must be large (TEXT), not VARCHAR(512).
+    @Column(name = "logo_url", columnDefinition = "TEXT")
     private String logoUrl;
 
-    @Column(name = "favicon_url")
+    @Column(name = "favicon_url", columnDefinition = "TEXT")
     private String faviconUrl;
 
     @Column(name = "primary_color", nullable = false)
@@ -47,7 +48,8 @@ public class SiteConfig {
     @Column(name = "contact_phone")
     private String contactPhone;
 
-    @Column(name = "social_links")
+    // Banner + admissions-promo JSON (incl. media/video URLs) — can exceed VARCHAR(2048).
+    @Column(name = "social_links", columnDefinition = "TEXT")
     private String socialLinks; // Stringified JSON or comma-separated links
 
     @Column(name = "created_at", nullable = false, updatable = false)
