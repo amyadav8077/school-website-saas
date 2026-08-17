@@ -267,7 +267,9 @@
     scrollbar-width: none;
   }
   .hc-cards::-webkit-scrollbar { display: none; }
-  .hc-card { flex-basis: 116px; height: 150px; }
+  .hc-card { flex-basis: 84px; height: 108px; }
+  .hc-card--active { height: 114px; }
+  .hc-card-title { font-size: 0.68rem; right: 8px; bottom: 8px; left: 8px; }
   .hc-footer { right: 24px; bottom: 40px; left: 24px; width: auto; }
 }
 
@@ -278,6 +280,10 @@
   .hc-desc { max-width: 320px; font-size: 0.82rem; }
   .hc-round { width: 38px; height: 38px; }
   .hc-progress { gap: 10px; }
+  .hc-cards { gap: 8px; bottom: 116px; }
+  .hc-card { flex-basis: 68px; height: 88px; }
+  .hc-card--active { height: 94px; }
+  .hc-card-title { font-size: 0.6rem; right: 6px; bottom: 6px; left: 6px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
