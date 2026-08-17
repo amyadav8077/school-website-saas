@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  HostListener,
   Input,
   OnChanges,
   OnDestroy,
@@ -12,7 +13,6 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { gsap } from 'gsap';
 
 export interface CarouselSlide {
   url: string;
@@ -26,46 +26,77 @@ export interface CarouselSlide {
   imports: [CommonModule],
   template: `
     @if (slidesInternal.length > 0) {
-      <div class="hc" (mouseenter)="onHover(true)" (mouseleave)="onHover(false)">
-        <!-- Main feature image -->
-        <div class="hc-main">
-          <div class="hc-main-bg" [style.background-image]="'url(' + current().url + ')'"></div>
-          <img #mainImg class="hc-main-img" [src]="current().url" alt="" />
-          <div class="hc-scrim"></div>
+      <section
+        #carouselRoot
+        class="hc"
+        tabindex="0"
+        role="region"
+        aria-roledescription="carousel"
+        [attr.aria-label]="'Campus highlights carousel. Slide ' + (active() + 1) + ' of ' + slidesInternal.length"
+        (mouseenter)="onHover(true)"
+        (mouseleave)="onHover(false)"
+        (focusin)="onHover(true)"
+        (focusout)="onHover(false)"
+      >
+        <div
+          class="hc-backdrop"
+          [class.hc-backdrop--transitioning]="transitioning()"
+          [style.background-image]="'url(' + current().url + ')'"
+          aria-hidden="true"
+        ></div>
+        <div class="hc-veil" aria-hidden="true"></div>
 
-          <!-- Caption overlay -->
-          <div class="hc-copy" #copy>
-            <span class="hc-kicker" [style.color]="accentColor">Campus Highlights</span>
-            <h2 class="hc-title">{{ current().caption || 'Discover Our Campus' }}</h2>
-            @if (current().subtitle) {
-              <p class="hc-sub">{{ current().subtitle }}</p>
-            }
-            <div class="hc-index">
-              <span class="hc-index-cur" [style.color]="accentColor">{{ pad(active() + 1) }}</span>
-              <span class="hc-index-sep"></span>
-              <span class="hc-index-total">{{ pad(slidesInternal.length) }}</span>
-            </div>
-          </div>
+        <!-- Main copy -->
+        <main class="hc-body">
+          <div class="hc-eyebrow" [style.color]="accentColor">Campus Highlights</div>
+          <h1 class="hc-title">{{ current().caption || 'Discover Our Campus' }}</h1>
+          @if (current().subtitle) {
+            <p class="hc-desc">{{ current().subtitle }}</p>
+          }
+        </main>
 
-          <!-- Progress bar (autoplay) -->
-          <div class="hc-progress"><span #bar class="hc-progress-bar" [style.background]="accentColor"></span></div>
-
-          <!-- Arrows -->
-          <button type="button" class="hc-arrow hc-arrow-l" (click)="prev()" aria-label="Previous">‹</button>
-          <button type="button" class="hc-arrow hc-arrow-r" (click)="next()" aria-label="Next">›</button>
-        </div>
-
-        <!-- Thumbnail strip -->
-        <div class="hc-thumbs">
-          @for (s of slidesInternal; track $index; let i = $index) {
-            <button type="button" class="hc-thumb" [class.is-active]="i === active()"
-              (click)="goTo(i)" [style.border-color]="i === active() ? accentColor : 'transparent'">
-              <img [src]="s.url" alt="" />
-              <span class="hc-thumb-num">{{ pad(i + 1) }}</span>
+        <!-- Preview cards (replaces old thumbnail strip) -->
+        <div class="hc-cards" aria-label="Other highlights">
+          @for (s of visibleSlides(); track s.i; let cardIndex = $index) {
+            <button
+              type="button"
+              class="hc-card"
+              [class.hc-card--active]="cardIndex === 0"
+              [style.border-color]="cardIndex === 0 ? accentColor : ''"
+              [attr.aria-current]="cardIndex === 0 ? 'true' : null"
+              [attr.aria-label]="'Show ' + (s.slide.caption || 'slide ' + (s.i + 1))"
+              (click)="goTo(s.i)"
+            >
+              <img class="hc-card-img" [src]="s.slide.url" [alt]="s.slide.caption || ''" loading="lazy" />
+              <span class="hc-card-shade" aria-hidden="true"></span>
+              @if (s.slide.caption) {
+                <span class="hc-card-title">{{ s.slide.caption }}</span>
+              }
             </button>
           }
         </div>
-      </div>
+
+        <!-- Footer: controls + progress -->
+        <div class="hc-footer">
+          <div class="hc-controls" aria-label="Carousel controls">
+            <button type="button" class="hc-round" aria-label="Previous slide" (click)="prev()">
+              <span aria-hidden="true">&larr;</span>
+            </button>
+            <button type="button" class="hc-round" aria-label="Next slide" (click)="next()">
+              <span aria-hidden="true">&rarr;</span>
+            </button>
+          </div>
+
+          <div class="hc-progress" aria-hidden="true">
+            <span class="hc-progress-line">
+              <span class="hc-progress-fill" [style.width.%]="progressPercent()" [style.background]="accentColor"></span>
+            </span>
+            <span class="hc-count" [style.color]="accentColor">{{ pad(active() + 1) }}</span>
+            <span class="hc-count-sep">/</span>
+            <span class="hc-count-total">{{ pad(slidesInternal.length) }}</span>
+          </div>
+        </div>
+      </section>
     }
   `,
   styleUrl: './hero-carousel.component.scss',
@@ -79,15 +110,14 @@ export class HeroCarouselComponent implements OnChanges, AfterViewInit, OnDestro
   /** Stable internal copy so template method-call inputs don't cause resets. */
   protected slidesInternal: CarouselSlide[] = [];
   protected readonly active = signal(0);
+  protected readonly transitioning = signal(false);
 
-  @ViewChild('copy') copyEl?: ElementRef<HTMLElement>;
-  @ViewChild('mainImg') mainImgEl?: ElementRef<HTMLImageElement>;
-  @ViewChild('bar') barEl?: ElementRef<HTMLElement>;
+  @ViewChild('carouselRoot') rootEl?: ElementRef<HTMLElement>;
 
   private viewReady = false;
   private hovering = false;
-  private timer?: ReturnType<typeof setTimeout>;
-  private barTween?: gsap.core.Tween;
+  private timer?: ReturnType<typeof setInterval>;
+  private transitionTimer?: ReturnType<typeof setTimeout>;
   private lastKey = '';
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -95,7 +125,6 @@ export class HeroCarouselComponent implements OnChanges, AfterViewInit, OnDestro
     if (changes['slides']) {
       const incoming = this.slides ?? [];
       const key = incoming.map((s) => s.url).join('|');
-      // Only rebuild + reset when the slide set actually changed (not just a new array ref)
       if (key !== this.lastKey) {
         this.lastKey = key;
         this.slidesInternal = [...incoming];
@@ -107,17 +136,32 @@ export class HeroCarouselComponent implements OnChanges, AfterViewInit, OnDestro
 
   ngAfterViewInit(): void {
     this.viewReady = true;
-    this.animateIn();
     this.restartAutoplay();
   }
 
   ngOnDestroy(): void {
-    this.clearTimer();
-    this.barTween?.kill();
+    this.stopAutoplay();
+    if (this.transitionTimer) clearTimeout(this.transitionTimer);
   }
 
   current(): CarouselSlide {
     return this.slidesInternal[this.active()] ?? { url: '', caption: '' };
+  }
+
+  /** Up to 3 upcoming slides (wrapping) for the side card strip. */
+  visibleSlides(): { slide: CarouselSlide; i: number }[] {
+    const n = this.slidesInternal.length;
+    if (n === 0) return [];
+    const count = Math.min(3, n);
+    return Array.from({ length: count }, (_, offset) => {
+      const i = (this.active() + offset) % n;
+      return { slide: this.slidesInternal[i], i };
+    });
+  }
+
+  progressPercent(): number {
+    const n = this.slidesInternal.length;
+    return n === 0 ? 0 : ((this.active() + 1) / n) * 100;
   }
 
   pad(n: number): string {
@@ -141,62 +185,45 @@ export class HeroCarouselComponent implements OnChanges, AfterViewInit, OnDestro
 
   onHover(isHover: boolean): void {
     this.hovering = isHover;
-    if (isHover) {
-      this.clearTimer();
-      this.barTween?.pause();
-    } else {
-      this.restartAutoplay();
+    if (isHover) this.stopAutoplay();
+    else this.restartAutoplay();
+  }
+
+  @HostListener('keydown', ['$event'])
+  onKeydown(event: KeyboardEvent): void {
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      this.next();
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      this.prev();
     }
   }
 
   private setActive(i: number): void {
+    this.transitioning.set(true);
     this.active.set(i);
     this.cdr.detectChanges();
-    this.animateIn();
     this.restartAutoplay();
+
+    if (this.transitionTimer) clearTimeout(this.transitionTimer);
+    this.transitionTimer = setTimeout(() => {
+      this.transitioning.set(false);
+      this.cdr.detectChanges();
+    }, 650);
   }
 
   private restartAutoplay(): void {
-    this.clearTimer();
+    this.stopAutoplay();
     if (!this.viewReady || this.hovering || this.slidesInternal.length <= 1) return;
     if (typeof window === 'undefined') return;
-
-    // Animate progress bar over the autoplay duration, then advance.
-    const bar = this.barEl?.nativeElement;
-    if (bar) {
-      this.barTween?.kill();
-      this.barTween = gsap.fromTo(
-        bar,
-        { width: '0%' },
-        { width: '100%', duration: this.autoplayMs / 1000, ease: 'none', overwrite: true }
-      );
-    }
-    this.timer = setTimeout(() => this.next(), this.autoplayMs);
+    this.timer = setInterval(() => this.next(), this.autoplayMs);
   }
 
-  private clearTimer(): void {
+  private stopAutoplay(): void {
     if (this.timer) {
-      clearTimeout(this.timer);
+      clearInterval(this.timer);
       this.timer = undefined;
-    }
-  }
-
-  private animateIn(): void {
-    if (!this.viewReady || typeof window === 'undefined') return;
-
-    const img = this.mainImgEl?.nativeElement;
-    if (img) {
-      gsap.fromTo(img, { opacity: 0.3, scale: 1.12 }, { opacity: 1, scale: 1, duration: 0.8, ease: 'power2.out', overwrite: true });
-    }
-
-    const copy = this.copyEl?.nativeElement;
-    if (copy) {
-      const targets = copy.querySelectorAll('.hc-kicker, .hc-title, .hc-sub, .hc-index');
-      gsap.fromTo(
-        targets,
-        { y: 24, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out', stagger: 0.07, overwrite: true }
-      );
     }
   }
 }
