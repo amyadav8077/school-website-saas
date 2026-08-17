@@ -259,9 +259,10 @@
   .hc-cards {
     right: 24px;
     bottom: 120px;
-    left: 24px;
+    left: auto;
+    max-width: calc(100% - 48px);
     width: auto;
-    justify-content: flex-start;
+    justify-content: flex-end;
     overflow-x: auto;
     padding: 8px 0 14px;
     scrollbar-width: none;
