@@ -1181,16 +1181,21 @@
 
             <div class="footer-grid af-footer-inner">
 
-              <!-- Brand column -->
-              <div>
-                <div class="af-footer-brandrow">
-                  @if (logoUrl() && logoUrl().startsWith('http')) {
-                    <img [src]="logoUrl()" alt="logo" class="af-footer-logo-img" />
-                  } @else {
-                    <span class="af-footer-logo-emoji">{{ logoUrl() || '🏫' }}</span>
-                  }
-                  <strong class="af-footer-brandname">{{ activeTenant().name }}</strong>
-                </div>
+              <!-- Column 1: School branding -->
+              <div class="af-footer-col af-footer-brandcol">
+                 <div class="af-footer-brandrow">
+                   @if (logoUrl() && (logoUrl().startsWith('http') || logoUrl().startsWith('data:') || logoUrl().startsWith('/'))) {
+                     <img [src]="logoUrl()" alt="logo" class="af-footer-logo-img" />
+                   } @else {
+                     <span class="af-footer-logo-emoji">{{ logoUrl() || '🏫' }}</span>
+                   }
+                   <strong class="af-footer-brandname">{{ activeTenant().name }}</strong>
+                 </div>
+
+                @if (footerMotto()) {
+                  <p class="af-footer-motto" [style.color]="accentColor()">{{ footerMotto() }}</p>
+                }
+
                 <p class="af-footer-tagline">
                   Nurturing potential and inspiring excellence — empowering every learner with world-class academics, athletics and mentorship.
                 </p>
@@ -1200,11 +1205,6 @@
                   @if (facebookUrl()) {
                     <a [href]="facebookUrl()" target="_blank" rel="noopener" class="foot-social" aria-label="Facebook" title="Facebook">
                       <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07c0 6.02 4.39 11.02 10.13 11.93v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.09 24 18.09 24 12.07Z"/></svg>
-                    </a>
-                  }
-                  @if (twitterUrl()) {
-                    <a [href]="twitterUrl()" target="_blank" rel="noopener" class="foot-social" aria-label="X" title="X">
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.46l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93Zm-1.29 19.5h2.04L6.48 3.24H4.29L17.61 20.65Z"/></svg>
                     </a>
                   }
                   @if (instagramUrl()) {
@@ -1217,42 +1217,156 @@
                       <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.2C0 8.09 0 12 0 12s0 3.91.5 5.8a3.02 3.02 0 0 0 2.12 2.14c1.88.51 9.38.51 9.38.51s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.91 24 12 24 12s0-3.91-.5-5.8ZM9.6 15.57V8.43L15.82 12 9.6 15.57Z"/></svg>
                     </a>
                   }
+                  @if (linkedinUrl()) {
+                    <a [href]="linkedinUrl()" target="_blank" rel="noopener" class="foot-social" aria-label="LinkedIn" title="LinkedIn">
+                      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.55V9h3.57v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+                    </a>
+                  }
                 </div>
               </div>
 
-              <!-- Quick links -->
-              <div>
-                <h4 class="af-footer-coltitle">Quick Links</h4>
+              <!-- Column 2: Explore the school -->
+              <div class="af-footer-col">
+                <h4 class="af-footer-coltitle">Explore the School</h4>
                 <ul class="af-footer-linklist">
-                  <li><button class="foot-link" (click)="selectPreviewPageBySlug('home')">Home</button></li>
-                  <li><button class="foot-link" (click)="selectPreviewPageBySlug('courses')">Academics</button></li>
-                  <li><button class="foot-link" (click)="selectPreviewPageBySlug('admissions')">Admissions</button></li>
-                  <li><button class="foot-link" (click)="selectPreviewPageBySlug('gallery')">Campus Gallery</button></li>
-                  <li><button class="foot-link" (click)="selectPreviewPageBySlug('contact')">Contact Us</button></li>
-                  <li><button class="foot-link" (click)="selectPreviewPageBySlug('disclosures')">Mandatory Disclosures</button></li>
+                  @if (footerExploreLinks().length > 0) {
+                    @for (link of footerExploreLinks(); track $index) {
+                      <li><button class="foot-link" (click)="selectPreviewPageBySlug(link.slug)">{{ link.label }}</button></li>
+                    }
+                  } @else {
+                    <li><button class="foot-link" (click)="selectPreviewPageBySlug('about')">About</button></li>
+                    <li><button class="foot-link" (click)="selectPreviewPageBySlug('courses')">Academics</button></li>
+                    <li><button class="foot-link" (click)="selectPreviewPageBySlug('admissions')">Admissions</button></li>
+                    <li><button class="foot-link" (click)="selectPreviewPageBySlug('gallery')">Campus Life</button></li>
+                    <li><button class="foot-link" (click)="selectPreviewPageBySlug('news')">News</button></li>
+                    <li><button class="foot-link" (click)="selectPreviewPageBySlug('contact')">Contact</button></li>
+                  }
+                </ul>
+
+                <h4 class="af-footer-coltitle af-footer-coltitle--spaced">Academics</h4>
+                <ul class="af-footer-linklist">
+                  @if (footerAcademicsLinks().length > 0) {
+                    @for (link of footerAcademicsLinks(); track $index) {
+                      <li><button class="foot-link" (click)="selectPreviewPageBySlug(link.slug)">{{ link.label }}</button></li>
+                    }
+                  } @else {
+                    <li><a class="foot-link" href="#">Departments</a></li>
+                    <li><a class="foot-link" href="#">Curriculum</a></li>
+                    <li><a class="foot-link" href="#">Faculty</a></li>
+                    <li><a class="foot-link" href="#">Examination Results</a></li>
+                  }
                 </ul>
               </div>
 
-              <!-- Contact -->
-              <div>
+              <!-- Column 3: Admissions & resources -->
+              <div class="af-footer-col">
+                <h4 class="af-footer-coltitle">Admissions</h4>
+                <ul class="af-footer-linklist">
+                  @if (footerAdmissionsLinks().length > 0) {
+                    @for (link of footerAdmissionsLinks(); track $index) {
+                      <li><button class="foot-link" (click)="selectPreviewPageBySlug(link.slug)">{{ link.label }}</button></li>
+                    }
+                  } @else {
+                    <li><button class="foot-link" (click)="selectPreviewPageBySlug('admissions')">Apply Now</button></li>
+                    <li><a class="foot-link" href="#">Visit Campus</a></li>
+                    <li><a class="foot-link" href="#">Fee Structure</a></li>
+                    <li><a class="foot-link" href="#">Important Dates</a></li>
+                  }
+                </ul>
+
+                <h4 class="af-footer-coltitle af-footer-coltitle--spaced">Student Resources</h4>
+                <ul class="af-footer-linklist">
+                  @if (footerResourceLinks().length > 0) {
+                    @for (link of footerResourceLinks(); track $index) {
+                      <li><button class="foot-link" (click)="selectPreviewPageBySlug(link.slug)">{{ link.label }}</button></li>
+                    }
+                  } @else {
+                    @if (studentPortalUrl()) {
+                      <li><a class="foot-link" [href]="studentPortalUrl()" target="_blank" rel="noopener">Student Portal</a></li>
+                    } @else {
+                      <li><button class="foot-link" (click)="selectPreviewPageBySlug('student-corner')">Student Portal</button></li>
+                    }
+                    @if (parentPortalUrl()) {
+                      <li><a class="foot-link" [href]="parentPortalUrl()" target="_blank" rel="noopener">Parent Portal</a></li>
+                    } @else {
+                      <li><button class="foot-link" (click)="selectPreviewPageBySlug('parent-corner')">Parent Portal</button></li>
+                    }
+                    @if (libraryUrl()) {
+                      <li><a class="foot-link" [href]="libraryUrl()" target="_blank" rel="noopener">Library</a></li>
+                    }
+                    @if (transportUrl()) {
+                      <li><a class="foot-link" [href]="transportUrl()" target="_blank" rel="noopener">Transport</a></li>
+                    }
+                    @if (calendarUrl()) {
+                      <li><a class="foot-link" [href]="calendarUrl()" target="_blank" rel="noopener">Calendar</a></li>
+                    }
+                  }
+                </ul>
+
+                <h4 class="af-footer-coltitle af-footer-coltitle--spaced">Downloads</h4>
+                <ul class="af-footer-linklist">
+                  <li><a class="foot-link foot-link--dl" [href]="prospectusUrl() || '#'" [attr.target]="prospectusUrl() ? '_blank' : null" rel="noopener">📄 Prospectus</a></li>
+                  <li><a class="foot-link foot-link--dl" [href]="handbookUrl() || '#'" [attr.target]="handbookUrl() ? '_blank' : null" rel="noopener">📘 Student Handbook</a></li>
+                  <li><a class="foot-link foot-link--dl" [href]="academicCalendarUrl() || '#'" [attr.target]="academicCalendarUrl() ? '_blank' : null" rel="noopener">🗓️ Academic Calendar</a></li>
+                </ul>
+              </div>
+
+              <!-- Column 4: Contact & newsletter -->
+              <div class="af-footer-col">
                 <h4 class="af-footer-coltitle">Get in Touch</h4>
                 <ul class="af-footer-contactlist">
-                  <li class="af-footer-contactrow">
-                    <span class="foot-ico" [style.background]="accentColor()">✉️</span>
-                    <a [href]="'mailto:' + contactEmail()" class="af-footer-contactlink">{{ contactEmail() }}</a>
-                  </li>
+                  @if (footerAddress()) {
+                    <li class="af-footer-contactrow">
+                      <span class="foot-ico" [style.background]="accentColor()">📍</span>
+                      <span class="af-footer-contacttext">{{ footerAddress() }}</span>
+                    </li>
+                  }
                   <li class="af-footer-contactrow">
                     <span class="foot-ico" [style.background]="accentColor()">📞</span>
                     <a [href]="'tel:' + contactPhone()" class="af-footer-contactlink">{{ contactPhone() }}</a>
                   </li>
+                  <li class="af-footer-contactrow">
+                    <span class="foot-ico" [style.background]="accentColor()">✉️</span>
+                    <a [href]="'mailto:' + contactEmail()" class="af-footer-contactlink">{{ contactEmail() }}</a>
+                  </li>
+                  @if (footerOfficeHours()) {
+                    <li class="af-footer-contactrow">
+                      <span class="foot-ico" [style.background]="accentColor()">🕐</span>
+                      <span class="af-footer-contacttext">{{ footerOfficeHours() }}</span>
+                    </li>
+                  }
                 </ul>
+
+                <!-- Newsletter -->
+                <div class="af-footer-newsletter">
+                  <h4 class="af-footer-coltitle">Stay Updated</h4>
+                  <p class="af-footer-newsletter-copy">School updates and announcements, straight to your inbox.</p>
+                  <form class="af-footer-newsletter-form" (submit)="$event.preventDefault()">
+                    <input type="email" class="af-footer-newsletter-input" placeholder="Your email address" aria-label="Email address" />
+                    <button type="submit" class="af-footer-newsletter-btn" [style.background]="accentColor()">Subscribe</button>
+                  </form>
+                </div>
               </div>
 
+            </div>
+
+            <!-- Accreditation badges -->
+            <div class="af-footer-badges">
+              <span class="af-footer-badge">🏅 CBSE Affiliated</span>
+              <span class="af-footer-badge">✅ ISO 9001 Certified</span>
+              <span class="af-footer-badge">🌿 Green School Award</span>
             </div>
 
             <!-- Bottom bar -->
             <div class="af-footer-bottom">
               <span class="af-footer-copy">© 2026 {{ activeTenant().name }} · Educational Trust. All rights reserved.</span>
+              <nav class="af-footer-legal" aria-label="Legal">
+                <a class="foot-legal-link" href="#">Privacy Policy</a>
+                <a class="foot-legal-link" href="#">Terms</a>
+                <a class="foot-legal-link" href="#">Safeguarding Policy</a>
+                <a class="foot-legal-link" href="#">Accessibility</a>
+                <button class="foot-legal-link" type="button">🌐 English</button>
+              </nav>
               <span class="af-footer-powered">Powered by <strong>SchoolSaaS.com</strong></span>
             </div>
           </footer>
