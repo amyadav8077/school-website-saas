@@ -254,37 +254,39 @@
 }
 
 @media (max-width: 900px) {
-  .hc { min-height: 640px; }
-  .hc-body { width: auto; margin: 60px 24px 0; }
-  .hc-cards {
-    right: 24px;
-    bottom: 120px;
-    left: auto;
-    max-width: calc(100% - 48px);
-    width: auto;
-    justify-content: flex-end;
-    overflow-x: auto;
-    padding: 8px 0 14px;
-    scrollbar-width: none;
+  .hc {
+    min-height: 640px;
+    // Smaller cards so the 3-card strip stays a small band in the bottom-right.
+    --hc-card-width: 76px;
+    --hc-cards-gap: 8px;
   }
-  .hc-cards::-webkit-scrollbar { display: none; }
-  .hc-card { flex-basis: 84px; height: 108px; }
-  .hc-card--active { height: 114px; }
-  .hc-card-title { font-size: 0.68rem; right: 8px; bottom: 8px; left: 8px; }
-  .hc-footer { right: 24px; bottom: 40px; left: 24px; width: auto; }
+  .hc-body { width: auto; margin: 60px 24px 0; }
+  // Keep the desktop mechanism: cards anchored bottom-right, footer below them.
+  .hc-cards { right: 24px; bottom: 96px; }
+  .hc-card { height: 96px; }
+  .hc-card--active { height: 104px; }
+  .hc-card-title { font-size: 0.62rem; right: 6px; bottom: 6px; left: 6px; }
+  .hc-footer { right: 24px; bottom: 40px; }
 }
 
 @media (max-width: 560px) {
-  .hc { min-height: 620px; }
-  .hc-body { margin-top: 48px; }
+  .hc {
+    min-height: 560px;
+    --hc-card-width: 64px;
+    --hc-cards-gap: 6px;
+  }
+  .hc-body { margin: 40px 20px 0; }
   .hc-title { font-size: clamp(1.6rem, 8vw, 2.6rem); }
   .hc-desc { max-width: 320px; font-size: 0.82rem; }
-  .hc-round { width: 38px; height: 38px; }
-  .hc-progress { gap: 10px; }
-  .hc-cards { gap: 8px; bottom: 116px; }
-  .hc-card { flex-basis: 68px; height: 88px; }
-  .hc-card--active { height: 94px; }
-  .hc-card-title { font-size: 0.6rem; right: 6px; bottom: 6px; left: 6px; }
+  .hc-round { width: 36px; height: 36px; font-size: 1rem; }
+  .hc-controls { gap: 8px; }
+  .hc-progress { gap: 8px; }
+  .hc-count { font-size: 0.9rem; }
+  .hc-cards { right: 16px; bottom: 84px; }
+  .hc-card { height: 82px; }
+  .hc-card--active { height: 88px; }
+  .hc-card-title { font-size: 0.55rem; right: 5px; bottom: 5px; left: 5px; }
+  .hc-footer { right: 16px; bottom: 32px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
