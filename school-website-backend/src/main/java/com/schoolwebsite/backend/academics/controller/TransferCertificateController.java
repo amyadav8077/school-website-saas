@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.schoolwebsite.backend.academics.dto.TCDownloadRequest;
 import com.schoolwebsite.backend.academics.entity.*;
 import com.schoolwebsite.backend.academics.service.*;
 import com.schoolwebsite.backend.auth.security.CurrentUser;
@@ -27,6 +28,13 @@ public class TransferCertificateController {
             @RequestParam(required = false) String fatherName, @RequestParam(required = false) String aadharNo) {
         return ResponseEntity.ok(ApiResponse
                 .ok(service.searchTCs(tenantId, studentName, classLevel, section, admissionNo, fatherName, aadharNo)));
+    }
+
+    @PostMapping("/sites/{tenantId}/tc/verify-download")
+    public ResponseEntity<ApiResponse<TransferCertificate>> verifyForDownload(@PathVariable Long tenantId,
+            @RequestBody TCDownloadRequest req) {
+        return ResponseEntity.ok(ApiResponse.ok(service.verifyForDownload(tenantId, req.getAdmissionNo(),
+                req.getFatherName(), req.getDateOfBirth(), req.getAadharNo())));
     }
 
     @GetMapping("/admin/sites/{tenantId}/tc")

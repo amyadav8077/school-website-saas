@@ -38,6 +38,9 @@ public class TransferCertificate {
     @Column(name = "aadhar_no", nullable = false)
     private String aadharNo; // e.g. 1234-5678-9012
 
+    @Column(name = "date_of_birth")
+    private String dateOfBirth; // e.g. 2010-05-14 (used for download verification)
+
     @Column(name = "tc_number", nullable = false)
     private String tcNumber; // e.g. TC-2026-001
 

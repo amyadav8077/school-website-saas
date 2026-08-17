@@ -34,6 +34,11 @@ public interface StudentInvoiceRepository extends JpaRepository<StudentInvoice, 
     List<StudentInvoice> findByTenantIdAndGradeLevelAndSectionOrderByCreatedAtDesc(Long tenantId, String gradeLevel,
             String section);
 
+    // Full identity-verification tuple: returns all invoices belonging to the
+    // exact student (admission + father + aadhaar + DOB) so bills can be viewed/paid.
+    List<StudentInvoice> findByTenantIdAndAdmissionNoAndFatherNameIgnoreCaseAndAadharNoAndDateOfBirthOrderByCreatedAtDesc(
+            Long tenantId, String admissionNo, String fatherName, String aadharNo, String dateOfBirth);
+
     // Paginated variants for admin lists at scale.
     Page<StudentInvoice> findByTenantIdOrderByCreatedAtDesc(Long tenantId, Pageable pageable);
 

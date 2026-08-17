@@ -9,6 +9,14 @@ public interface TransferCertificateService {
             String admissionNo, String fatherName, String aadharNo);
 
     /**
+     * Verifies the full identity tuple (admissionNo + fatherName + dateOfBirth +
+     * aadharNo) before a Transfer Certificate may be downloaded. Returns the
+     * full unmasked record on success; throws if the details do not match.
+     */
+    TransferCertificate verifyForDownload(Long tenantId, String admissionNo, String fatherName, String dateOfBirth,
+            String aadharNo);
+
+    /**
      * Admin-only full list for the issuing tenant (authorization enforced by caller).
      */
     List<TransferCertificate> getIssuedTCs(Long tenantId);

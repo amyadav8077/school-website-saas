@@ -191,10 +191,32 @@ export class App implements OnInit {
   protected readonly instagramUrl = signal<string>('');
   protected readonly twitterUrl = signal<string>('');
   protected readonly youtubeUrl = signal<string>('');
+  protected readonly linkedinUrl = signal<string>('');
   protected readonly googleMapUrl = signal<string>('');
   protected readonly logoUrl = signal<string>('🏰');
   protected readonly contactEmail = signal<string>('info@schoolsaas.com');
   protected readonly contactPhone = signal<string>('+1 (555) 019-9000');
+
+  // Footer content
+  protected readonly footerMotto = signal<string>('Knowledge · Character · Service');
+  protected readonly footerAddress = signal<string>('123 Campus Avenue, Education City, 560001');
+  protected readonly footerOfficeHours = signal<string>('Mon – Fri · 8:00 AM – 4:00 PM');
+  protected readonly prospectusUrl = signal<string>('');
+  protected readonly handbookUrl = signal<string>('');
+  protected readonly academicCalendarUrl = signal<string>('');
+
+  // Footer student-resource links
+  protected readonly studentPortalUrl = signal<string>('');
+  protected readonly parentPortalUrl = signal<string>('');
+  protected readonly libraryUrl = signal<string>('');
+  protected readonly transportUrl = signal<string>('');
+  protected readonly calendarUrl = signal<string>('');
+
+  // Configurable footer link columns (internal page links)
+  protected readonly footerExploreLinks = signal<{ label: string; slug: string }[]>([]);
+  protected readonly footerResourceLinks = signal<{ label: string; slug: string }[]>([]);
+  protected readonly footerAcademicsLinks = signal<{ label: string; slug: string }[]>([]);
+  protected readonly footerAdmissionsLinks = signal<{ label: string; slug: string }[]>([]);
 
   ngOnInit() {
     this.checkBackendHealth();
@@ -469,7 +491,9 @@ export class App implements OnInit {
       'news': 7,
       'gallery': 8,
       'disclosures': 9,
-      'tc': 10
+      'tc': 10,
+      'student-corner': 20,
+      'parent-corner': 21
     };
     data.sort((a, b) => {
       const orderA = pageSortOrder[a.slug] || 99;
@@ -569,7 +593,24 @@ export class App implements OnInit {
         this.instagramUrl.set(banner.instagramUrl || '');
         this.twitterUrl.set(banner.twitterUrl || '');
         this.youtubeUrl.set(banner.youtubeUrl || '');
+        this.linkedinUrl.set(banner.linkedinUrl || '');
         this.googleMapUrl.set(banner.googleMapUrl || '');
+        if (banner.footerMotto) this.footerMotto.set(banner.footerMotto);
+        if (banner.footerAddress) this.footerAddress.set(banner.footerAddress);
+        if (banner.footerOfficeHours) this.footerOfficeHours.set(banner.footerOfficeHours);
+        this.prospectusUrl.set(banner.prospectusUrl || '');
+        this.handbookUrl.set(banner.handbookUrl || '');
+        this.academicCalendarUrl.set(banner.academicCalendarUrl || '');
+        this.studentPortalUrl.set(banner.studentPortalUrl || '');
+        this.parentPortalUrl.set(banner.parentPortalUrl || '');
+        this.libraryUrl.set(banner.libraryUrl || '');
+        this.transportUrl.set(banner.transportUrl || '');
+        this.calendarUrl.set(banner.calendarUrl || '');
+        const footerCols = banner.footerColumns || {};
+        this.footerExploreLinks.set(Array.isArray(footerCols.explore) ? footerCols.explore : []);
+        this.footerResourceLinks.set(Array.isArray(footerCols.studentResources) ? footerCols.studentResources : []);
+        this.footerAcademicsLinks.set(Array.isArray(footerCols.academics) ? footerCols.academics : []);
+        this.footerAdmissionsLinks.set(Array.isArray(footerCols.admissions) ? footerCols.admissions : []);
         this.applyPromoConfig(banner);
       } catch (e) {
         this.activeBanner.set(null);
@@ -577,7 +618,20 @@ export class App implements OnInit {
         this.instagramUrl.set('');
         this.twitterUrl.set('');
         this.youtubeUrl.set('');
+        this.linkedinUrl.set('');
         this.googleMapUrl.set('');
+        this.prospectusUrl.set('');
+        this.handbookUrl.set('');
+        this.academicCalendarUrl.set('');
+        this.studentPortalUrl.set('');
+        this.parentPortalUrl.set('');
+        this.libraryUrl.set('');
+        this.transportUrl.set('');
+        this.calendarUrl.set('');
+        this.footerExploreLinks.set([]);
+        this.footerResourceLinks.set([]);
+        this.footerAcademicsLinks.set([]);
+        this.footerAdmissionsLinks.set([]);
         this.promoConfig.set(null);
         this.showPromo.set(false);
       }
@@ -587,7 +641,20 @@ export class App implements OnInit {
       this.instagramUrl.set('');
       this.twitterUrl.set('');
       this.youtubeUrl.set('');
+      this.linkedinUrl.set('');
       this.googleMapUrl.set('');
+      this.prospectusUrl.set('');
+      this.handbookUrl.set('');
+      this.academicCalendarUrl.set('');
+      this.studentPortalUrl.set('');
+      this.parentPortalUrl.set('');
+      this.libraryUrl.set('');
+      this.transportUrl.set('');
+      this.calendarUrl.set('');
+      this.footerExploreLinks.set([]);
+      this.footerResourceLinks.set([]);
+      this.footerAcademicsLinks.set([]);
+      this.footerAdmissionsLinks.set([]);
       this.promoConfig.set(null);
       this.showPromo.set(false);
     }

@@ -17,6 +17,10 @@ public interface TransferCertificateRepository extends JpaRepository<TransferCer
     Optional<TransferCertificate> findByTenantIdAndAdmissionNoAndFatherNameIgnoreCaseAndAadharNo(Long tenantId,
             String admissionNo, String fatherName, String aadharNo);
 
+    // Full download-verification tuple: adds date of birth on top of the secure tuple.
+    Optional<TransferCertificate> findByTenantIdAndAdmissionNoAndFatherNameIgnoreCaseAndAadharNoAndDateOfBirth(
+            Long tenantId, String admissionNo, String fatherName, String aadharNo, String dateOfBirth);
+
     List<TransferCertificate> findByTenantIdAndClassLevelAndSectionOrderByIssueDateDesc(Long tenantId,
             String classLevel, String section);
 

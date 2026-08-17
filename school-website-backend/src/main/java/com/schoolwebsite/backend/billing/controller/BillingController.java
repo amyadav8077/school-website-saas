@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.schoolwebsite.backend.auth.security.CurrentUser;
+import com.schoolwebsite.backend.billing.dto.InvoiceVerifyRequest;
 import com.schoolwebsite.backend.billing.entity.*;
 import com.schoolwebsite.backend.billing.service.*;
 import com.schoolwebsite.backend.common.dto.ApiResponse;
@@ -47,11 +48,21 @@ public class BillingController {
     public ResponseEntity<ApiResponse<List<StudentInvoice>>> getInvoices(@PathVariable Long tenantId,
             @RequestParam(required = false) String studentName, @RequestParam(required = false) String gradeLevel,
             @RequestParam(required = false) String section) {
-        // Public parent lookup: requires a student-name filter (no full dumps).
-        if (!StringUtils.hasText(studentName)) {
-            throw AppException.badRequest("A student name is required to look up invoices.");
+        // Public lookup: allow either a student-name filter OR a class+section
+        // filter (no full dumps — an empty query is still rejected).
+        boolean hasName = StringUtils.hasText(studentName);
+        boolean hasClassSection = StringUtils.hasText(gradeLevel) && StringUtils.hasText(section);
+        if (!hasName && !hasClassSection) {
+            throw AppException.badRequest("Provide a student name, or a class and section, to look up invoices.");
         }
         return ResponseEntity.ok(ApiResponse.ok(service.getInvoices(tenantId, studentName, gradeLevel, section)));
+    }
+
+    @PostMapping("/sites/{tenantId}/invoices/verify")
+    public ResponseEntity<ApiResponse<List<StudentInvoice>>> verifyInvoices(@PathVariable Long tenantId,
+            @RequestBody InvoiceVerifyRequest req) {
+        return ResponseEntity.ok(ApiResponse.ok(service.verifyInvoices(tenantId, req.getAdmissionNo(),
+                req.getFatherName(), req.getDateOfBirth(), req.getAadharNo())));
     }
 
     @GetMapping("/sites/{tenantId}/invoices/paged")

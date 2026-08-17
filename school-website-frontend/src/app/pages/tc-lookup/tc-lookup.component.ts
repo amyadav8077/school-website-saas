@@ -11,6 +11,7 @@ export interface TransferCertificate {
   section: string;
   fatherName: string;
   aadharNo: string;
+  dateOfBirth?: string;
   tcNumber: string;
   issueDate: string;
   pdfUrl?: string;
@@ -127,20 +128,21 @@ export interface TransferCertificate {
       @if (hasSearched()) {
         <div>
           
-          <!-- Class Mode Matching list -->
-          @if (lookupMode() === 'CLASS' && certificatesList().length > 0 && !certificate()) {
+          <!-- Class Mode Matching list (privacy-safe: name only) -->
+          @if (lookupMode() === 'CLASS' && certificatesList().length > 0 && !certificate() && !verifyingTc()) {
             <div class="ds-card tl-match-card">
-              <h4 class="ds-heading tl-match-heading">🔍 Matching Transfer Certificates in {{ classForm.classLevel }} (Section {{ classForm.section }})</h4>
-              
+              <h4 class="ds-heading tl-match-heading">🔍 Transfer Certificates in {{ classForm.classLevel }} (Section {{ classForm.section }})</h4>
+              <p class="tl-intro">For privacy, only names are shown. To view or download a certificate, verify the student's identity details.</p>
+
               <div class="tl-match-list">
                 @for (tc of certificatesList(); track tc.id) {
                   <div class="ds-card ds-card-hover tl-match-row">
                     <div class="tl-match-info">
                       <strong class="tl-match-name">{{ tc.studentName }}</strong>
-                      <span class="tl-match-meta">Adm No: {{ tc.admissionNo }} • Father: {{ tc.fatherName }}</span>
+                      <span class="tl-match-meta">{{ tc.classLevel }} • Section {{ tc.section }}</span>
                     </div>
-                    <button (click)="selectTC(tc)" class="ds-btn tl-btn-view" [style.background-color]="primaryColor">
-                      📜 View Certificate
+                    <button (click)="startVerification(tc)" class="ds-btn tl-btn-view" [style.background-color]="primaryColor">
+                      🔒 Verify & Download
                     </button>
                   </div>
                 }
@@ -148,7 +150,51 @@ export interface TransferCertificate {
             </div>
           }
 
-          @if (!certificate() && (lookupMode() === 'SECURE' || (lookupMode() === 'CLASS' && certificatesList().length === 0))) {
+          <!-- Class Mode: identity verification gate before download -->
+          @if (verifyingTc()) {
+            <div class="ds-card tl-match-card">
+              <button (click)="cancelVerification()" class="ds-btn ds-btn-ghost tl-back-btn">⬅️ Back to Search List</button>
+              <h4 class="ds-heading tl-match-heading">🔒 Verify Identity to Download — {{ verifyingTc()?.studentName }}</h4>
+              <p class="tl-intro">Enter the student's details exactly as recorded. All four must match to download the certificate.</p>
+
+              <form (ngSubmit)="verifyAndDownload()" #dlForm="ngForm" class="tl-secure-form">
+                <div class="tl-secure-grid">
+                  <div>
+                    <label class="tl-label">Admission Number</label>
+                    <input type="text" name="dlAdmissionNo" [(ngModel)]="downloadForm.admissionNo" required placeholder="e.g. ADM-901" class="tl-input-secure" />
+                  </div>
+                  <div>
+                    <label class="tl-label">Father's Full Name</label>
+                    <input type="text" name="dlFatherName" [(ngModel)]="downloadForm.fatherName" required placeholder="e.g. James Potter" class="tl-input-secure" />
+                  </div>
+                </div>
+                <div class="tl-secure-grid">
+                  <div>
+                    <label class="tl-label">Date of Birth</label>
+                    <input type="date" name="dlDob" [(ngModel)]="downloadForm.dateOfBirth" required class="tl-input-secure" />
+                  </div>
+                  <div>
+                    <label class="tl-label">Candidate's Aadhar Number</label>
+                    <input type="text" name="dlAadhar" [(ngModel)]="downloadForm.aadharNo" required placeholder="e.g. 1234-5678-9012" class="tl-input-secure" />
+                  </div>
+                </div>
+
+                @if (verifyError()) {
+                  <div class="ds-alert ds-alert-error ds-shake tl-alert">
+                    <span class="tl-alert-icon">⚠️</span>
+                    <strong class="tl-alert-title">Verification Failed</strong>
+                    <p class="tl-alert-text">{{ verifyError() }}</p>
+                  </div>
+                }
+
+                <button type="submit" class="ds-btn tl-btn-verify" [disabled]="!dlForm.form.valid || isLoading()" [style.background-color]="primaryColor">
+                  {{ isLoading() ? 'Verifying details...' : '⬇️ Verify & Download Certificate' }}
+                </button>
+              </form>
+            </div>
+          }
+
+          @if (!certificate() && !verifyingTc() && (lookupMode() === 'SECURE' || (lookupMode() === 'CLASS' && certificatesList().length === 0))) {
             <!-- Error Alert -->
             <div class="ds-alert ds-alert-error ds-shake tl-alert">
               <span class="tl-alert-icon">⚠️</span>
@@ -160,8 +206,8 @@ export interface TransferCertificate {
             </div>
           } @else if (certificate()) {
             
-            @if (lookupMode() === 'CLASS' && certificatesList().length > 1) {
-              <button (click)="certificate.set(null)" class="ds-btn ds-btn-ghost tl-back-btn">
+            @if (lookupMode() === 'CLASS') {
+              <button (click)="backToList()" class="ds-btn ds-btn-ghost tl-back-btn">
                 ⬅️ Back to Search List
               </button>
             }
@@ -216,6 +262,8 @@ export class TCLookupComponent {
   protected readonly hasSearched = signal(false);
   protected readonly isLoading = signal(false);
   protected readonly lookupMode = signal<string>('CLASS'); // CLASS, SECURE
+  protected readonly verifyingTc = signal<TransferCertificate | null>(null);
+  protected readonly verifyError = signal<string>('');
 
   form = {
     admissionNo: '',
@@ -229,10 +277,59 @@ export class TCLookupComponent {
     studentName: ''
   };
 
+  downloadForm = {
+    admissionNo: '',
+    fatherName: '',
+    dateOfBirth: '',
+    aadharNo: ''
+  };
+
   private readonly http = inject(HttpClient);
 
-  selectTC(tc: TransferCertificate) {
-    this.certificate.set(tc);
+  /** Opens the identity verification gate for a chosen (masked) list entry. */
+  startVerification(tc: TransferCertificate) {
+    this.verifyingTc.set(tc);
+    this.verifyError.set('');
+    this.certificate.set(null);
+    this.downloadForm = { admissionNo: '', fatherName: '', dateOfBirth: '', aadharNo: '' };
+  }
+
+  cancelVerification() {
+    this.verifyingTc.set(null);
+    this.verifyError.set('');
+  }
+
+  backToList() {
+    this.certificate.set(null);
+    this.verifyingTc.set(null);
+  }
+
+  /** Verifies the four identity details against the backend, then downloads on success. */
+  verifyAndDownload() {
+    this.isLoading.set(true);
+    this.verifyError.set('');
+
+    const payload = {
+      admissionNo: this.downloadForm.admissionNo.trim(),
+      fatherName: this.downloadForm.fatherName.trim(),
+      dateOfBirth: this.downloadForm.dateOfBirth.trim(),
+      aadharNo: this.downloadForm.aadharNo.trim()
+    };
+
+    this.http.post<TransferCertificate>(`http://localhost:8080/api/sites/${this.tenantId}/tc/verify-download`, payload)
+      .subscribe({
+        next: (data) => {
+          this.isLoading.set(false);
+          this.verifyingTc.set(null);
+          this.certificate.set(data);
+          this.downloadCertificate();
+        },
+        error: (err) => {
+          this.isLoading.set(false);
+          this.verifyError.set(err?.error?.message
+            || 'The details provided do not match our records. Please check and try again.');
+        }
+      });
   }
 
   /**
@@ -326,6 +423,8 @@ export class TCLookupComponent {
     this.hasSearched.set(false);
     this.certificate.set(null);
     this.certificatesList.set([]);
+    this.verifyingTc.set(null);
+    this.verifyError.set('');
 
     if (this.lookupMode() === 'SECURE') {
       const url = `http://localhost:8080/api/sites/${this.tenantId}/tc`
@@ -363,10 +462,7 @@ export class TCLookupComponent {
         .subscribe({
           next: (data) => {
             this.isLoading.set(false);
-            this.certificatesList.set(data);
-            if (data.length === 1) {
-              this.certificate.set(data[0]);
-            }
+            this.certificatesList.set(data || []);
             this.hasSearched.set(true);
           },
           error: (err) => {

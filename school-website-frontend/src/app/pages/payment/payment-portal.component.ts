@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -8,6 +8,7 @@ export interface StudentInvoice {
   studentName: string;
   admissionNo?: string;
   gradeLevel: string;
+  section?: string;
   feeItemName: string;
   amount: number;
   status: string; // PENDING, PAID
@@ -73,49 +74,109 @@ export interface StudentInvoice {
         </div>
       </form>
 
-      <!-- Search Results -->
-      @if (hasSearched()) {
+      <!-- Step 1: Class/section results — names only (privacy-safe) -->
+      @if (hasSearched() && !verifiedInvoices()) {
         <div>
-          @if (invoices().length === 0) {
+          @if (studentList().length === 0) {
             <div class="pp-empty">
               <span class="pp-empty-icon">🔍</span>
-              <p class="pp-empty-title">No invoices found for student: "{{ searchName }}"</p>
-              <p class="pp-empty-hint">Verify spelling or generate a student invoice in the Admin panel above!</p>
+              <p class="pp-empty-title">No students found for {{ searchClass }} (Section {{ searchSection }})</p>
+              <p class="pp-empty-hint">Verify the class/section or generate a student invoice in the Admin panel above!</p>
             </div>
-          } @else {
-            <h4 class="pp-results-heading">
-              Issued Bills found matching search criteria:
-            </h4>
-            
+          } @else if (!verifyingStudent()) {
+            <h4 class="pp-results-heading">Students in {{ searchClass }} (Section {{ searchSection }})</h4>
+            <p class="pp-subtitle">For privacy, fee details are hidden. Verify a student's identity to view and pay their bills.</p>
+
             <div class="pp-results-list">
-              @for (inv of invoices(); track inv.id) {
+              @for (s of studentList(); track s.studentName) {
                 <div class="ds-card ds-card-hover pp-invoice-card">
                   <div>
-                    <div class="pp-invoice-title-row">
-                      <span class="ds-chip">INV-400{{ inv.id }}</span>
-                      <strong class="pp-invoice-fee-name">{{ inv.feeItemName }}</strong>
-                    </div>
-                    <span class="pp-invoice-due">Due Date: {{ inv.dueDate | date:'mediumDate' }}</span>
-                    @if (inv.status === 'PAID') {
-                      <span class="pp-invoice-paid">Paid on: {{ inv.paymentDate | date:'medium' }}</span>
-                    }
+                    <strong class="pp-invoice-fee-name">{{ s.studentName }}</strong>
+                    <span class="pp-invoice-due">{{ s.gradeLevel }} • Section {{ s.section }}</span>
                   </div>
-                  
                   <div class="pp-invoice-right">
-                    <span class="pp-invoice-amount">\${{ inv.amount }}</span>
-                    
-                    @if (inv.status === 'PENDING') {
-                      <button (click)="openCheckoutModal(inv)" class="ds-btn pp-pay-btn" [style.background-color]="accentColor">
-                        💳 Pay Fees Now
-                      </button>
-                    } @else {
-                      <span class="ds-chip pp-chip-paid">🟢 PAID</span>
-                    }
+                    <button (click)="startVerification(s.studentName)" class="ds-btn pp-pay-btn" [style.background-color]="primaryColor">
+                      🔒 Verify & View Bills
+                    </button>
                   </div>
                 </div>
               }
             </div>
           }
+
+          <!-- Step 2: identity verification gate -->
+          @if (verifyingStudent()) {
+            <button (click)="cancelVerification()" class="ds-btn ds-btn-ghost pp-cancel-btn" style="margin-bottom: 1rem;">⬅️ Back to Student List</button>
+            <h4 class="pp-results-heading">🔒 Verify Identity — {{ verifyingStudent() }}</h4>
+            <p class="pp-subtitle">Enter the student's details exactly as recorded. All four must match to view and pay bills.</p>
+
+            <form (ngSubmit)="verifyAndViewBills()" #vForm="ngForm" class="pp-search-form">
+              <div class="pp-field-flex1">
+                <label class="pp-label">Admission Number</label>
+                <input type="text" name="vAdmission" [(ngModel)]="verifyForm.admissionNo" required placeholder="e.g. ADM-901" class="pp-input-text" />
+              </div>
+              <div class="pp-field-flex1">
+                <label class="pp-label">Father's Full Name</label>
+                <input type="text" name="vFather" [(ngModel)]="verifyForm.fatherName" required placeholder="e.g. James Potter" class="pp-input-text" />
+              </div>
+              <div class="pp-field-flex1">
+                <label class="pp-label">Date of Birth</label>
+                <input type="date" name="vDob" [(ngModel)]="verifyForm.dateOfBirth" required class="pp-input-text" />
+              </div>
+              <div class="pp-field-flex1">
+                <label class="pp-label">Aadhaar Number</label>
+                <input type="text" name="vAadhar" [(ngModel)]="verifyForm.aadharNo" required placeholder="e.g. 1234-5678-9012" class="pp-input-text" />
+              </div>
+              <div class="pp-search-btn-wrap">
+                <button type="submit" class="ds-btn pp-search-btn" [disabled]="!vForm.form.valid || isVerifying()" [style.background-color]="primaryColor">
+                  {{ isVerifying() ? 'Verifying…' : '🔓 Verify & View Bills' }}
+                </button>
+              </div>
+            </form>
+
+            @if (verifyError()) {
+              <div class="ds-alert ds-alert-error ds-shake" style="margin-top: 1rem;">
+                <strong>Verification Failed:</strong> {{ verifyError() }}
+              </div>
+            }
+          }
+        </div>
+      }
+
+      <!-- Step 3: verified — show that student's bills + pay -->
+      @if (verifiedInvoices()) {
+        <div>
+          <button (click)="resetToList()" class="ds-btn ds-btn-ghost pp-cancel-btn" style="margin-bottom: 1rem;">⬅️ Back to Student List</button>
+          <h4 class="pp-results-heading">Issued Bills for {{ verifiedInvoices()?.[0]?.studentName }}</h4>
+
+          <div class="pp-results-list">
+            @for (inv of verifiedInvoices(); track inv.id) {
+              <div class="ds-card ds-card-hover pp-invoice-card">
+                <div>
+                  <div class="pp-invoice-title-row">
+                    <span class="ds-chip">INV-400{{ inv.id }}</span>
+                    <strong class="pp-invoice-fee-name">{{ inv.feeItemName }}</strong>
+                  </div>
+                  <span class="pp-invoice-due">Due Date: {{ inv.dueDate | date:'mediumDate' }}</span>
+                  @if (inv.status === 'PAID') {
+                    <span class="pp-invoice-paid">Paid on: {{ inv.paymentDate | date:'medium' }}</span>
+                  }
+                </div>
+
+                <div class="pp-invoice-right">
+                  <span class="pp-invoice-amount">\${{ inv.amount }}</span>
+
+                  @if (inv.status === 'PENDING') {
+                    <button (click)="openCheckoutModal(inv)" class="ds-btn pp-pay-btn" [style.background-color]="accentColor">
+                      💳 Pay Fees Now
+                    </button>
+                  } @else {
+                    <span class="ds-chip pp-chip-paid">🟢 PAID</span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
         </div>
       }
 
@@ -216,18 +277,48 @@ export class PaymentPortalComponent {
   protected readonly hasSearched = signal(false);
   protected readonly showCheckoutModal = signal(false);
   protected readonly selectedInvoice = signal<StudentInvoice | null>(null);
-  
+
   protected readonly checkoutState = signal<string>('FORM'); // FORM, PROCESSING, SUCCESS
   protected readonly checkoutStatusMessage = signal<string>('Initializing sandbox stripe integration...');
+
+  // Verification gate state
+  protected readonly verifyingStudent = signal<string | null>(null);
+  protected readonly verifiedInvoices = signal<StudentInvoice[] | null>(null);
+  protected readonly isVerifying = signal(false);
+  protected readonly verifyError = signal<string>('');
+
+  /** Unique students (by name) from the masked class/section listing. */
+  protected readonly studentList = computed(() => {
+    const seen = new Set<string>();
+    const out: StudentInvoice[] = [];
+    for (const inv of this.invoices()) {
+      if (!seen.has(inv.studentName)) {
+        seen.add(inv.studentName);
+        out.push(inv);
+      }
+    }
+    return out;
+  });
 
   searchName: string = '';
   searchClass: string = '1st';
   searchSection: string = 'A';
 
+  verifyForm = {
+    admissionNo: '',
+    fatherName: '',
+    dateOfBirth: '',
+    aadharNo: ''
+  };
+
   constructor(private readonly http: HttpClient) {}
 
   searchStudentInvoices() {
     this.hasSearched.set(false);
+    this.verifyingStudent.set(null);
+    this.verifiedInvoices.set(null);
+    this.verifyError.set('');
+
     let url = `http://localhost:8080/api/sites/${this.tenantId}/invoices`
       + `?gradeLevel=${encodeURIComponent(this.searchClass)}`
       + `&section=${encodeURIComponent(this.searchSection)}`;
@@ -238,11 +329,57 @@ export class PaymentPortalComponent {
     this.http.get<StudentInvoice[]>(url)
       .subscribe({
         next: (data) => {
-          this.invoices.set(data);
+          this.invoices.set(data || []);
           this.hasSearched.set(true);
         },
         error: (err) => {
+          this.invoices.set([]);
+          this.hasSearched.set(true);
           console.error(err);
+        }
+      });
+  }
+
+  startVerification(studentName: string) {
+    this.verifyingStudent.set(studentName);
+    this.verifyError.set('');
+    this.verifiedInvoices.set(null);
+    this.verifyForm = { admissionNo: '', fatherName: '', dateOfBirth: '', aadharNo: '' };
+  }
+
+  cancelVerification() {
+    this.verifyingStudent.set(null);
+    this.verifyError.set('');
+  }
+
+  resetToList() {
+    this.verifiedInvoices.set(null);
+    this.verifyingStudent.set(null);
+    this.verifyError.set('');
+  }
+
+  verifyAndViewBills() {
+    this.isVerifying.set(true);
+    this.verifyError.set('');
+
+    const payload = {
+      admissionNo: this.verifyForm.admissionNo.trim(),
+      fatherName: this.verifyForm.fatherName.trim(),
+      dateOfBirth: this.verifyForm.dateOfBirth.trim(),
+      aadharNo: this.verifyForm.aadharNo.trim()
+    };
+
+    this.http.post<StudentInvoice[]>(`http://localhost:8080/api/sites/${this.tenantId}/invoices/verify`, payload)
+      .subscribe({
+        next: (data) => {
+          this.isVerifying.set(false);
+          this.verifiedInvoices.set(data || []);
+          this.verifyingStudent.set(null);
+        },
+        error: (err) => {
+          this.isVerifying.set(false);
+          this.verifyError.set(err?.error?.message
+            || 'The details provided do not match our records. Please check and try again.');
         }
       });
   }
@@ -277,7 +414,18 @@ export class PaymentPortalComponent {
         next: () => {
           this.checkoutState.set('SUCCESS');
           this.paymentCompleted.emit();
-          this.searchStudentInvoices(); // Refresh local list
+          // Refresh the verified student's bills in place (stay on their view).
+          if (this.verifiedInvoices()) {
+            this.http.post<StudentInvoice[]>(`http://localhost:8080/api/sites/${this.tenantId}/invoices/verify`, {
+              admissionNo: this.verifyForm.admissionNo.trim(),
+              fatherName: this.verifyForm.fatherName.trim(),
+              dateOfBirth: this.verifyForm.dateOfBirth.trim(),
+              aadharNo: this.verifyForm.aadharNo.trim()
+            }).subscribe({
+              next: (data) => this.verifiedInvoices.set(data || []),
+              error: () => {}
+            });
+          }
         },
         error: (err) => {
           console.error(err);

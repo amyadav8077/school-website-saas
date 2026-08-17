@@ -80,6 +80,9 @@ export interface Page {
             <option value="FACULTY">Faculty Directory (Pre-seeds Academic Leaders Showcase)</option>
             <option value="EVENTS">Events Calendar (Pre-seeds Upcoming Academic Events)</option>
             <option value="TC">Transfer Certificate Portal (Pre-seeds TC Verification Desk)</option>
+            <option value="STUDENT_CORNER">Student Corner / Portal (Pre-seeds Hero & Student Life cards)</option>
+            <option value="PARENT_CORNER">Parent Corner / Portal (Pre-seeds Hero & Parent Info cards)</option>
+            <option value="CUSTOM_PORTAL">Custom Portal Page (Pre-seeds Hero & 3 Info cards)</option>
           </select>
 
           <form (ngSubmit)="createNewPage()" class="pb-create-form" style="display: flex; gap: 0.5rem;">
@@ -538,6 +541,15 @@ export class PageBuilderComponent implements OnChanges {
     } else if (selected === 'TC') {
       this.newPageForm.title = 'Transfer Certificate';
       this.newPageForm.slug = 'tc';
+    } else if (selected === 'STUDENT_CORNER') {
+      this.newPageForm.title = 'Student Corner';
+      this.newPageForm.slug = 'student-corner';
+    } else if (selected === 'PARENT_CORNER') {
+      this.newPageForm.title = 'Parent Corner';
+      this.newPageForm.slug = 'parent-corner';
+    } else if (selected === 'CUSTOM_PORTAL') {
+      this.newPageForm.title = '';
+      this.newPageForm.slug = '';
     } else {
       this.newPageForm.title = '';
       this.newPageForm.slug = '';
@@ -784,6 +796,93 @@ export class PageBuilderComponent implements OnChanges {
             title: 'TC Verification Desk',
             body: 'Parents and institutions can verify the authenticity of a Transfer Certificate using the lookup portal below. Issue and manage Transfer Certificates from the TC office in the Admin panel.',
             imgUrl: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&q=80'
+          })
+        }
+      ];
+    } else if (template === 'STUDENT_CORNER') {
+      sections = [
+        {
+          type: 'HERO',
+          positionOrder: 1,
+          config: JSON.stringify({
+            title: 'Student Corner',
+            subtitle: 'Explore student life — everything you need in one place.'
+          })
+        },
+        {
+          type: 'FEATURES',
+          positionOrder: 2,
+          config: JSON.stringify({
+            f1_title: 'View Student Life',
+            f1_desc: 'A glimpse into daily life, events and traditions on campus.',
+            f2_title: 'Clubs & Activities',
+            f2_desc: 'Discover clubs, societies and extracurricular programs.',
+            f3_title: 'Student Achievements',
+            f3_desc: "Celebrating our students' accomplishments and milestones."
+          })
+        },
+        {
+          type: 'INTRO',
+          positionOrder: 3,
+          config: JSON.stringify({
+            title: 'Welcome, Students',
+            body: 'This is your space. Find quick links, resources and updates that matter to your journey with us.',
+            imgUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80'
+          })
+        }
+      ];
+    } else if (template === 'PARENT_CORNER') {
+      sections = [
+        {
+          type: 'HERO',
+          positionOrder: 1,
+          config: JSON.stringify({
+            title: 'Parent Corner',
+            subtitle: 'Find important school information, all in one place.'
+          })
+        },
+        {
+          type: 'FEATURES',
+          positionOrder: 2,
+          config: JSON.stringify({
+            f1_title: 'Admissions',
+            f1_desc: 'Enrollment steps, requirements and key admission dates.',
+            f2_title: 'School Calendar',
+            f2_desc: 'Term dates, holidays and upcoming school events.',
+            f3_title: 'Fees & Policies',
+            f3_desc: 'Fee structure, payment options and school policies.'
+          })
+        },
+        {
+          type: 'INTRO',
+          positionOrder: 3,
+          config: JSON.stringify({
+            title: 'Welcome, Parents',
+            body: "We value our partnership with you. Here you'll find the information and resources you need to stay involved and informed.",
+            imgUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80'
+          })
+        }
+      ];
+    } else if (template === 'CUSTOM_PORTAL') {
+      sections = [
+        {
+          type: 'HERO',
+          positionOrder: 1,
+          config: JSON.stringify({
+            title: this.newPageForm.title || 'Portal',
+            subtitle: 'Everything you need, in one place.'
+          })
+        },
+        {
+          type: 'FEATURES',
+          positionOrder: 2,
+          config: JSON.stringify({
+            f1_title: 'Section One',
+            f1_desc: 'Describe the first resource or link here.',
+            f2_title: 'Section Two',
+            f2_desc: 'Describe the second resource or link here.',
+            f3_title: 'Section Three',
+            f3_desc: 'Describe the third resource or link here.'
           })
         }
       ];
