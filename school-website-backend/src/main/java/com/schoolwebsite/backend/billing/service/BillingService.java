@@ -19,6 +19,14 @@ public interface BillingService {
 
     List<StudentInvoice> getInvoices(Long tenantId, String studentName, String gradeLevel, String section);
 
+    /**
+     * Verifies the full identity tuple (admissionNo + fatherName + dateOfBirth +
+     * aadharNo) and, on success, returns that student's full unmasked invoices so
+     * they can be viewed and paid. Throws if the details do not match.
+     */
+    List<StudentInvoice> verifyInvoices(Long tenantId, String admissionNo, String fatherName, String dateOfBirth,
+            String aadharNo);
+
     Page<StudentInvoice> getInvoicesPaged(Long tenantId, String studentName, String gradeLevel, String section,
             int page, int size);
 

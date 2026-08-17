@@ -68,6 +68,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/sites/*/support").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/sites/*/jobs/*/apply").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/sites/invoices/*/pay").permitAll()
+                        // Public identity-verification gates for TC download and fee viewing
+                        .requestMatchers(HttpMethod.POST, "/api/sites/*/tc/verify-download").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/sites/*/invoices/verify").permitAll()
                         // Everything else (all /api/admin/** management, all writes) requires auth
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

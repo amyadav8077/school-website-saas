@@ -37,6 +37,9 @@ public class StudentInvoice {
     @Column(name = "aadhar_no")
     private String aadharNo;
 
+    @Column(name = "date_of_birth")
+    private String dateOfBirth; // e.g. 2010-05-14 (used for fee-view verification)
+
     @Column(name = "fee_item_name", nullable = false)
     private String feeItemName;
 
