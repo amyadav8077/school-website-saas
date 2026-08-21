@@ -75,11 +75,13 @@ import { FirebasePhoneAuthService } from '../../shared/firebase/firebase-phone-a
               </button>
             </form>
 
-            <div class="alt-login stagger" style="--i:4">
-              <button type="button" (click)="setView('PHONE')" class="link">📱 Sign in with mobile OTP</button>
-            </div>
+            <div class="divider stagger" style="--i:4"><span>or</span></div>
 
-            <div class="hint stagger" style="--i:5">
+            <button type="button" (click)="setView('PHONE')" class="btn btn-ghost btn-alt stagger" style="--i:5">
+              <span class="btn-alt-icon">📱</span> Sign in with mobile OTP
+            </button>
+
+            <div class="hint stagger" style="--i:6">
               <strong>Test credentials</strong>
               <div>Super Admin: <code>admin</code> / <code>admin123</code></div>
               <div>Pioneer Admin: <code>pioneer_admin</code> / <code>pioneer123</code></div>
@@ -90,27 +92,25 @@ import { FirebasePhoneAuthService } from '../../shared/firebase/firebase-phone-a
           @if (currentView() === 'PHONE') {
             <div class="stack">
               @if (!phoneAuth.isConfigured) {
-                <div class="alert alert-error"><span>⚠️</span> Mobile based login is not yet supported!</div>
+                <div class="alert alert-error stagger" style="--i:1"><span>⚠️</span> Mobile based login is not yet supported!</div>
               }
 
               @if (!otpSent()) {
-                <div class="field stagger" style="--i:1; overflow: visible;">
+                <div class="field-group stagger" style="--i:2">
+                  <span class="field-caption">Mobile number</span>
                   <app-phone-input [(ngModel)]="phoneNumber" name="loginPhone" placeholder="Registered mobile number"></app-phone-input>
                 </div>
-                <div class="btn-row stagger" style="--i:2">
-                  <button (click)="setView('LOGIN')" class="btn btn-ghost">Cancel</button>
-                  <button (click)="onSendLoginOtp()" [disabled]="!phoneNumber || isLoading() || !phoneAuth.isConfigured" class="btn btn-primary grow">
-                    <span class="btn-shine"></span>
-                    @if (isLoading()) { <span class="spinner"></span> Sending... } @else { Send OTP }
-                  </button>
-                </div>
+                <button (click)="onSendLoginOtp()" [disabled]="!phoneNumber || isLoading() || !phoneAuth.isConfigured" class="btn btn-primary stagger" style="--i:3">
+                  <span class="btn-shine"></span>
+                  @if (isLoading()) { <span class="spinner"></span> Sending OTP... } @else { Send OTP }
+                </button>
               } @else {
-                <div class="field stagger" style="--i:1">
+                <div class="field stagger" style="--i:2">
                   <input type="text" [(ngModel)]="phoneOtp" maxlength="6" inputmode="numeric" class="otp-input" placeholder=" " />
                   <label>6-Digit OTP</label>
                   <span class="underline"></span>
                 </div>
-                <div class="btn-row stagger" style="--i:2">
+                <div class="btn-row stagger" style="--i:3">
                   <button (click)="resetPhoneLogin()" class="btn btn-ghost">Back</button>
                   <button (click)="onVerifyLoginOtp()" [disabled]="!phoneOtp || isLoading()" class="btn btn-success grow">
                     <span class="btn-shine"></span>
@@ -118,6 +118,13 @@ import { FirebasePhoneAuthService } from '../../shared/firebase/firebase-phone-a
                   </button>
                 </div>
               }
+
+              <div class="divider stagger" style="--i:4"><span>or</span></div>
+
+              <button type="button" (click)="setView('LOGIN')" class="btn btn-ghost btn-alt stagger" style="--i:5">
+                <span class="btn-alt-icon">🔑</span> Sign in with username &amp; password
+              </button>
+
               <!-- Firebase invisible reCAPTCHA anchor -->
               <div id="login-recaptcha"></div>
             </div>
