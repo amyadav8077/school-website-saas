@@ -12,14 +12,14 @@ import com.schoolwebsite.backend.academics.entity.*;
 public interface TransferCertificateRepository extends JpaRepository<TransferCertificate, Long> {
     List<TransferCertificate> findByTenantIdOrderByIssueDateDesc(Long tenantId);
 
-    // Exact-match verification tuple (case-insensitive father name) so a caller must
+    // Exact-match verification tuple (admission number + Aadhaar) so a caller must
     // know the precise record — a substring match would weaken the guarantee.
-    Optional<TransferCertificate> findByTenantIdAndAdmissionNoAndFatherNameIgnoreCaseAndAadharNo(Long tenantId,
-            String admissionNo, String fatherName, String aadharNo);
+    Optional<TransferCertificate> findByTenantIdAndAdmissionNoAndAadharNo(Long tenantId, String admissionNo,
+            String aadharNo);
 
     // Full download-verification tuple: adds date of birth on top of the secure tuple.
-    Optional<TransferCertificate> findByTenantIdAndAdmissionNoAndFatherNameIgnoreCaseAndAadharNoAndDateOfBirth(
-            Long tenantId, String admissionNo, String fatherName, String aadharNo, String dateOfBirth);
+    Optional<TransferCertificate> findByTenantIdAndAdmissionNoAndAadharNoAndDateOfBirth(Long tenantId,
+            String admissionNo, String aadharNo, String dateOfBirth);
 
     List<TransferCertificate> findByTenantIdAndClassLevelAndSectionOrderByIssueDateDesc(Long tenantId,
             String classLevel, String section);

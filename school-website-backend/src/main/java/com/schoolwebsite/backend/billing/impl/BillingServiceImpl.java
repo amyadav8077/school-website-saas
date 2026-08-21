@@ -84,8 +84,8 @@ public class BillingServiceImpl implements BillingService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<StudentInvoice> verifyInvoices(Long tenantId, String admissionNo, String fatherName,
-            String dateOfBirth, String aadharNo) {
+    public List<StudentInvoice> verifyInvoices(Long tenantId, String admissionNo, String fatherName, String dateOfBirth,
+            String aadharNo) {
         log.debug("Verifying fee-view eligibility for tenantId={}", tenantId);
         if (!StringUtils.hasText(admissionNo) || !StringUtils.hasText(fatherName) || !StringUtils.hasText(dateOfBirth)
                 || !StringUtils.hasText(aadharNo)) {
@@ -115,20 +115,10 @@ public class BillingServiceImpl implements BillingService {
      * used to harvest verification details or expose a student's financials.
      */
     private StudentInvoice maskForListing(StudentInvoice inv) {
-        return StudentInvoice.builder()
-                .id(inv.getId())
-                .tenantId(inv.getTenantId())
-                .studentName(inv.getStudentName())
-                .gradeLevel(inv.getGradeLevel())
-                .section(inv.getSection())
-                .admissionNo(maskAdmissionNo(inv.getAdmissionNo()))
-                .fatherName(null)
-                .aadharNo(null)
-                .dateOfBirth(null)
-                .feeItemName("Hidden — verify to view")
-                .amount(0.0)
-                .status(inv.getStatus())
-                .dueDate(inv.getDueDate())
+        return StudentInvoice.builder().id(inv.getId()).tenantId(inv.getTenantId()).studentName(inv.getStudentName())
+                .gradeLevel(inv.getGradeLevel()).section(inv.getSection())
+                .admissionNo(maskAdmissionNo(inv.getAdmissionNo())).fatherName(null).aadharNo(null).dateOfBirth(null)
+                .feeItemName("Hidden — verify to view").amount(0.0).status(inv.getStatus()).dueDate(inv.getDueDate())
                 .build();
     }
 

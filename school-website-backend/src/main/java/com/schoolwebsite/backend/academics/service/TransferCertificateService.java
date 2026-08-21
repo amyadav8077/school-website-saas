@@ -6,15 +6,14 @@ import com.schoolwebsite.backend.academics.entity.TransferCertificate;
 
 public interface TransferCertificateService {
     List<TransferCertificate> searchTCs(Long tenantId, String studentName, String classLevel, String section,
-            String admissionNo, String fatherName, String aadharNo);
+            String admissionNo, String aadharNo);
 
     /**
-     * Verifies the full identity tuple (admissionNo + fatherName + dateOfBirth +
-     * aadharNo) before a Transfer Certificate may be downloaded. Returns the
-     * full unmasked record on success; throws if the details do not match.
+     * Verifies the identity tuple (admissionNo + dateOfBirth + aadharNo) before a
+     * Transfer Certificate may be downloaded. Returns the full unmasked record on
+     * success; throws if the details do not match.
      */
-    TransferCertificate verifyForDownload(Long tenantId, String admissionNo, String fatherName, String dateOfBirth,
-            String aadharNo);
+    TransferCertificate verifyForDownload(Long tenantId, String admissionNo, String dateOfBirth, String aadharNo);
 
     /**
      * Admin-only full list for the issuing tenant (authorization enforced by caller).

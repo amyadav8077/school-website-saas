@@ -87,6 +87,14 @@
   margin-bottom: 0.35rem;
 }
 
+.tl-help {
+  display: block;
+  font-size: 0.72rem;
+  color: #64748b;
+  margin-top: 0.35rem;
+  line-height: 1.4;
+}
+
 .tl-select {
   width: 100%;
   padding: 0.7rem;
@@ -332,4 +340,97 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
   transition: background 0.2s;
   cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .tl-card {
+    padding: 1.25rem;
+    margin: 1rem auto;
+    border-radius: 10px;
+  }
+
+  .tl-title {
+    font-size: 1.2rem;
+  }
+
+  .tl-intro {
+    font-size: 0.85rem;
+  }
+
+  /* Let the two tabs wrap instead of overflowing off-screen */
+  .tl-tabs {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .tl-tab-btn {
+    flex: 1 1 auto;
+    padding: 0.5rem 0.4rem;
+    font-size: 0.8rem;
+    text-align: center;
+  }
+
+  /* Class search: stack all fields full-width */
+  .tl-class-form {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .tl-field-flex1,
+  .tl-field-flex1-sm,
+  .tl-field-flex2 {
+    flex: 1 1 100%;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .tl-secure-form {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  /* Secure/download forms: single column so inputs aren't cramped */
+  .tl-secure-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .tl-match-card {
+    padding: 1rem;
+  }
+
+  /* Match row: stack name over a full-width action button */
+  .tl-match-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tl-match-info {
+    text-align: center;
+  }
+
+  .tl-btn-view {
+    width: 100%;
+    padding: 0.6rem 1rem;
+  }
+
+  /* Docket: tighten padding and collapse detail grid to one column */
+  .tl-docket {
+    padding: 1.25rem;
+  }
+
+  .tl-docket-board {
+    font-size: 1.05rem;
+  }
+
+  .tl-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tl-download-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+  }
 }

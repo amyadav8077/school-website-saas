@@ -2,11 +2,13 @@ import { Component, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { PhoneInputComponent } from '../../shared/components/phone-input.component';
+import { FirebasePhoneAuthService } from '../../shared/firebase/firebase-phone-auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PhoneInputComponent],
   template: `
     <!-- OPTION A — SPLIT SCREEN (ANIMATED) -->
     <div class="split">
@@ -42,8 +44,8 @@ import { HttpClient } from '@angular/common/http';
       <main class="form-panel">
         <div class="fp-inner">
           <div class="fp-head">
-            <h2 class="pop" [attr.data-view]="currentView()">{{ currentView() === 'LOGIN' ? 'Welcome back' : currentView() === 'FORGOT' ? 'Reset password' : 'Verify code' }}</h2>
-            <p class="pop-sub">{{ currentView() === 'LOGIN' ? 'Sign in to your administrative console.' : currentView() === 'FORGOT' ? 'We\\'ll send you a secure OTP token.' : 'Enter the OTP and choose a new password.' }}</p>
+            <h2 class="pop" [attr.data-view]="currentView()">{{ headerTitle() }}</h2>
+            <p class="pop-sub">{{ headerSubtitle() }}</p>
           </div>
 
           @if (errorMessage()) {
@@ -73,10 +75,51 @@ import { HttpClient } from '@angular/common/http';
               </button>
             </form>
 
-            <div class="hint stagger" style="--i:4">
+            <div class="alt-login stagger" style="--i:4">
+              <button type="button" (click)="setView('PHONE')" class="link">📱 Sign in with mobile OTP</button>
+            </div>
+
+            <div class="hint stagger" style="--i:5">
               <strong>Test credentials</strong>
               <div>Super Admin: <code>admin</code> / <code>admin123</code></div>
               <div>Pioneer Admin: <code>pioneer_admin</code> / <code>pioneer123</code></div>
+            </div>
+          }
+
+          <!-- PHONE OTP LOGIN -->
+          @if (currentView() === 'PHONE') {
+            <div class="stack">
+              @if (!phoneAuth.isConfigured) {
+                <div class="alert alert-error"><span>⚠️</span> Mobile based login is not yet supported!</div>
+              }
+
+              @if (!otpSent()) {
+                <div class="field stagger" style="--i:1; overflow: visible;">
+                  <app-phone-input [(ngModel)]="phoneNumber" name="loginPhone" placeholder="Registered mobile number"></app-phone-input>
+                </div>
+                <div class="btn-row stagger" style="--i:2">
+                  <button (click)="setView('LOGIN')" class="btn btn-ghost">Cancel</button>
+                  <button (click)="onSendLoginOtp()" [disabled]="!phoneNumber || isLoading() || !phoneAuth.isConfigured" class="btn btn-primary grow">
+                    <span class="btn-shine"></span>
+                    @if (isLoading()) { <span class="spinner"></span> Sending... } @else { Send OTP }
+                  </button>
+                </div>
+              } @else {
+                <div class="field stagger" style="--i:1">
+                  <input type="text" [(ngModel)]="phoneOtp" maxlength="6" inputmode="numeric" class="otp-input" placeholder=" " />
+                  <label>6-Digit OTP</label>
+                  <span class="underline"></span>
+                </div>
+                <div class="btn-row stagger" style="--i:2">
+                  <button (click)="resetPhoneLogin()" class="btn btn-ghost">Back</button>
+                  <button (click)="onVerifyLoginOtp()" [disabled]="!phoneOtp || isLoading()" class="btn btn-success grow">
+                    <span class="btn-shine"></span>
+                    @if (isLoading()) { <span class="spinner"></span> Verifying... } @else { Verify &amp; sign in }
+                  </button>
+                </div>
+              }
+              <!-- Firebase invisible reCAPTCHA anchor -->
+              <div id="login-recaptcha"></div>
             </div>
           }
 
@@ -136,19 +179,46 @@ export class LoginComponent {
   protected readonly errorMessage = signal('');
   protected readonly successMessage = signal('');
   protected readonly currentView = signal('LOGIN');
+  protected readonly otpSent = signal(false);
 
   credentials = { username: '', password: '' };
   forgotContact = '';
   resetOtp = '';
   resetNewPassword = '';
   demoPrefilledOtp = '';
+  phoneNumber = '';
+  phoneOtp = '';
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    protected readonly phoneAuth: FirebasePhoneAuthService
+  ) {}
+
+  protected headerTitle(): string {
+    switch (this.currentView()) {
+      case 'FORGOT': return 'Reset password';
+      case 'RESET': return 'Verify code';
+      case 'PHONE': return 'Mobile sign in';
+      default: return 'Welcome back';
+    }
+  }
+
+  protected headerSubtitle(): string {
+    switch (this.currentView()) {
+      case 'FORGOT': return 'We\'ll send you a secure OTP token.';
+      case 'RESET': return 'Enter the OTP and choose a new password.';
+      case 'PHONE': return 'Sign in with a one-time code sent to your mobile.';
+      default: return 'Sign in to your administrative console.';
+    }
+  }
 
   setView(view: string) {
     this.currentView.set(view);
     this.errorMessage.set('');
     this.successMessage.set('');
+    if (view !== 'PHONE') {
+      this.resetPhoneLogin();
+    }
   }
 
   onSubmit() {
@@ -207,5 +277,53 @@ export class LoginComponent {
           console.error(err);
         }
       });
+  }
+
+  async onSendLoginOtp() {
+    this.isLoading.set(true);
+    this.errorMessage.set('');
+    this.successMessage.set('');
+    try {
+      await this.phoneAuth.sendOtp(this.phoneNumber, 'login-recaptcha');
+      this.otpSent.set(true);
+      this.successMessage.set('OTP sent to ' + this.phoneNumber + '.');
+    } catch (err: any) {
+      this.errorMessage.set(err?.message || 'Could not send OTP. Please try again.');
+      console.error(err);
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
+
+  async onVerifyLoginOtp() {
+    this.isLoading.set(true);
+    this.errorMessage.set('');
+    this.successMessage.set('');
+    try {
+      const idToken = await this.phoneAuth.confirmOtp(this.phoneOtp);
+      this.http.post<any>('http://localhost:8080/api/auth/login/phone', { idToken })
+        .subscribe({
+          next: (res) => {
+            this.isLoading.set(false);
+            this.resetPhoneLogin();
+            this.loginSuccess.emit(res);
+          },
+          error: (err) => {
+            this.isLoading.set(false);
+            this.errorMessage.set(err.error?.message || 'No admin account is linked to this mobile number.');
+            console.error(err);
+          }
+        });
+    } catch (err: any) {
+      this.isLoading.set(false);
+      this.errorMessage.set(err?.message || 'Invalid OTP. Please try again.');
+      console.error(err);
+    }
+  }
+
+  resetPhoneLogin() {
+    this.otpSent.set(false);
+    this.phoneOtp = '';
+    this.phoneAuth.reset();
   }
 }

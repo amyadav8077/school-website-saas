@@ -58,7 +58,8 @@ public class SecurityConfig {
                         // Framework/monitoring
                         .requestMatchers("/api/health", "/error").permitAll()
                         // Public auth flows (login, OTP-based reset). change-password is protected below.
-                        .requestMatchers("/api/auth/login", "/api/auth/forgot-password/**").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/auth/login/phone", "/api/auth/forgot-password/**")
+                        .permitAll()
                         // Public website reads (anonymous visitors browse a school's site)
                         .requestMatchers(HttpMethod.GET, "/api/sites/bootstrap").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/admin/tenants/resolve").permitAll()

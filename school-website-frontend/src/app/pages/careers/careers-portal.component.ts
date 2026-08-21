@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter, signa
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { PhoneInputComponent } from '../../shared/components/phone-input.component';
 
 export interface JobPosting {
   id: number;
@@ -15,7 +16,7 @@ export interface JobPosting {
 @Component({
   selector: 'app-careers-portal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PhoneInputComponent],
   template: `
     <div class="ds-card ds-reveal cp-card-root">
       
@@ -100,7 +101,7 @@ export interface JobPosting {
                     </div>
                     <div>
                       <label class="cp-label">Phone Number</label>
-                      <input type="text" name="candidatePhone" [(ngModel)]="form.candidatePhone" required placeholder="e.g. +1 (555) 012-3456" class="cp-input" />
+                      <app-phone-input name="candidatePhone" [(ngModel)]="form.candidatePhone" required placeholder="Mobile number"></app-phone-input>
                     </div>
                   </div>
                   

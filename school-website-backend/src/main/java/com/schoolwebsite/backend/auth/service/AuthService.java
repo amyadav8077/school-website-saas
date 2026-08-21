@@ -29,4 +29,10 @@ public interface AuthService {
     String issueOtp(String contact);
 
     boolean verifyOtp(String contact, String enteredOtp);
+
+    /** Persists a new verified phone number on the given admin. */
+    AdminUser updatePhoneNumber(AdminUser user, String newPhoneNumber);
+
+    /** Persists a new verified email on the given admin. */
+    AdminUser updateEmail(AdminUser user, String newEmail);
 }

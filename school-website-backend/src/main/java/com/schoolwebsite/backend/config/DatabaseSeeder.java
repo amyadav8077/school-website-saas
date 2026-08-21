@@ -348,7 +348,8 @@ public class DatabaseSeeder implements CommandLineRunner {
                     .positionOrder(2)
                     .config("{\"f1_title\":\"View Student Life\",\"f1_desc\":\"A glimpse into daily life, events and traditions on campus.\",\"f2_title\":\"Clubs & Activities\",\"f2_desc\":\"Discover clubs, societies and extracurricular programs.\",\"f3_title\":\"Student Achievements\",\"f3_desc\":\"Celebrating our students' accomplishments and milestones.\"}")
                     .build());
-            pageSectionRepository.save(PageSection.builder().pageId(studentCorner.getId()).type("INTRO").positionOrder(3)
+            pageSectionRepository.save(PageSection.builder().pageId(studentCorner.getId()).type("INTRO")
+                    .positionOrder(3)
                     .config("{\"title\":\"Welcome, Students\",\"body\":\"This is your space. Find quick links, resources and updates that matter to your journey with us. Admins can customize this page from the Page Builder.\",\"imgUrl\":\"https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80\"}")
                     .build());
 
@@ -741,28 +742,23 @@ public class DatabaseSeeder implements CommandLineRunner {
             tcRepository.save(TransferCertificate.builder().tenantId(tid).studentName("Harry Potter")
                     .admissionNo("ADM-901").classLevel("10th").section("A").fatherName("James Potter")
                     .aadharNo("1234-5678-9012").dateOfBirth("2010-07-31").tcNumber("TC-2026-001")
-                    .issueDate(LocalDateTime.now().minusDays(10))
-                    .pdfUrl("/tc/TC-2026-001.pdf").build());
+                    .issueDate(LocalDateTime.now().minusDays(10)).pdfUrl("/tc/TC-2026-001.pdf").build());
             tcRepository.save(TransferCertificate.builder().tenantId(tid).studentName("Ron Weasley")
                     .admissionNo("ADM-902").classLevel("12th").section("B").fatherName("Arthur Weasley")
                     .aadharNo("9876-5432-1098").dateOfBirth("2008-03-01").tcNumber("TC-2026-002")
-                    .issueDate(LocalDateTime.now().minusDays(5))
-                    .pdfUrl("/tc/TC-2026-002.pdf").build());
+                    .issueDate(LocalDateTime.now().minusDays(5)).pdfUrl("/tc/TC-2026-002.pdf").build());
             tcRepository.save(TransferCertificate.builder().tenantId(tid).studentName("Bruce Wayne")
                     .admissionNo("ADM-103").classLevel("10th").section("A").fatherName("Thomas Wayne")
                     .aadharNo("1111-2222-3333").dateOfBirth("2010-02-19").tcNumber("TC-2026-003")
-                    .issueDate(LocalDateTime.now().minusDays(3))
-                    .pdfUrl("/tc/TC-2026-003.pdf").build());
+                    .issueDate(LocalDateTime.now().minusDays(3)).pdfUrl("/tc/TC-2026-003.pdf").build());
             tcRepository.save(TransferCertificate.builder().tenantId(tid).studentName("Diana Prince")
                     .admissionNo("ADM-201").classLevel("8th").section("C").fatherName("King Hippolyta")
                     .aadharNo("2222-3333-4444").dateOfBirth("2012-03-22").tcNumber("TC-2026-004")
-                    .issueDate(LocalDateTime.now().minusDays(1))
-                    .pdfUrl("/tc/TC-2026-004.pdf").build());
+                    .issueDate(LocalDateTime.now().minusDays(1)).pdfUrl("/tc/TC-2026-004.pdf").build());
             tcRepository.save(TransferCertificate.builder().tenantId(tid).studentName("Peter Parker")
                     .admissionNo("ADM-105").classLevel("2nd").section("B").fatherName("Richard Parker")
                     .aadharNo("5555-6666-7777").dateOfBirth("2016-08-10").tcNumber("TC-2026-005")
-                    .issueDate(LocalDateTime.now().minusDays(7))
-                    .pdfUrl("/tc/TC-2026-005.pdf").build());
+                    .issueDate(LocalDateTime.now().minusDays(7)).pdfUrl("/tc/TC-2026-005.pdf").build());
 
             // ── JOB POSTINGS (5) ─────────────────────────────────────────
             JobPosting physJob = jobRepository.save(JobPosting.builder().tenantId(tid)
@@ -836,56 +832,48 @@ public class DatabaseSeeder implements CommandLineRunner {
             // ── STUDENT INVOICES (10) ─────────────────────────────────────
             invoiceRepository.save(StudentInvoice.builder().tenantId(tid).studentName("John Doe").admissionNo("ADM-101")
                     .gradeLevel("10th").section("A").fatherName("Richard Doe").aadharNo("1234-5678-9012")
-                    .dateOfBirth("2010-01-12")
-                    .feeItemName(tuition.getName()).amount(tuition.getAmount()).status("PENDING")
-                    .dueDate(LocalDateTime.now().plusDays(15)).build());
+                    .dateOfBirth("2010-01-12").feeItemName(tuition.getName()).amount(tuition.getAmount())
+                    .status("PENDING").dueDate(LocalDateTime.now().plusDays(15)).build());
             invoiceRepository.save(StudentInvoice.builder().tenantId(tid).studentName("Harry Potter")
                     .admissionNo("ADM-901").gradeLevel("10th").section("A").fatherName("James Potter")
                     .aadharNo("1234-5678-9012").dateOfBirth("2010-07-31").feeItemName(tuition.getName())
-                    .amount(tuition.getAmount())
-                    .status("PAID").dueDate(LocalDateTime.now().plusDays(30))
+                    .amount(tuition.getAmount()).status("PAID").dueDate(LocalDateTime.now().plusDays(30))
                     .paymentDate(LocalDateTime.now().minusDays(2)).build());
             invoiceRepository.save(StudentInvoice.builder().tenantId(tid).studentName("Bruce Wayne")
                     .admissionNo("ADM-103").gradeLevel("10th").section("A").fatherName("Thomas Wayne")
                     .aadharNo("1111-2222-3333").dateOfBirth("2010-02-19").feeItemName(tuition.getName())
-                    .amount(tuition.getAmount())
-                    .status("PAID").dueDate(LocalDateTime.now().plusDays(30))
+                    .amount(tuition.getAmount()).status("PAID").dueDate(LocalDateTime.now().plusDays(30))
                     .paymentDate(LocalDateTime.now().minusDays(5)).build());
             invoiceRepository.save(StudentInvoice.builder().tenantId(tid).studentName("Ron Weasley")
                     .admissionNo("ADM-902").gradeLevel("12th").section("B").fatherName("Arthur Weasley")
                     .aadharNo("9876-5432-1098").dateOfBirth("2008-03-01").feeItemName(tuition.getName())
-                    .amount(tuition.getAmount())
-                    .status("PENDING").dueDate(LocalDateTime.now().plusDays(10)).build());
+                    .amount(tuition.getAmount()).status("PENDING").dueDate(LocalDateTime.now().plusDays(10)).build());
             invoiceRepository.save(StudentInvoice.builder().tenantId(tid).studentName("Hermione Granger")
                     .admissionNo("ADM-104").gradeLevel("12th").section("B").fatherName("Mr. Granger")
                     .aadharNo("4444-5555-6666").dateOfBirth("2008-09-19").feeItemName(tuition.getName())
-                    .amount(tuition.getAmount())
-                    .status("PAID").dueDate(LocalDateTime.now().plusDays(30))
+                    .amount(tuition.getAmount()).status("PAID").dueDate(LocalDateTime.now().plusDays(30))
                     .paymentDate(LocalDateTime.now().minusDays(8)).build());
             invoiceRepository.save(StudentInvoice.builder().tenantId(tid).studentName("Jane Smith")
                     .admissionNo("ADM-102").gradeLevel("2nd").section("B").fatherName("Robert Smith")
                     .aadharNo("9876-5432-1098").dateOfBirth("2016-04-05").feeItemName(bus.getName())
-                    .amount(bus.getAmount()).status("PENDING")
-                    .dueDate(LocalDateTime.now().plusDays(20)).build());
+                    .amount(bus.getAmount()).status("PENDING").dueDate(LocalDateTime.now().plusDays(20)).build());
             invoiceRepository.save(StudentInvoice.builder().tenantId(tid).studentName("Peter Parker")
                     .admissionNo("ADM-105").gradeLevel("2nd").section("B").fatherName("Richard Parker")
                     .aadharNo("5555-6666-7777").dateOfBirth("2016-08-10").feeItemName(bus.getName())
-                    .amount(bus.getAmount()).status("PAID")
-                    .dueDate(LocalDateTime.now().plusDays(30)).paymentDate(LocalDateTime.now().minusDays(1)).build());
+                    .amount(bus.getAmount()).status("PAID").dueDate(LocalDateTime.now().plusDays(30))
+                    .paymentDate(LocalDateTime.now().minusDays(1)).build());
             invoiceRepository.save(StudentInvoice.builder().tenantId(tid).studentName("Arjun Mehta")
                     .admissionNo("ADM-301").gradeLevel("12th").section("A").fatherName("Suresh Mehta")
                     .aadharNo("7777-8888-9999").dateOfBirth("2008-11-23").feeItemName(jee.getName())
-                    .amount(jee.getAmount()).status("PAID")
-                    .dueDate(LocalDateTime.now().plusDays(30)).paymentDate(LocalDateTime.now().minusDays(3)).build());
+                    .amount(jee.getAmount()).status("PAID").dueDate(LocalDateTime.now().plusDays(30))
+                    .paymentDate(LocalDateTime.now().minusDays(3)).build());
             invoiceRepository.save(StudentInvoice.builder().tenantId(tid).studentName("Priya Nambiar")
                     .admissionNo("ADM-302").gradeLevel("12th").section("A").fatherName("Rajan Nambiar")
                     .aadharNo("6666-7777-8888").dateOfBirth("2008-06-14").feeItemName(jee.getName())
-                    .amount(jee.getAmount()).status("PENDING")
-                    .dueDate(LocalDateTime.now().plusDays(5)).build());
+                    .amount(jee.getAmount()).status("PENDING").dueDate(LocalDateTime.now().plusDays(5)).build());
             invoiceRepository.save(StudentInvoice.builder().tenantId(tid).studentName("John Doe").admissionNo("ADM-101")
                     .gradeLevel("10th").section("A").fatherName("Richard Doe").aadharNo("1234-5678-9012")
-                    .dateOfBirth("2010-01-12")
-                    .feeItemName(sports.getName()).amount(sports.getAmount()).status("PAID")
+                    .dateOfBirth("2010-01-12").feeItemName(sports.getName()).amount(sports.getAmount()).status("PAID")
                     .dueDate(LocalDateTime.now().plusDays(30)).paymentDate(LocalDateTime.now().minusDays(4)).build());
 
             // ── STUDENT GRADES (12) ───────────────────────────────────────

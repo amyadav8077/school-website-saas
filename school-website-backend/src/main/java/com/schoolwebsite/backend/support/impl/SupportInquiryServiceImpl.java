@@ -9,6 +9,7 @@ import com.schoolwebsite.backend.auth.security.CurrentUser;
 import com.schoolwebsite.backend.common.constant.AppConstants;
 import com.schoolwebsite.backend.common.exception.AppException;
 import com.schoolwebsite.backend.common.exception.ErrorCode;
+import com.schoolwebsite.backend.notification.AdminNotificationService;
 import com.schoolwebsite.backend.support.entity.SupportInquiry;
 import com.schoolwebsite.backend.support.repository.SupportInquiryRepository;
 import com.schoolwebsite.backend.support.service.SupportInquiryService;
@@ -21,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SupportInquiryServiceImpl implements SupportInquiryService {
     private final SupportInquiryRepository repository;
+    private final AdminNotificationService adminNotificationService;
 
     @Override
     @Transactional
@@ -29,7 +31,10 @@ public class SupportInquiryServiceImpl implements SupportInquiryService {
         inquiry.setId(null);
         inquiry.setTenantId(tenantId);
         inquiry.setStatus(AppConstants.STATUS_PENDING);
-        return repository.save(inquiry);
+        SupportInquiry saved = repository.save(inquiry);
+        adminNotificationService.notifyNewSupportInquiry(tenantId, saved.getSenderName(), saved.getSenderEmail(),
+                saved.getSubject(), saved.getMessage());
+        return saved;
     }
 
     @Override
