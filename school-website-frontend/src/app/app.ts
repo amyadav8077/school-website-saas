@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, effect, HostListener } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, effect, HostListener } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -164,6 +164,116 @@ export class App implements OnInit {
   protected readonly prefilledSearchName = signal<string>('');
   protected readonly showGradesDropdown = signal<boolean>(false);
 
+  // Admin Console (split-view management portal)
+  // Which management section is shown in the center panel.
+  protected readonly consoleSection = signal<string>('dashboard');
+  // Collapsed left rail (icon-only) on desktop.
+  protected readonly consoleCollapsed = signal<boolean>(false);
+  // Mobile drawer open state for the left rail.
+  protected readonly consoleMobileNav = signal<boolean>(false);
+
+  private static readonly CONSOLE_LABELS: Record<string, string> = {
+    dashboard: 'Dashboard',
+    profile: 'Admin Profile',
+    branding: 'Branding & Theme',
+    pages: 'Page Builder',
+    gradebook: 'Gradebook',
+    admissions: 'Admissions',
+    careers: 'Careers (ATS)',
+    academics: 'Academics & Faculty',
+    billing: 'Billing & Invoices',
+    tc: 'Transfer Certificates',
+    news: 'News & Events',
+    support: 'Support Tickets',
+    preview: 'Preview Website',
+  };
+  protected readonly consoleSectionLabel = computed(
+    () => App.CONSOLE_LABELS[this.consoleSection()] ?? 'Dashboard'
+  );
+
+  selectConsoleSection(section: string): void {
+    this.consoleSection.set(section);
+    this.consoleMobileNav.set(false);
+    if (section === 'dashboard') {
+      this.loadDashboardStats();
+    }
+  }
+
+  // Super-admin Platform Hub console (SchoolSaaS.com management)
+  protected readonly hubSection = signal<string>('overview');
+  protected readonly hubCollapsed = signal<boolean>(false);
+  protected readonly hubMobileNav = signal<boolean>(false);
+
+  selectHubSection(section: string): void {
+    this.hubSection.set(section);
+    this.hubMobileNav.set(false);
+  }
+
+  // Dashboard live stats (real data from backend)
+  protected readonly dashLoading = signal<boolean>(false);
+  protected readonly dashAdmissions = signal<number | null>(null);
+  protected readonly dashApplications = signal<number | null>(null);
+  protected readonly dashSupport = signal<number | null>(null);
+  protected readonly dashInvoiceCount = signal<number | null>(null);
+  protected readonly dashPending = signal<number | null>(null);
+  protected readonly dashPaid = signal<number | null>(null);
+
+  // Website visit analytics
+  protected readonly dashTotalVisits = signal<number | null>(null);
+  protected readonly dashVisitsInRange = signal<number | null>(null);
+  protected readonly dashVisitDaily = signal<{ date: string; label: string; count: number }[]>([]);
+  protected readonly dashVisitMax = computed(() =>
+    Math.max(1, ...this.dashVisitDaily().map(d => d.count))
+  );
+
+  private loadDashboardStats(): void {
+    const t = this.activeTenant();
+    if (!t?.id) return;
+    const base = 'http://localhost:8080/api';
+    this.dashLoading.set(true);
+
+    this.http.get<any>(`${base}/admin/sites/${t.id}/admissions/paged?page=0&size=1`)
+      .subscribe({ next: (d) => this.dashAdmissions.set(d?.totalElements ?? 0), error: () => this.dashAdmissions.set(null) });
+
+    this.http.get<any>(`${base}/admin/sites/${t.id}/applications`)
+      .subscribe({ next: (d) => this.dashApplications.set(Array.isArray(d) ? d.length : (d?.totalElements ?? 0)), error: () => this.dashApplications.set(null) });
+
+    this.http.get<any>(`${base}/admin/sites/${t.id}/support`)
+      .subscribe({ next: (d) => this.dashSupport.set(Array.isArray(d) ? d.length : (d?.totalElements ?? 0)), error: () => this.dashSupport.set(null) });
+
+    this.http.get<any>(`${base}/sites/${t.id}/invoices/stats`)
+      .subscribe({
+        next: (d) => {
+          this.dashInvoiceCount.set(d?.invoiceCount ?? 0);
+          this.dashPending.set(d?.totalPending ?? 0);
+          this.dashPaid.set(d?.totalPaid ?? 0);
+          this.dashLoading.set(false);
+        },
+        error: () => { this.dashPending.set(null); this.dashLoading.set(false); }
+      });
+
+    this.http.get<any>(`${base}/admin/sites/${t.id}/visits/stats?days=14`)
+      .subscribe({
+        next: (d) => {
+          this.dashTotalVisits.set(d?.totalVisits ?? 0);
+          this.dashVisitsInRange.set(d?.visitsInRange ?? 0);
+          this.dashVisitDaily.set(Array.isArray(d?.daily) ? d.daily : []);
+        },
+        error: () => { this.dashTotalVisits.set(null); this.dashVisitDaily.set([]); }
+      });
+  }
+
+  protected refreshDashboard(): void {
+    this.loadDashboardStats();
+  }
+
+  protected formatCurrency(v: number | null): string {
+    if (v === null) return '—';
+    if (v >= 100000) return '₹' + (v / 100000).toFixed(1).replace(/\.0$/, '') + 'L';
+    if (v >= 1000) return '₹' + (v / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+    return '₹' + v;
+  }
+
   // Security Role-Based Access Control
   protected readonly activeRole = signal<string>('SCHOOL_ADMIN'); // SCHOOL_ADMIN, PARENT_VISITOR
 
@@ -217,6 +327,12 @@ export class App implements OnInit {
   protected readonly footerResourceLinks = signal<{ label: string; slug: string }[]>([]);
   protected readonly footerAcademicsLinks = signal<{ label: string; slug: string }[]>([]);
   protected readonly footerAdmissionsLinks = signal<{ label: string; slug: string }[]>([]);
+
+  // Per-school footer section visibility toggles (default ON for backward compat).
+  protected readonly showFooterAcademics = signal<boolean>(true);
+  protected readonly showFooterResources = signal<boolean>(true);
+  protected readonly showFooterDownloads = signal<boolean>(true);
+  protected readonly showFooterNewsletter = signal<boolean>(true);
 
   ngOnInit() {
     this.checkBackendHealth();
@@ -292,6 +408,7 @@ export class App implements OnInit {
           this.publicRetryCount = 0;
           this.applyBootstrap(data);
           this.publicSiteLoading.set(false);
+          this.recordSiteVisit(data?.tenant?.id);
         },
         error: (err) => {
           const status = err?.status;
@@ -317,6 +434,14 @@ export class App implements OnInit {
   retryPublicSite(): void {
     this.publicRetryCount = 0;
     this.loadPublicSite();
+  }
+
+  /** Fire-and-forget: record one public-site page load for visit analytics. */
+  private recordSiteVisit(tenantId: number | undefined | null): void {
+    if (!tenantId) return;
+    const path = typeof window !== 'undefined' ? (window.location.pathname || '/') : '/';
+    this.http.post(`http://localhost:8080/api/sites/${tenantId}/visit`, { path })
+      .subscribe({ next: () => {}, error: () => {} });
   }
 
   /** Applies a single aggregated bootstrap payload to all public signals. */
@@ -385,6 +510,7 @@ export class App implements OnInit {
     this.loadTenantCatalogs(tenant.id);
     this.loadTenantNotifications(tenant.id);
     this.fetchTenantsList();
+    this.loadDashboardStats();
   }
 
   onBrandingUpdated(config: any) {
@@ -611,6 +737,11 @@ export class App implements OnInit {
         this.footerResourceLinks.set(Array.isArray(footerCols.studentResources) ? footerCols.studentResources : []);
         this.footerAcademicsLinks.set(Array.isArray(footerCols.academics) ? footerCols.academics : []);
         this.footerAdmissionsLinks.set(Array.isArray(footerCols.admissions) ? footerCols.admissions : []);
+        const fs = banner.footerSections || {};
+        this.showFooterAcademics.set(fs.academics !== false);
+        this.showFooterResources.set(fs.studentResources !== false);
+        this.showFooterDownloads.set(fs.downloads !== false);
+        this.showFooterNewsletter.set(fs.newsletter !== false);
         this.applyPromoConfig(banner);
       } catch (e) {
         this.activeBanner.set(null);
@@ -632,6 +763,10 @@ export class App implements OnInit {
         this.footerResourceLinks.set([]);
         this.footerAcademicsLinks.set([]);
         this.footerAdmissionsLinks.set([]);
+        this.showFooterAcademics.set(true);
+        this.showFooterResources.set(true);
+        this.showFooterDownloads.set(true);
+        this.showFooterNewsletter.set(true);
         this.promoConfig.set(null);
         this.showPromo.set(false);
       }
@@ -655,6 +790,10 @@ export class App implements OnInit {
       this.footerResourceLinks.set([]);
       this.footerAcademicsLinks.set([]);
       this.footerAdmissionsLinks.set([]);
+      this.showFooterAcademics.set(true);
+      this.showFooterResources.set(true);
+      this.showFooterDownloads.set(true);
+      this.showFooterNewsletter.set(true);
       this.promoConfig.set(null);
       this.showPromo.set(false);
     }
@@ -849,6 +988,7 @@ export class App implements OnInit {
     if (user.role === 'TENANT_ADMIN') {
       this.activeTenant.set({ id: user.tenantId, name: user.tenantName, subdomain: user.subdomain });
       this.loadTenantProjectAndWebsite(user.subdomain);
+      this.loadDashboardStats();
     } else {
       this.fetchTenantsList();
     }

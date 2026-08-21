@@ -63,11 +63,20 @@ import { FirebasePhoneAuthService } from '../../shared/firebase/firebase-phone-a
                 <label>Username</label>
                 <span class="underline"></span>
               </div>
-              <div class="field stagger" style="--i:2">
-                <input type="password" name="password" [(ngModel)]="credentials.password" required placeholder=" " autocomplete="current-password" />
-                <label>Password</label>
-                <span class="underline"></span>
-                <span (click)="setView('FORGOT')" class="link float-link">Forgot?</span>
+              <div class="stagger" style="--i:2">
+                <div class="field">
+                  <input [type]="showPassword() ? 'text' : 'password'" name="password" [(ngModel)]="credentials.password" required placeholder=" " autocomplete="current-password" class="has-toggle" />
+                  <label>Password</label>
+                  <span class="underline"></span>
+                  <button type="button" class="pw-toggle" (click)="showPassword.set(!showPassword())"
+                    [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+                    [attr.title]="showPassword() ? 'Hide password' : 'Show password'">
+                    {{ showPassword() ? '🙈' : '👁️' }}
+                  </button>
+                </div>
+                <div class="field-actions">
+                  <span (click)="setView('FORGOT')" class="link">Forgot password?</span>
+                </div>
               </div>
               <button type="submit" [disabled]="!loginForm.form.valid || isLoading()" class="btn btn-primary stagger" style="--i:3">
                 <span class="btn-shine"></span>
@@ -160,9 +169,14 @@ import { FirebasePhoneAuthService } from '../../shared/firebase/firebase-phone-a
                 <span class="underline"></span>
               </div>
               <div class="field stagger" style="--i:3">
-                <input type="password" [(ngModel)]="resetNewPassword" placeholder=" " />
+                <input [type]="showResetPassword() ? 'text' : 'password'" [(ngModel)]="resetNewPassword" placeholder=" " class="has-toggle" />
                 <label>New Password</label>
                 <span class="underline"></span>
+                <button type="button" class="pw-toggle" (click)="showResetPassword.set(!showResetPassword())"
+                  [attr.aria-label]="showResetPassword() ? 'Hide password' : 'Show password'"
+                  [attr.title]="showResetPassword() ? 'Hide password' : 'Show password'">
+                  {{ showResetPassword() ? '🙈' : '👁️' }}
+                </button>
               </div>
               <div class="btn-row stagger" style="--i:4">
                 <button (click)="setView('FORGOT')" class="btn btn-ghost">Back</button>
@@ -187,6 +201,8 @@ export class LoginComponent {
   protected readonly successMessage = signal('');
   protected readonly currentView = signal('LOGIN');
   protected readonly otpSent = signal(false);
+  protected readonly showPassword = signal(false);
+  protected readonly showResetPassword = signal(false);
 
   credentials = { username: '', password: '' };
   forgotContact = '';

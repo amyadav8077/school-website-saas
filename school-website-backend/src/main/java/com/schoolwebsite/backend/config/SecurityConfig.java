@@ -68,6 +68,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/sites/*/admissions").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/sites/*/support").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/sites/*/jobs/*/apply").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/sites/*/visit").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/sites/invoices/*/pay").permitAll()
                         // Public identity-verification gates for TC download and fee viewing
                         .requestMatchers(HttpMethod.POST, "/api/sites/*/tc/verify-download").permitAll()

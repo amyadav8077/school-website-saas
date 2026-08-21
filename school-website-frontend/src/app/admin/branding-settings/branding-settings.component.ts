@@ -202,9 +202,10 @@ type FooterColumnKey = 'explore' | 'studentResources' | 'academics' | 'admission
           <!-- Footer Content Settings -->
           <div style="background: #f5f3ff; padding: 1.25rem; border-radius: 8px; border: 1px solid #ddd6fe; margin-bottom: 0.5rem; display: flex; flex-direction: column; gap: 1rem;">
             <div>
-              <strong style="font-size: 0.95rem; color: #6d28d9; display: block; margin-bottom: 0.25rem;">🏛️ Footer Content</strong>
-              <span style="font-size: 0.8rem; color: #475569; display: block;">School motto, address, office hours, and downloadable documents shown in the site footer.</span>
-            </div>
+               <strong style="font-size: 0.95rem; color: #6d28d9; display: block; margin-bottom: 0.25rem;">🏛️ Footer Content</strong>
+               <span style="font-size: 0.8rem; color: #475569; display: block;">School motto, address, office hours, and downloadable documents shown in the site footer.</span>
+             </div>
+
 
             <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
               <div>
@@ -222,24 +223,39 @@ type FooterColumnKey = 'explore' | 'studentResources' | 'academics' | 'admission
               <input type="text" name="footerAddress" [(ngModel)]="footerAddress" placeholder="e.g. 123 Campus Avenue, Education City, 560001" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem; box-sizing: border-box;" />
             </div>
 
-            <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
-              <div>
-                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">📄 Prospectus URL</label>
-                <input type="text" name="prospectusUrl" [(ngModel)]="prospectusUrl" placeholder="https://…/prospectus.pdf" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem; box-sizing: border-box;" />
+            <!-- SECTION CARD: Downloads -->
+            <div style="border: 1px solid #ddd6fe; border-radius: 8px; padding: 0.9rem 1rem; background: #ffffff;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; font-weight: 800; color: #6d28d9; cursor: pointer; margin-bottom: 0.35rem;">
+                <input type="checkbox" name="showFooterDownloads" [(ngModel)]="showFooterDownloads" style="width: 16px; height: 16px;" />
+                📥 Downloads Section
+              </label>
+              <span style="font-size: 0.76rem; color: #64748b; display: block; margin-bottom: 0.75rem;">Downloadable documents shown in the footer: Prospectus, Student Handbook, Academic Calendar. Each link shows only when a URL is set.</span>
+              @if (showFooterDownloads) {
+              <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div>
+                  <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">📄 Prospectus URL</label>
+                  <input type="text" name="prospectusUrl" [(ngModel)]="prospectusUrl" placeholder="https://…/prospectus.pdf" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem; box-sizing: border-box;" />
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">📘 Student Handbook URL</label>
+                  <input type="text" name="handbookUrl" [(ngModel)]="handbookUrl" placeholder="https://…/handbook.pdf" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem; box-sizing: border-box;" />
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">🗓️ Academic Calendar URL</label>
+                  <input type="text" name="academicCalendarUrl" [(ngModel)]="academicCalendarUrl" placeholder="https://…/calendar.pdf" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem; box-sizing: border-box;" />
+                </div>
               </div>
-              <div>
-                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">📘 Student Handbook URL</label>
-                <input type="text" name="handbookUrl" [(ngModel)]="handbookUrl" placeholder="https://…/handbook.pdf" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem; box-sizing: border-box;" />
-              </div>
-              <div>
-                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">🗓️ Academic Calendar URL</label>
-                <input type="text" name="academicCalendarUrl" [(ngModel)]="academicCalendarUrl" placeholder="https://…/calendar.pdf" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem; box-sizing: border-box;" />
-              </div>
+              }
             </div>
 
-            <div style="border-top: 1px dashed #ddd6fe; padding-top: 0.85rem;">
-              <span style="font-size: 0.8rem; color: #6d28d9; font-weight: 700; display: block; margin-bottom: 0.5rem;">🎒 Student Resource Links</span>
-              <span style="font-size: 0.75rem; color: #64748b; display: block; margin-bottom: 0.75rem;">Paste the URL for each resource (e.g. your LMS, library catalog, transport info). Links only appear in the footer when a URL is provided.</span>
+            <!-- SECTION CARD: Student Resources -->
+            <div style="border: 1px solid #ddd6fe; border-radius: 8px; padding: 0.9rem 1rem; background: #ffffff;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; font-weight: 800; color: #6d28d9; cursor: pointer; margin-bottom: 0.35rem;">
+                <input type="checkbox" name="showFooterResources" [(ngModel)]="showFooterResources" style="width: 16px; height: 16px;" />
+                🎒 Student Resources Section
+              </label>
+              <span style="font-size: 0.76rem; color: #64748b; display: block; margin-bottom: 0.75rem;">Quick links to your portals and services. Paste the URL for each (e.g. your LMS, library catalog, transport info). A link appears only when its URL is provided. You can also add custom page links below.</span>
+              @if (showFooterResources) {
               <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
                 <div>
                   <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.25rem;">🎓 Student Portal URL</label>
@@ -262,6 +278,31 @@ type FooterColumnKey = 'explore' | 'studentResources' | 'academics' | 'admission
                   <input type="text" name="calendarUrl" [(ngModel)]="calendarUrl" placeholder="https://…" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem; box-sizing: border-box;" />
                 </div>
               </div>
+
+              <!-- Custom Student Resources page links -->
+              <div style="border-top: 1px dashed #ddd6fe; padding-top: 0.85rem; margin-top: 0.85rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span style="font-size: 0.8rem; font-weight: 700; color: #6d28d9;">Custom page links</span>
+                  <button type="button" (click)="addFooterLink('studentResources')" [disabled]="availablePages.length === 0"
+                    style="background: #7c3aed; color: white; border: 0; padding: 0.35rem 0.7rem; border-radius: 5px; font-weight: 700; font-size: 0.75rem; cursor: pointer;">+ Add Link</button>
+                </div>
+                @for (link of footerResourceLinks; track $index) {
+                  <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+                    <input type="text" [name]="'resLabel' + $index" [(ngModel)]="link.label" placeholder="Label"
+                      style="flex: 1; min-width: 0; padding: 0.45rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.82rem;" />
+                    <select [name]="'resSlug' + $index" [(ngModel)]="link.slug" (ngModelChange)="onFooterLinkSlugChange(link)"
+                      style="flex: 1; min-width: 0; padding: 0.45rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.82rem; background: white;">
+                      @for (p of availablePages; track p.slug) {
+                        <option [value]="p.slug">{{ p.title }}</option>
+                      }
+                    </select>
+                    <button type="button" (click)="moveFooterLink('studentResources', $index, -1)" title="Move up" style="border: 1px solid #cbd5e1; background: white; border-radius: 4px; cursor: pointer; padding: 0.3rem 0.5rem;">↑</button>
+                    <button type="button" (click)="moveFooterLink('studentResources', $index, 1)" title="Move down" style="border: 1px solid #cbd5e1; background: white; border-radius: 4px; cursor: pointer; padding: 0.3rem 0.5rem;">↓</button>
+                    <button type="button" (click)="removeFooterLink('studentResources', $index)" title="Remove" style="border: 0; background: transparent; color: #dc2626; font-weight: 800; cursor: pointer; font-size: 1rem;">✕</button>
+                  </div>
+                }
+              </div>
+              }
             </div>
           </div>
 
@@ -303,37 +344,15 @@ type FooterColumnKey = 'explore' | 'studentResources' | 'academics' | 'admission
               }
             </div>
 
-            <!-- Student Resources column -->
-            <div style="border-top: 1px dashed #a5f3fc; padding-top: 1rem;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <span style="font-size: 0.82rem; font-weight: 700; color: #0e7490;">🎒 "Student Resources" Column</span>
-                <button type="button" (click)="addFooterLink('studentResources')" [disabled]="availablePages.length === 0"
-                  style="background: #0891b2; color: white; border: 0; padding: 0.35rem 0.7rem; border-radius: 5px; font-weight: 700; font-size: 0.75rem; cursor: pointer;">+ Add Link</button>
-              </div>
-              @for (link of footerResourceLinks; track $index) {
-                <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
-                  <input type="text" [name]="'resLabel' + $index" [(ngModel)]="link.label" placeholder="Label"
-                    style="flex: 1; min-width: 0; padding: 0.45rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.82rem;" />
-                  <select [name]="'resSlug' + $index" [(ngModel)]="link.slug" (ngModelChange)="onFooterLinkSlugChange(link)"
-                    style="flex: 1; min-width: 0; padding: 0.45rem; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.82rem; background: white;">
-                    @for (p of availablePages; track p.slug) {
-                      <option [value]="p.slug">{{ p.title }}</option>
-                    }
-                  </select>
-                  <button type="button" (click)="moveFooterLink('studentResources', $index, -1)" title="Move up" style="border: 1px solid #cbd5e1; background: white; border-radius: 4px; cursor: pointer; padding: 0.3rem 0.5rem;">↑</button>
-                  <button type="button" (click)="moveFooterLink('studentResources', $index, 1)" title="Move down" style="border: 1px solid #cbd5e1; background: white; border-radius: 4px; cursor: pointer; padding: 0.3rem 0.5rem;">↓</button>
-                  <button type="button" (click)="removeFooterLink('studentResources', $index)" title="Remove" style="border: 0; background: transparent; color: #dc2626; font-weight: 800; cursor: pointer; font-size: 1rem;">✕</button>
-                </div>
-              }
-              @if (footerResourceLinks.length === 0) {
-                <span style="font-size: 0.75rem; color: #64748b;">Using default links (Student Portal, Parent Portal, plus any Library/Transport/Calendar URLs set above).</span>
-              }
-            </div>
-
-            <!-- Academics column -->
-            <div style="border-top: 1px dashed #a5f3fc; padding-top: 1rem;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <span style="font-size: 0.82rem; font-weight: 700; color: #0e7490;">🎓 "Academics" Column</span>
+            <!-- SECTION CARD: Academics (custom link editor + enable toggle) -->
+            <div style="border: 1px solid #a5f3fc; border-radius: 8px; padding: 0.9rem 1rem; background: #ffffff;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; font-weight: 800; color: #0e7490; cursor: pointer; margin-bottom: 0.35rem;">
+                <input type="checkbox" name="showFooterAcademics" [(ngModel)]="showFooterAcademics" style="width: 16px; height: 16px;" />
+                🎓 Academics Section
+              </label>
+              <span style="font-size: 0.76rem; color: #64748b; display: block; margin-bottom: 0.75rem;">Links under the footer "Academics" heading. Add your own pages, or leave empty to use the defaults (Departments, Curriculum, Faculty, Examination Results).</span>
+              @if (showFooterAcademics) {
+              <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 0.5rem;">
                 <button type="button" (click)="addFooterLink('academics')" [disabled]="availablePages.length === 0"
                   style="background: #0891b2; color: white; border: 0; padding: 0.35rem 0.7rem; border-radius: 5px; font-weight: 700; font-size: 0.75rem; cursor: pointer;">+ Add Link</button>
               </div>
@@ -354,6 +373,7 @@ type FooterColumnKey = 'explore' | 'studentResources' | 'academics' | 'admission
               }
               @if (footerAcademicsLinks.length === 0) {
                 <span style="font-size: 0.75rem; color: #64748b;">Using default links (Departments, Curriculum, Faculty, Examination Results).</span>
+              }
               }
             </div>
 
@@ -382,6 +402,15 @@ type FooterColumnKey = 'explore' | 'studentResources' | 'academics' | 'admission
               @if (footerAdmissionsLinks.length === 0) {
                 <span style="font-size: 0.75rem; color: #64748b;">Using default links (Apply Now, Visit Campus, Fee Structure, Important Dates).</span>
               }
+            </div>
+
+            <!-- SECTION CARD: Newsletter -->
+            <div style="border: 1px solid #a5f3fc; border-radius: 8px; padding: 0.9rem 1rem; background: #ffffff;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; font-weight: 800; color: #0e7490; cursor: pointer; margin-bottom: 0.35rem;">
+                <input type="checkbox" name="showFooterNewsletter" [(ngModel)]="showFooterNewsletter" style="width: 16px; height: 16px;" />
+                ✉️ Newsletter Section ("Stay Updated")
+              </label>
+              <span style="font-size: 0.76rem; color: #64748b; display: block;">Shows a "Stay Updated" email sign-up box in the footer with a Subscribe button. No fields to configure — turn it off if your school doesn't run a newsletter.</span>
             </div>
           </div>
 
@@ -595,6 +624,13 @@ export class BrandingSettingsComponent implements OnChanges {
         academics: this.footerAcademicsLinks.filter(l => l.slug && l.label.trim()),
         admissions: this.footerAdmissionsLinks.filter(l => l.slug && l.label.trim())
       },
+      // Per-school footer section visibility toggles
+      footerSections: {
+        academics: this.showFooterAcademics,
+        studentResources: this.showFooterResources,
+        downloads: this.showFooterDownloads,
+        newsletter: this.showFooterNewsletter
+      },
       // Admissions promo popup
       promoEnabled: this.promoEnabled,
       promoVideoUrl: this.promoVideoUrl,
@@ -695,6 +731,12 @@ export class BrandingSettingsComponent implements OnChanges {
   footerAcademicsLinks: { label: string; slug: string }[] = [];
   footerAdmissionsLinks: { label: string; slug: string }[] = [];
 
+  // Per-school footer section visibility toggles (default ON for backward compat)
+  showFooterAcademics = true;
+  showFooterResources = true;
+  showFooterDownloads = true;
+  showFooterNewsletter = true;
+
   form = {
     primaryColor: '#1e3a8a',
     secondaryColor: '#3b82f6',
@@ -766,6 +808,12 @@ export class BrandingSettingsComponent implements OnChanges {
               this.footerResourceLinks = Array.isArray(cols.studentResources) ? cols.studentResources : [];
               this.footerAcademicsLinks = Array.isArray(cols.academics) ? cols.academics : [];
               this.footerAdmissionsLinks = Array.isArray(cols.admissions) ? cols.admissions : [];
+              // Footer section visibility toggles (absent = shown)
+              const fsec = banner.footerSections || {};
+              this.showFooterAcademics = fsec.academics !== false;
+              this.showFooterResources = fsec.studentResources !== false;
+              this.showFooterDownloads = fsec.downloads !== false;
+              this.showFooterNewsletter = fsec.newsletter !== false;
               // Admissions promo popup
               this.promoEnabled = banner.promoEnabled || false;
               this.promoVideoUrl = banner.promoVideoUrl || '';

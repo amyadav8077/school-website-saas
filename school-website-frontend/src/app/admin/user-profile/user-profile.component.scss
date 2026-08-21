@@ -95,4 +95,9 @@
 .up-submit-btn {
   padding: 0.65rem 1.25rem;
   font-size: 0.9rem;
+  margin-top: 1rem;
+}
+/* Password form already spaces its children with gap, so don't double it. */
+.up-form .up-submit-btn {
+  margin-top: 0;
 }

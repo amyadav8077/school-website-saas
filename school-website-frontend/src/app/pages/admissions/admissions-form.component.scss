@@ -57,6 +57,9 @@
   grid-template-columns: 1.2fr 1fr;
   gap: 1rem;
 }
+@media (max-width: 640px) {
+  .af-grid-row { grid-template-columns: 1fr; }
+}
 
 .af-label {
   display: block;

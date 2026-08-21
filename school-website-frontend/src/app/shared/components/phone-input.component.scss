@@ -2,24 +2,31 @@
   display: flex;
   gap: 0.5rem;
   align-items: stretch;
+  width: 100%;
 }
 
 .pi-country {
-  flex: 0 0 auto;
+  /* Fixed, compact width for the dial-code selector so it never dominates
+     the row; the number field always keeps the remaining space. */
+  flex: 0 0 5.5rem;
+  width: 5.5rem;
+  max-width: 5.5rem;
+  min-width: 0;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
   background: white;
-  padding: 0 0.6rem;
+  padding: 0 0.4rem;
   font-size: 0.9rem;
   font-weight: 600;
   color: #0f172a;
   cursor: pointer;
+  text-overflow: ellipsis;
 }
 
 .pi-field {
   position: relative;
   flex: 1 1 auto;
-  min-width: 0;
+  min-width: 6rem;
 }
 
 .pi-input {
@@ -73,7 +80,10 @@
 
 @media (max-width: 640px) {
   .pi-country {
-    padding: 0 0.4rem;
+    flex-basis: 5rem;
+    width: 5rem;
+    max-width: 5rem;
+    padding: 0 0.3rem;
     font-size: 0.82rem;
   }
 }
