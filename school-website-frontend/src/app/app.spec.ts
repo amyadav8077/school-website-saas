@@ -31,12 +31,10 @@ describe('App', () => {
     // Trigger ngOnInit() lifecycle hooks
     fixture.detectChanges();
 
-    // Satisfy health check & tenants list network calls on init
+    // On init with no saved session, only the health check fires. The admin-only
+    // tenants list is loaded after a super-admin logs in, not on init.
     const reqHealth = httpTestingController.expectOne('http://localhost:8080/api/health');
     reqHealth.flush({ status: 'UP', message: 'OK' });
-
-    const reqTenants = httpTestingController.expectOne('http://localhost:8080/api/admin/tenants');
-    reqTenants.flush([]);
   });
 
   it('should assert the initial titles and signals', () => {
@@ -46,12 +44,9 @@ describe('App', () => {
     // Trigger ngOnInit() lifecycle hooks
     fixture.detectChanges();
 
-    // Satisfy initial network requests
+    // Only the health check fires on init (no saved session).
     const reqHealth = httpTestingController.expectOne('http://localhost:8080/api/health');
     reqHealth.flush({ status: 'UP', message: 'OK' });
-
-    const reqTenants = httpTestingController.expectOne('http://localhost:8080/api/admin/tenants');
-    reqTenants.flush([]);
 
     expect((app as any).title()).toEqual('School Website SaaS Platform');
     expect((app as any).backendStatus()).toEqual('UP');
