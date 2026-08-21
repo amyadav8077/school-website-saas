@@ -102,9 +102,9 @@
     .otp-banner code { font-weight: 800; color: var(--ink); background: #fff; padding: 0.1rem 0.45rem; border-radius: 5px; margin-left: 0.3rem; }
 
     /* "or" divider between the two sign-in methods */
-    .divider { display: flex; align-items: center; gap: 0.85rem; color: var(--muted); }
-    .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
-    .divider span { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+    .divider { display: flex; align-items: center; gap: 0.85rem; color: var(--muted); width: 100%; margin: 1.25rem 0; }
+    .divider::before, .divider::after { content: ""; flex: 1 1 auto; min-width: 24px; height: 2px; border-radius: 2px; background: #cbd5e1; }
+    .divider span { flex: 0 0 auto; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
 
     /* Secondary (alternative method) button — full width, themed, clearly a choice */
     .btn-alt { width: 100%; }
