@@ -171,6 +171,22 @@ public class AuthServiceImpl implements AuthService {
         return valid;
     }
 
+    @Override
+    @Transactional
+    public AdminUser updatePhoneNumber(AdminUser user, String newPhoneNumber) {
+        log.info("Updating phone number for userId={}", user.getId());
+        user.setPhoneNumber(newPhoneNumber);
+        return adminUserRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public AdminUser updateEmail(AdminUser user, String newEmail) {
+        log.info("Updating email for userId={}", user.getId());
+        user.setEmail(newEmail);
+        return adminUserRepository.save(user);
+    }
+
     private void sendOtpEmailIfApplicable(String contact, String otp) {
         if (!contact.contains("@") || mailSender == null) {
             return;

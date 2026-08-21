@@ -106,16 +106,10 @@ export interface TransferCertificate {
                 class="tl-input-secure" />
             </div>
             <div>
-              <label class="tl-label">Father's Full Name</label>
-              <input type="text" name="fatherName" [(ngModel)]="form.fatherName" required placeholder="e.g. James Potter" 
+              <label class="tl-label">Candidate's Aadhar Card Number</label>
+              <input type="text" name="aadharNo" [(ngModel)]="form.aadharNo" required placeholder="e.g. 1234-5678-9012" 
                 class="tl-input-secure" />
             </div>
-          </div>
-
-          <div>
-            <label class="tl-label">Candidate's Aadhar Card Number</label>
-            <input type="text" name="aadharNo" [(ngModel)]="form.aadharNo" required placeholder="e.g. 1234-5678-9012" 
-              class="tl-input-secure" />
           </div>
 
           <button type="submit" class="ds-btn tl-btn-verify" [disabled]="!verifyForm.form.valid || isLoading()" [style.background-color]="primaryColor">
@@ -155,7 +149,7 @@ export interface TransferCertificate {
             <div class="ds-card tl-match-card">
               <button (click)="cancelVerification()" class="ds-btn ds-btn-ghost tl-back-btn">⬅️ Back to Search List</button>
               <h4 class="ds-heading tl-match-heading">🔒 Verify Identity to Download — {{ verifyingTc()?.studentName }}</h4>
-              <p class="tl-intro">Enter the student's details exactly as recorded. All four must match to download the certificate.</p>
+              <p class="tl-intro">Enter the student's details exactly as recorded. All three must match to download the certificate.</p>
 
               <form (ngSubmit)="verifyAndDownload()" #dlForm="ngForm" class="tl-secure-form">
                 <div class="tl-secure-grid">
@@ -164,19 +158,14 @@ export interface TransferCertificate {
                     <input type="text" name="dlAdmissionNo" [(ngModel)]="downloadForm.admissionNo" required placeholder="e.g. ADM-901" class="tl-input-secure" />
                   </div>
                   <div>
-                    <label class="tl-label">Father's Full Name</label>
-                    <input type="text" name="dlFatherName" [(ngModel)]="downloadForm.fatherName" required placeholder="e.g. James Potter" class="tl-input-secure" />
-                  </div>
-                </div>
-                <div class="tl-secure-grid">
-                  <div>
                     <label class="tl-label">Date of Birth</label>
                     <input type="date" name="dlDob" [(ngModel)]="downloadForm.dateOfBirth" required class="tl-input-secure" />
+                    <span class="tl-help">📅 Pick from the calendar — day, month &amp; year</span>
                   </div>
-                  <div>
-                    <label class="tl-label">Candidate's Aadhar Number</label>
-                    <input type="text" name="dlAadhar" [(ngModel)]="downloadForm.aadharNo" required placeholder="e.g. 1234-5678-9012" class="tl-input-secure" />
-                  </div>
+                </div>
+                <div>
+                  <label class="tl-label">Candidate's Aadhar Number</label>
+                  <input type="text" name="dlAadhar" [(ngModel)]="downloadForm.aadharNo" required placeholder="e.g. 1234-5678-9012" class="tl-input-secure" />
                 </div>
 
                 @if (verifyError()) {
@@ -267,7 +256,6 @@ export class TCLookupComponent {
 
   form = {
     admissionNo: '',
-    fatherName: '',
     aadharNo: ''
   };
 
@@ -279,7 +267,6 @@ export class TCLookupComponent {
 
   downloadForm = {
     admissionNo: '',
-    fatherName: '',
     dateOfBirth: '',
     aadharNo: ''
   };
@@ -291,7 +278,7 @@ export class TCLookupComponent {
     this.verifyingTc.set(tc);
     this.verifyError.set('');
     this.certificate.set(null);
-    this.downloadForm = { admissionNo: '', fatherName: '', dateOfBirth: '', aadharNo: '' };
+    this.downloadForm = { admissionNo: '', dateOfBirth: '', aadharNo: '' };
   }
 
   cancelVerification() {
@@ -311,7 +298,6 @@ export class TCLookupComponent {
 
     const payload = {
       admissionNo: this.downloadForm.admissionNo.trim(),
-      fatherName: this.downloadForm.fatherName.trim(),
       dateOfBirth: this.downloadForm.dateOfBirth.trim(),
       aadharNo: this.downloadForm.aadharNo.trim()
     };
@@ -429,7 +415,6 @@ export class TCLookupComponent {
     if (this.lookupMode() === 'SECURE') {
       const url = `http://localhost:8080/api/sites/${this.tenantId}/tc`
         + `?admissionNo=${encodeURIComponent(this.form.admissionNo)}`
-        + `&fatherName=${encodeURIComponent(this.form.fatherName)}`
         + `&aadharNo=${encodeURIComponent(this.form.aadharNo)}`;
 
       this.http.get<TransferCertificate[]>(url)

@@ -14,6 +14,7 @@ import com.schoolwebsite.backend.auth.security.CurrentUser;
 import com.schoolwebsite.backend.common.constant.AppConstants;
 import com.schoolwebsite.backend.common.exception.AppException;
 import com.schoolwebsite.backend.common.exception.ErrorCode;
+import com.schoolwebsite.backend.notification.AdminNotificationService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,8 @@ public class CareersServiceImpl implements CareersService {
     private final JobPostingRepository jobRepository;
 
     private final JobApplicationRepository applicationRepository;
+
+    private final AdminNotificationService adminNotificationService;
 
     @Override
     @Transactional(readOnly = true)
@@ -70,7 +73,10 @@ public class CareersServiceImpl implements CareersService {
         application.setJobId(jobId);
         application.setJobTitle(job.getTitle());
         application.setStatus(AppConstants.STATUS_PENDING);
-        return applicationRepository.save(application);
+        JobApplication saved = applicationRepository.save(application);
+        adminNotificationService.notifyNewJobApplication(tenantId, saved.getJobTitle(), saved.getCandidateName(),
+                saved.getCandidateEmail(), saved.getCandidatePhone());
+        return saved;
     }
 
     @Override

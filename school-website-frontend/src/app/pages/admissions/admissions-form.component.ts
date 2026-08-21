@@ -2,11 +2,12 @@ import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { PhoneInputComponent } from '../../shared/components/phone-input.component';
 
 @Component({
   selector: 'app-admissions-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PhoneInputComponent],
   template: `
     <div class="ds-card ds-reveal af-card">
       <h3 [style.color]="primaryColor" class="ds-heading af-heading">
@@ -62,8 +63,7 @@ import { HttpClient } from '@angular/common/http';
             </div>
             <div>
               <label class="af-label">Phone Number</label>
-              <input type="text" name="parentPhone" [(ngModel)]="form.parentPhone" required placeholder="e.g. +1 (555) 123-4567"
-                class="af-input" />
+              <app-phone-input name="parentPhone" [(ngModel)]="form.parentPhone" required placeholder="Mobile number"></app-phone-input>
             </div>
           </div>
 

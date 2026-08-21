@@ -2,13 +2,14 @@ import { Component, Input, Output, EventEmitter, signal, OnChanges, SimpleChange
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { PhoneInputComponent } from '../../shared/components/phone-input.component';
 
 type FooterColumnKey = 'explore' | 'studentResources' | 'academics' | 'admissions';
 
 @Component({
   selector: 'app-branding-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PhoneInputComponent],
   template: `
     <div class="ds-card ds-reveal" style="padding: 2rem; margin-bottom: 2rem;">
       <h2 class="ds-heading" style="font-size: 1.5rem; margin-top: 0; margin-bottom: 0.5rem;">Edit School <span class="ds-heading-grad">Branding Settings</span></h2>
@@ -154,8 +155,7 @@ type FooterColumnKey = 'explore' | 'studentResources' | 'academics' | 'admission
 
             <div>
               <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">Contact Phone</label>
-              <input type="text" name="contactPhone" [(ngModel)]="form.contactPhone" placeholder="e.g. +1 (555) 123-4567"
-                style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 1rem;" />
+              <app-phone-input name="contactPhone" [(ngModel)]="form.contactPhone" placeholder="Contact number"></app-phone-input>
             </div>
           </div>
 
@@ -481,7 +481,7 @@ type FooterColumnKey = 'explore' | 'studentResources' | 'academics' | 'admission
               <div class="mobile-grid-1" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
                 <div>
                   <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #7c2d12; margin-bottom: 0.25rem;">Phone</label>
-                  <input type="text" name="promoPhone" [(ngModel)]="promoPhone" style="width: 100%; padding: 0.5rem; border: 1px solid #fdba74; border-radius: 4px; font-size: 0.85rem;" />
+                  <app-phone-input name="promoPhone" [(ngModel)]="promoPhone" placeholder="Phone"></app-phone-input>
                 </div>
                 <div>
                   <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #7c2d12; margin-bottom: 0.25rem;">Website</label>

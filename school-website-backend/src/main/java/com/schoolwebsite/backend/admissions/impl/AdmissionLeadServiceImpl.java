@@ -15,6 +15,7 @@ import com.schoolwebsite.backend.auth.security.CurrentUser;
 import com.schoolwebsite.backend.common.constant.AppConstants;
 import com.schoolwebsite.backend.common.exception.AppException;
 import com.schoolwebsite.backend.common.exception.ErrorCode;
+import com.schoolwebsite.backend.notification.AdminNotificationService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AdmissionLeadServiceImpl implements AdmissionLeadService {
     private final AdmissionLeadRepository repository;
+    private final AdminNotificationService adminNotificationService;
 
     @Override
     @Transactional
@@ -35,6 +37,8 @@ public class AdmissionLeadServiceImpl implements AdmissionLeadService {
                 .status(AppConstants.STATUS_PENDING).message(request.getMessage()).build();
 
         AdmissionLead saved = repository.save(lead);
+        adminNotificationService.notifyNewAdmissionLead(tenantId, saved.getStudentName(), saved.getGradeLevel(),
+                saved.getParentName(), saved.getParentEmail(), saved.getParentPhone(), saved.getMessage());
         return mapToResponse(saved);
     }
 

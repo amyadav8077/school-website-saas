@@ -27,8 +27,8 @@ public class TransferCertificateServiceImpl implements TransferCertificateServic
     /**
      * PUBLIC lookup supporting two modes:
      * <ol>
-     * <li><b>Secure verify</b> — the full identity tuple
-     * (admissionNo + fatherName + aadharNo) returns the exact certificate.</li>
+     * <li><b>Secure verify</b> — the identity tuple
+     * (admissionNo + aadharNo) returns the exact certificate.</li>
      * <li><b>Class &amp; section</b> — classLevel + section (optionally narrowed
      * by student name) lists certificates for that class/section.</li>
      * </ol>
@@ -38,13 +38,13 @@ public class TransferCertificateServiceImpl implements TransferCertificateServic
     @Override
     @Transactional(readOnly = true)
     public List<TransferCertificate> searchTCs(Long tenantId, String studentName, String classLevel, String section,
-            String admissionNo, String fatherName, String aadharNo) {
+            String admissionNo, String aadharNo) {
         log.debug("Looking up transfer certificate(s) for tenantId={}", tenantId);
 
-        // Mode 1: full secure identity tuple.
-        if (StringUtils.hasText(admissionNo) && StringUtils.hasText(fatherName) && StringUtils.hasText(aadharNo)) {
-            Optional<TransferCertificate> tc = repository.findByTenantIdAndAdmissionNoAndFatherNameIgnoreCaseAndAadharNo(
-                    tenantId, admissionNo.trim(), fatherName.trim(), aadharNo.trim());
+        // Mode 1: secure identity tuple.
+        if (StringUtils.hasText(admissionNo) && StringUtils.hasText(aadharNo)) {
+            Optional<TransferCertificate> tc = repository.findByTenantIdAndAdmissionNoAndAadharNo(tenantId,
+                    admissionNo.trim(), aadharNo.trim());
             return tc.map(t -> List.of(maskSensitive(t))).orElse(List.of());
         }
 
@@ -58,36 +58,34 @@ public class TransferCertificateServiceImpl implements TransferCertificateServic
                         .findByTenantIdAndClassLevelAndSectionAndStudentNameContainingIgnoreCaseOrderByIssueDateDesc(
                                 tenantId, classLevel.trim(), section.trim(), studentName.trim());
             } else {
-                results = repository.findByTenantIdAndClassLevelAndSectionOrderByIssueDateDesc(
-                        tenantId, classLevel.trim(), section.trim());
+                results = repository.findByTenantIdAndClassLevelAndSectionOrderByIssueDateDesc(tenantId,
+                        classLevel.trim(), section.trim());
             }
             return results.stream().map(this::maskForListing).collect(java.util.stream.Collectors.toList());
         }
 
         throw AppException.badRequest(
-                "Provide either Class and Section, or the full verification details (Admission Number, Father's Name and Aadhaar Number).");
+                "Provide either Class and Section, or the full verification details (Admission Number and Aadhaar Number).");
     }
 
     /**
-     * PUBLIC download verification. All four details must match the record
-     * exactly (father name is case-insensitive). Returns the full unmasked
-     * certificate so the caller can render/download it; throws otherwise.
+     * PUBLIC download verification. All three details must match the record
+     * exactly. Returns the full unmasked certificate so the caller can
+     * render/download it; throws otherwise.
      */
     @Override
     @Transactional(readOnly = true)
-    public TransferCertificate verifyForDownload(Long tenantId, String admissionNo, String fatherName,
-            String dateOfBirth, String aadharNo) {
+    public TransferCertificate verifyForDownload(Long tenantId, String admissionNo, String dateOfBirth,
+            String aadharNo) {
         log.debug("Verifying TC download eligibility for tenantId={}", tenantId);
-        if (!StringUtils.hasText(admissionNo) || !StringUtils.hasText(fatherName) || !StringUtils.hasText(dateOfBirth)
-                || !StringUtils.hasText(aadharNo)) {
-            throw AppException.badRequest(
-                    "Download requires Admission Number, Father's Name, Date of Birth and Aadhaar Number.");
+        if (!StringUtils.hasText(admissionNo) || !StringUtils.hasText(dateOfBirth) || !StringUtils.hasText(aadharNo)) {
+            throw AppException.badRequest("Download requires Admission Number, Date of Birth and Aadhaar Number.");
         }
         return repository
-                .findByTenantIdAndAdmissionNoAndFatherNameIgnoreCaseAndAadharNoAndDateOfBirth(
-                        tenantId, admissionNo.trim(), fatherName.trim(), aadharNo.trim(), dateOfBirth.trim())
-                .orElseThrow(() -> AppException.badRequest(
-                        "The details provided do not match our records. Please check and try again."));
+                .findByTenantIdAndAdmissionNoAndAadharNoAndDateOfBirth(tenantId, admissionNo.trim(), aadharNo.trim(),
+                        dateOfBirth.trim())
+                .orElseThrow(() -> AppException
+                        .badRequest("The details provided do not match our records. Please check and try again."));
     }
 
     /**
@@ -97,20 +95,10 @@ public class TransferCertificateServiceImpl implements TransferCertificateServic
      * to harvest the verification details needed to download a certificate.
      */
     private TransferCertificate maskForListing(TransferCertificate tc) {
-        return TransferCertificate.builder()
-                .id(tc.getId())
-                .tenantId(tc.getTenantId())
-                .studentName(tc.getStudentName())
-                .classLevel(tc.getClassLevel())
-                .section(tc.getSection())
-                .admissionNo(maskAdmissionNo(tc.getAdmissionNo()))
-                .fatherName(null)
-                .aadharNo(null)
-                .dateOfBirth(null)
-                .tcNumber(null)
-                .issueDate(tc.getIssueDate())
-                .pdfUrl(null)
-                .build();
+        return TransferCertificate.builder().id(tc.getId()).tenantId(tc.getTenantId()).studentName(tc.getStudentName())
+                .classLevel(tc.getClassLevel()).section(tc.getSection())
+                .admissionNo(maskAdmissionNo(tc.getAdmissionNo())).fatherName(null).aadharNo(null).dateOfBirth(null)
+                .tcNumber(null).issueDate(tc.getIssueDate()).pdfUrl(null).build();
     }
 
     /** Reveals only the last 2 characters of an admission number, e.g. ADM-901 -> ****01. */

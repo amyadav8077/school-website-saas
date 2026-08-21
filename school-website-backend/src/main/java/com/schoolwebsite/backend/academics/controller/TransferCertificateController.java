@@ -25,16 +25,16 @@ public class TransferCertificateController {
     public ResponseEntity<ApiResponse<List<TransferCertificate>>> verifyAndDownloadTC(@PathVariable Long tenantId,
             @RequestParam(required = false) String classLevel, @RequestParam(required = false) String section,
             @RequestParam(required = false) String studentName, @RequestParam(required = false) String admissionNo,
-            @RequestParam(required = false) String fatherName, @RequestParam(required = false) String aadharNo) {
-        return ResponseEntity.ok(ApiResponse
-                .ok(service.searchTCs(tenantId, studentName, classLevel, section, admissionNo, fatherName, aadharNo)));
+            @RequestParam(required = false) String aadharNo) {
+        return ResponseEntity.ok(
+                ApiResponse.ok(service.searchTCs(tenantId, studentName, classLevel, section, admissionNo, aadharNo)));
     }
 
     @PostMapping("/sites/{tenantId}/tc/verify-download")
     public ResponseEntity<ApiResponse<TransferCertificate>> verifyForDownload(@PathVariable Long tenantId,
             @RequestBody TCDownloadRequest req) {
-        return ResponseEntity.ok(ApiResponse.ok(service.verifyForDownload(tenantId, req.getAdmissionNo(),
-                req.getFatherName(), req.getDateOfBirth(), req.getAadharNo())));
+        return ResponseEntity.ok(ApiResponse.ok(
+                service.verifyForDownload(tenantId, req.getAdmissionNo(), req.getDateOfBirth(), req.getAadharNo())));
     }
 
     @GetMapping("/admin/sites/{tenantId}/tc")

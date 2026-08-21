@@ -9,8 +9,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.schoolwebsite.backend.auth.entity.AdminUser;
+import com.schoolwebsite.backend.auth.repository.AdminUserRepository;
 import com.schoolwebsite.backend.auth.security.CurrentUser;
 import com.schoolwebsite.backend.auth.service.AuthService;
+import com.schoolwebsite.backend.firebase.FirebaseTokenService;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final FirebaseTokenService firebaseTokenService;
+    private final AdminUserRepository adminUserRepository;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
@@ -31,6 +35,37 @@ public class AuthController {
         }
 
         return ResponseEntity.ok(authService.buildLoginResponse(userOpt.get()));
+    }
+
+    /**
+     * Phone-OTP login. The client completes the OTP with Firebase and sends the
+     * resulting ID token here. We verify it server-side, extract the verified
+     * phone number, match it to an admin account, and issue our own JWT.
+     */
+    @PostMapping("/login/phone")
+    public ResponseEntity<?> loginWithPhone(@RequestBody PhoneLoginRequest request) {
+        String verifiedPhone = firebaseTokenService.verifyAndExtractPhone(request.getIdToken());
+        Optional<AdminUser> userOpt = findAdminByPhone(verifiedPhone);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(401)
+                    .body(Map.of("message", "No administrator account is registered with this mobile number."));
+        }
+        return ResponseEntity.ok(authService.buildLoginResponse(userOpt.get()));
+    }
+
+    /**
+     * Matches a verified E.164 phone against stored admin numbers. Falls back to
+     * comparing the trailing national digits so a stored "9876543210" still
+     * matches a verified "+919876543210".
+     */
+    private Optional<AdminUser> findAdminByPhone(String verifiedPhone) {
+        Optional<AdminUser> exact = adminUserRepository.findByPhoneNumber(verifiedPhone);
+        if (exact.isPresent()) {
+            return exact;
+        }
+        String digits = verifiedPhone.replaceAll("\\D", "");
+        String last10 = digits.length() > 10 ? digits.substring(digits.length() - 10) : digits;
+        return adminUserRepository.findByPhoneNumber(last10);
     }
 
     @PostMapping("/tenant-admins")
@@ -65,6 +100,60 @@ public class AuthController {
         Map<String, String> response = new HashMap<>();
         response.put("username", admin.getUsername());
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Update the authenticated admin's mobile number, validated by Firebase OTP.
+     * The client verifies the new number via Firebase and sends the ID token; we
+     * verify it and persist the number it carries.
+     */
+    @PostMapping("/profile/phone")
+    public ResponseEntity<?> updatePhone(@RequestBody PhoneLoginRequest request) {
+        String username = CurrentUser.require().username();
+        Optional<AdminUser> userOpt = authService.findByUsername(username);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(401).body(Map.of("message", "User not found."));
+        }
+        String verifiedPhone = firebaseTokenService.verifyAndExtractPhone(request.getIdToken());
+        authService.updatePhoneNumber(userOpt.get(), verifiedPhone);
+        return ResponseEntity
+                .ok(Map.of("message", "Mobile number updated successfully.", "phoneNumber", verifiedPhone));
+    }
+
+    /**
+     * Step 1 of email change: send a one-time code to the NEW email address so we
+     * can prove the admin controls it before saving.
+     */
+    @PostMapping("/profile/email/request-otp")
+    public ResponseEntity<?> requestEmailUpdateOtp(@RequestBody EmailUpdateRequest request) {
+        CurrentUser.require();
+        String newEmail = request.getNewEmail() != null ? request.getNewEmail().trim() : "";
+        if (newEmail.isEmpty() || !newEmail.contains("@")) {
+            return ResponseEntity.badRequest().body(Map.of("message", "A valid new email address is required."));
+        }
+        authService.issueOtp(newEmail);
+        return ResponseEntity.ok(Map.of("message", "A one-time code has been sent to " + newEmail + "."));
+    }
+
+    /** Step 2 of email change: verify the OTP sent to the new address, then save it. */
+    @PostMapping("/profile/email/verify")
+    public ResponseEntity<?> verifyEmailUpdate(@RequestBody EmailUpdateRequest request) {
+        String username = CurrentUser.require().username();
+        Optional<AdminUser> userOpt = authService.findByUsername(username);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(401).body(Map.of("message", "User not found."));
+        }
+        String newEmail = request.getNewEmail() != null ? request.getNewEmail().trim() : "";
+        String otp = request.getOtp() != null ? request.getOtp().trim() : "";
+        if (newEmail.isEmpty() || otp.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "New email and OTP are required."));
+        }
+        if (!authService.verifyOtp(newEmail, otp)) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "Invalid or expired OTP. Please request a new code."));
+        }
+        authService.updateEmail(userOpt.get(), newEmail);
+        return ResponseEntity.ok(Map.of("message", "Email updated successfully.", "email", newEmail));
     }
 
     @PostMapping("/change-password")
@@ -151,6 +240,18 @@ public class AuthController {
         private String username;
 
         private String password;
+    }
+
+    @Data
+    public static class PhoneLoginRequest {
+        private String idToken;
+    }
+
+    @Data
+    public static class EmailUpdateRequest {
+        private String newEmail;
+
+        private String otp;
     }
 
     @Data
